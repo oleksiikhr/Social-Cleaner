@@ -26,6 +26,7 @@ export default new VueRouter({
 
   routes: [
     { path: '/', component: load('Dashboard') },
+    { path: '/token', component: load('Token') },
 
     // Always leave this last one
     { path: '*', component: load('Error404') } // Not found

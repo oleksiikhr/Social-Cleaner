@@ -1,40 +1,55 @@
 <template>
-  <q-layout id="q-app" ref="layout" view="hHh Lpr fff" :right-breakpoint="1100">
+  <q-layout id="q-app" ref="layout" view="hHh LpR fff" :right-breakpoint="1100">
     <!-- Header -->
     <q-toolbar slot="header">
       <q-btn flat @click="$refs.layout.toggleLeft()">
         <q-icon name="menu" />
       </q-btn>
       <q-toolbar-title>
-        Layout Header
-        <span slot="subtitle">Optional subtitle</span>
+        VK Clean
       </q-toolbar-title>
+      <q-btn flat @click.native="linkGithub">
+        <q-icon name="link" />
+      </q-btn>
       <q-btn flat @click="$refs.layout.toggleRight()">
         <q-icon name="menu" />
       </q-btn>
     </q-toolbar>
-    <!-- Navigation -->
-    <q-tabs slot="navigation">
-      <q-route-tab slot="title" icon="view_quilt" to="/test-layout/about" replace hide="icon" label="About" />
-      <q-route-tab slot="title" icon="view_day" to="/test-layout/toolbar" replace hide="icon" label="Toolbar" />
-      <q-route-tab slot="title" icon="view_day" to="/test-layout/tabs" replace label="Tabs" />
-      <q-route-tab slot="title" icon="input" to="/test-layout/drawer" replace label="Drawer" />
-    </q-tabs>
     <!-- Left Side Panel -->
     <div slot="left">
       <q-list no-border link inset-separator>
-        <q-list-header>Essential Links</q-list-header>
-        <q-side-link item to="/wall">
-          <q-item-side icon="dashboard" />
-          <q-item-main label="Wall" sublabel="https://vk.com/dev/wall" />
+        <q-list-header>Sections</q-list-header>
+        <q-side-link item to="/token">
+          <q-item-side icon="vpn_key" />
+          <q-item-main label="Token" sublabel="https://vk.com/dev/access_token" />
+        </q-side-link>
+        <q-side-link item to="/friends">
+          <q-item-side icon="people_outline" />
+          <q-item-main label="Friends" sublabel="https://vk.com/dev/friends" />
+        </q-side-link>
+        <q-side-link item to="/photos">
+          <q-item-side icon="photo" />
+          <q-item-main label="Photos" sublabel="https://vk.com/dev/photos" />
+        </q-side-link>
+        <q-side-link item to="/video">
+          <q-item-side icon="video_library" />
+          <q-item-main label="Video" sublabel="https://vk.com/dev/video" />
         </q-side-link>
         <q-side-link item to="/status">
           <q-item-side icon="done" />
           <q-item-main label="Status" sublabel="https://vk.com/dev/status" />
         </q-side-link>
-        <q-side-link item to="/dialogs">
+        <q-side-link item to="/messages">
           <q-item-side icon="chat" />
-          <q-item-main label="Dialogs" sublabel="https://vk.com/dev/messages" />
+          <q-item-main label="Messages" sublabel="https://vk.com/dev/messages" />
+        </q-side-link>
+        <q-side-link item to="/wall">
+          <q-item-side icon="dashboard" />
+          <q-item-main label="Wall" sublabel="https://vk.com/dev/wall" />
+        </q-side-link>
+        <q-side-link item to="/docs">
+          <q-item-side icon="bookmark" />
+          <q-item-main label="Docs" sublabel="https://vk.com/dev/docs" />
         </q-side-link>
         <q-side-link item to="/groups">
           <q-item-side icon="people" />
@@ -44,16 +59,11 @@
     </div>
     <!-- Right Side Panel -->
     <div slot="right">
-      Right Side of Layout
+      <!-- TODO: Vuex for every section* -->
+      Logs
     </div>
     <!-- sub-routes get injected here: -->
     <router-view />
-    <!-- Footer -->
-    <q-toolbar slot="footer">
-      <q-toolbar-title>
-        Layout Footer
-      </q-toolbar-title>
-    </q-toolbar>
   </q-layout>
 </template>
 
@@ -91,6 +101,11 @@
       QListHeader,
       QScrollArea,
       QList
+    },
+    methods: {
+      linkGithub () {
+        return window.open('https://github.com/Alexeykhr', '_blank')
+      }
     }
   }
 </script>
