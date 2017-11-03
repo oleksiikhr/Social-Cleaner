@@ -39,6 +39,15 @@
         isOpen: false
       }
     },
+    created () {
+      this.$http.jsonp('https://api.vk.com/method/users.get', {
+        params: {
+          user_ids: 1,
+          fields: 'counters'
+        }
+      })
+        .then(res => console.log(res.body.response[0].uid))
+    },
     methods: {
       linkGetToken () {
         if (!this.scope.length) {
