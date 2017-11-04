@@ -36,7 +36,7 @@ Vue.http.interceptor.before = (request, next) => {
   request.params.version = '5.69'
 
   next((res) => {
-    var body
+    var body = res.body
 
     if (typeof res.body === 'string') {
       try {
@@ -46,10 +46,7 @@ Vue.http.interceptor.before = (request, next) => {
         return console.log('Error: Response is not JSON format')
       }
     }
-    else if (typeof res.body === 'object') {
-      body = res.body
-    }
-    else {
+    else if (typeof res.body !== 'object') {
       return console.log('Error: Response format')
     }
 
