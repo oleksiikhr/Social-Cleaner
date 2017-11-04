@@ -1,60 +1,67 @@
 <template>
   <div id="token">
-    <h5>Getting a token</h5>
-    <p class="caption">To run most API methods you need to pass an access_token, a special access key.
-      Token is a string of digits and latin characters and may refer to a user, community or application itself.</p>
-    <q-option-group
-        type="toggle"
-        color="primary"
-        v-model="scope"
-        :options="[
-        { label: 'Friends', value: 'friends' },
-        { label: 'Photos', value: 'photos' },
-        { label: 'Video', value: 'video' },
-        { label: 'Status', value: 'status' },
-        { label: 'Messages', value: 'messages' },
-        { label: 'Wall', value: 'wall' },
-        { label: 'Docs', value: 'docs' },
-        { label: 'Groups', value: 'groups' }
-      ]"
-    />
-    <br>
-    <q-btn v-if="!haveToken" color="black" outline @click.native="haveToken = true">I have a token</q-btn>
-    <q-btn v-if="token.length < 1" icon-right="send" color="primary" outline @click.native="linkGetToken()">Get a token</q-btn>
-    <template v-if="haveToken">
-      <q-input v-model="token" clearable type="password" color="red" stack-label="Token insert here" :after="[{icon: 'done', handler () { fetchCheckPermissions() }}]"/>
+    <template v-if="!haveToken">
+      <h5>Getting a token</h5>
+      <p class="caption">To run most API methods you need to pass an access_token, a special access key.
+        Token is a string of digits and latin characters and may refer to a user, community or application itself.</p>
+      <q-option-group
+          type="toggle"
+          color="primary"
+          v-model="scope"
+          style="margin-bottom: 0.5rem"
+          :options="[
+          { label: 'Friends', value: 'friends' },
+          { label: 'Photos', value: 'photos' },
+          { label: 'Video', value: 'video' },
+          { label: 'Status', value: 'status' },
+          { label: 'Messages', value: 'messages' },
+          { label: 'Wall', value: 'wall' },
+          { label: 'Docs', value: 'docs' },
+          { label: 'Groups', value: 'groups' }
+        ]"
+      />
+      <q-btn v-if="!seePlaceWriteToken" style="margin-bottom: 0.5rem" color="black" outline
+             @click.native="seePlaceWriteToken = true">
+        I have a token
+      </q-btn>
+      <q-btn v-if="token.length < 1" style="margin-bottom: 0.5rem" icon-right="send"
+             color="primary" outline @click.native="linkGetToken()">
+        Get a token
+      </q-btn>
+      <q-input v-if="seePlaceWriteToken" v-model="token" clearable type="password" color="red" stack-label="Token insert here"
+               :after="[{icon: 'done', handler () { fetchCheckPermissions() }}]"/>
+    </template>
+
+    <template v-else>
+      <q-alert color="warning" style="margin-bottom: 1.5rem">
+        The token is not stored in the browser, so do not close / reload the page unless you want to lose the token.
+      </q-alert>
+      <q-btn color="red" outline @click.native="clearToken()">Clear token</q-btn>
     </template>
   </div>
 </template>
 
 <script>
   import { get } from '../helpers/vk'
-  import { QOptionGroup, QBtn, Toast, QInput } from 'quasar'
+  import { QOptionGroup, QBtn, Toast, QInput, QAlert } from 'quasar'
 
   export default {
     components: {
-      QOptionGroup, QBtn, Toast, QInput
+      QOptionGroup, QBtn, Toast, QInput, QAlert
     },
     data () {
       return {
         token: '',
         scope: [],
-        haveToken: false
+        seePlaceWriteToken: false
+      }
+    },
+    computed: {
+      haveToken () {
+        return !!this.$store.state.vk.token
       }
     },
     methods: {
-      linkGetToken () {
-        if (!this.scope.length) {
-          Toast.create.negative({
-            html: 'You must select at least 1 item'
-          })
-        }
-        else {
-          window.open('https://oauth.vk.com/authorize?client_id=6244330&display=page&redirect_uri=https://oauth.vk.com/blank.html' +
-            '&scope=' + this.scope.join(',') + '&response_type=token&v=5.69', '_blank')
-          this.haveToken = true
-        }
-      },
       fetchCheckPermissions () {
         if (!this.token) {
           return Toast.create.negative({
@@ -69,6 +76,7 @@
             if (res.body.response) {
               this.$store.dispatch('setPermissions', res.body.response)
               this.$store.dispatch('setToken', this.token)
+              this.fetchGetUser()
               Toast.create.positive({
                 html: 'Token installed'
               })
@@ -84,6 +92,28 @@
               })
             }
           })
+      },
+      fetchGetUser () {
+        get('account.getProfileInfo', {
+          access_token: this.token
+        })
+          .then(res => {
+            console.log(res.body)
+          })
+      },
+      linkGetToken () {
+        if (!this.scope.length) {
+          return Toast.create.negative({
+            html: 'You must select at least 1 item'
+          })
+        }
+
+        window.open('https://oauth.vk.com/authorize?client_id=6244330&display=page&redirect_uri=https://oauth.vk.com/blank.html' +
+          '&scope=' + this.scope.join(',') + '&response_type=token&v=5.69', '_blank')
+        this.seePlaceWriteToken = true
+      },
+      clearToken () {
+        this.$store.dispatch('clearToken')
       }
     }
   }

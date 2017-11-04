@@ -30,6 +30,34 @@ import 'quasar-extras/material-icons'
 // import 'quasar-extras/fontawesome'
 // import 'quasar-extras/animate'
 
+Vue.http.interceptor.before = (request, next) => {
+  request.emulateJSON = true
+  request.emulateHTTP = true
+  request.params.version = '5.69'
+
+  next((res) => {
+    if (typeof res.body === 'string') {
+      try {
+        var body = JSON.parse(res.body)
+        if (body.error && body.error.error_code === 5) {
+          this.$store.dispatch('clearToken')
+        }
+      }
+      catch (e) {
+        console.log('Error: Response is not JSON format')
+      }
+    }
+    else if (typeof res.body === 'object') {
+      if (res.body.error && res.body.error.error_code === 5) {
+        this.$store.dispatch('clearToken')
+      }
+    }
+    else {
+      console.log('Error: Response format')
+    }
+  })
+}
+
 Quasar.start(() => {
   /* eslint-disable no-new */
   new Vue({

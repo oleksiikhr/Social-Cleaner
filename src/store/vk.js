@@ -33,7 +33,7 @@ const mutations = {
     state.access.groups = !!(number & 262144)
   },
   CLEAR_TOKEN (state) {
-    state.key = null
+    state.token = null
   }
 }
 
