@@ -56,15 +56,32 @@
         }
       },
       fetchCheckPermissions () {
+        if (!this.token) {
+          return Toast.create.negative({
+            html: 'The token is empty'
+          })
+        }
+
         get('account.getAppPermissions', {
           access_token: this.token
         })
           .then(res => {
             if (res.body.response) {
-              // TODO: get all permissions:
-              // Example: 1026 & 2
-              console.log(res.body.response)
+              this.$store.dispatch('setPermissions', res.body.response)
               this.$store.dispatch('setToken', this.token)
+              Toast.create.positive({
+                html: 'Token installed'
+              })
+            }
+            else if (res.body.error) {
+              Toast.create.negative({
+                html: res.body.error.error_msg
+              })
+            }
+            else {
+              Toast.create.negative({
+                html: 'Token error'
+              })
             }
           })
       }
