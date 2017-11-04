@@ -19,13 +19,16 @@
       ]"
     />
     <br>
-    <q-btn v-if="!isOpen" color="black" outline @click.native="isOpen = true">I have a token</q-btn>
+    <q-btn v-if="!haveToken" color="black" outline @click.native="haveToken = true">I have a token</q-btn>
     <q-btn v-if="token.length < 1" icon-right="send" color="primary" outline @click.native="linkGetToken()">Get a token</q-btn>
-    <q-input v-if="isOpen" v-model="token" clearable type="password" stack-label="Token insert here" :after="[{icon: 'done', handler () { setToken() }}]"/>
+    <template v-if="haveToken">
+      <q-input v-model="token" clearable type="password" color="red" stack-label="Token insert here" :after="[{icon: 'done', handler () { fetchCheckPermissions() }}]"/>
+    </template>
   </div>
 </template>
 
 <script>
+  import { get } from '../helpers/vk'
   import { QOptionGroup, QBtn, Toast, QInput } from 'quasar'
 
   export default {
@@ -36,17 +39,8 @@
       return {
         token: '',
         scope: [],
-        isOpen: false
+        haveToken: false
       }
-    },
-    created () {
-      this.$http.jsonp('https://api.vk.com/method/users.get', {
-        params: {
-          user_ids: 1,
-          fields: 'counters'
-        }
-      })
-        .then(res => console.log(res.body.response[0].uid))
     },
     methods: {
       linkGetToken () {
@@ -56,15 +50,23 @@
           })
         }
         else {
-          // TODO: temporary save data in here
           window.open('https://oauth.vk.com/authorize?client_id=6244330&display=page&redirect_uri=https://oauth.vk.com/blank.html' +
             '&scope=' + this.scope.join(',') + '&response_type=token&v=5.69', '_blank')
-          this.isOpen = true
+          this.haveToken = true
         }
       },
-      setToken () {
-        // TODO: Save in Vuex
-        console.log('Set Token')
+      fetchCheckPermissions () {
+        get('account.getAppPermissions', {
+          access_token: this.token
+        })
+          .then(res => {
+            if (res.body.response) {
+              // TODO: get all permissions:
+              // Example: 1026 & 2
+              console.log(res.body.response)
+              this.$store.dispatch('setToken', this.token)
+            }
+          })
       }
     }
   }
