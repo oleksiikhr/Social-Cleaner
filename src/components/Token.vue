@@ -134,8 +134,3 @@
     }
   }
 </script>
-
-<style lang="stylus">
-  #token
-    padding: 20px
-</style>

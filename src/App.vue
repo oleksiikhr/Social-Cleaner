@@ -26,14 +26,17 @@
         <q-side-link :disabled="!linkFriends" item :to="linkFriends">
           <q-item-side icon="people_outline" />
           <q-item-main label="Friends" sublabel="https://vk.com/dev/friends" />
+          <q-chip v-if="linkFriends" small color="primary">{{ $store.state.vk.user.counters.friends }}</q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkPhotos" item :to="linkPhotos">
           <q-item-side icon="photo" />
           <q-item-main label="Photos" sublabel="https://vk.com/dev/photos" />
+          <q-chip v-if="linkPhotos" small color="primary">{{ $store.state.vk.user.counters.photos }}</q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkVideo" item :to="linkVideo">
           <q-item-side icon="video_library" />
           <q-item-main label="Video" sublabel="https://vk.com/dev/video" />
+          <q-chip v-if="linkVideo" small color="primary">{{ $store.state.vk.user.counters.videos }}</q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkStatus" item :to="linkStatus">
           <q-item-side icon="done" />
@@ -54,6 +57,7 @@
         <q-side-link :disabled="!linkGroups" item :to="linkGroups">
           <q-item-side icon="people" />
           <q-item-main label="Groups" sublabel="https://vk.com/dev/groups" />
+          <q-chip v-if="linkGroups" small color="primary">{{ $store.state.vk.user.counters.groups }}</q-chip>
         </q-side-link>
       </q-list>
     </div>
@@ -63,7 +67,9 @@
       Logs
     </div>
     <!-- sub-routes get injected here: -->
-    <router-view />
+    <div style="padding: 20px;">
+      <router-view />
+    </div>
   </q-layout>
 </template>
 
@@ -82,7 +88,8 @@
     QSideLink,
     QListHeader,
     QScrollArea,
-    QList
+    QList,
+    QChip
   } from 'quasar'
 
   export default {
@@ -100,7 +107,8 @@
       QSideLink,
       QListHeader,
       QScrollArea,
-      QList
+      QList,
+      QChip
     },
     computed: {
       linkFriends () {

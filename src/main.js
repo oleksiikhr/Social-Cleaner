@@ -33,7 +33,7 @@ import 'quasar-extras/material-icons'
 Vue.http.interceptor.before = (request, next) => {
   request.emulateJSON = true
   request.emulateHTTP = true
-  request.params.version = '5.69'
+  request.params.v = '5.69'
 
   next((res) => {
     var body = res.body
