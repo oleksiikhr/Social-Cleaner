@@ -25,8 +25,8 @@ export default new VueRouter({
   scrollBehavior: () => ({ y: 0 }),
 
   routes: [
-    { path: '/', component: load('Dashboard') },
-    { path: '/token', component: load('Token') },
+    { path: '/', name: 'dashboard', component: load('Dashboard') },
+    { path: '/token', name: 'token', component: load('Token') },
 
     // Always leave this last one
     { path: '*', component: load('Error404') } // Not found

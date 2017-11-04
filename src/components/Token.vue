@@ -29,14 +29,14 @@
         Get a token
       </q-btn>
       <q-input v-if="seePlaceWriteToken" v-model="token" clearable type="password" color="red" stack-label="Token insert here"
-               :after="[{icon: 'done', handler () { fetchCheckPermissions() }}]"/>
+               :after="[{icon: 'done', handler () { fetchGetPermissions() }}]"/>
     </template>
 
     <template v-else>
       <q-alert color="warning" style="margin-bottom: 1.5rem">
         The token is not stored in the browser, so do not close / reload the page unless you want to lose the token.
       </q-alert>
-      <q-btn color="red" outline @click.native="clearToken()">Clear token</q-btn>
+      <q-btn color="red" outline @click.native="exit()">Exit</q-btn>
     </template>
   </div>
 </template>
@@ -62,7 +62,7 @@
       }
     },
     methods: {
-      fetchCheckPermissions () {
+      fetchGetPermissions () {
         if (!this.token) {
           return Toast.create.negative({
             html: 'The token is empty'
@@ -74,6 +74,8 @@
         })
           .then(res => {
             if (res.body.response) {
+              this.token = ''
+              this.scope = []
               this.$store.dispatch('setPermissions', res.body.response)
               this.$store.dispatch('setToken', this.token)
               this.fetchGetUser()
@@ -92,13 +94,32 @@
               })
             }
           })
+          .catch(err => {
+            Toast.create.negative({
+              html: 'Not access to VK'
+            })
+          })
       },
       fetchGetUser () {
-        get('account.getProfileInfo', {
+        get('users.get', {
+          fields: 'has_photo,photo_100,counters',
           access_token: this.token
         })
           .then(res => {
-            console.log(res.body)
+            if (res.body.response) {
+              this.$store.dispatch('setUser', res.body.response)
+            } else {
+              Toast.create.negative({
+                html: 'User not received'
+              })
+              this.exit()
+            }
+          })
+          .catch(err => {
+            Toast.create.negative({
+              html: 'Error from VK'
+            })
+            this.exit()
           })
       },
       linkGetToken () {
@@ -112,8 +133,8 @@
           '&scope=' + this.scope.join(',') + '&response_type=token&v=5.69', '_blank')
         this.seePlaceWriteToken = true
       },
-      clearToken () {
-        this.$store.dispatch('clearToken')
+      exit () {
+        this.$store.dispatch('exit')
       }
     }
   }

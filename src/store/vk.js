@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 const state = {
   token: null,
+  user: {},
   access: {
     friends: false,
     photos: false,
@@ -32,8 +33,24 @@ const mutations = {
     state.access.docs = !!(number & 1311072)
     state.access.groups = !!(number & 262144)
   },
+  SET_USER (state, obj) {
+    state.user = obj
+  },
   CLEAR_TOKEN (state) {
     state.token = null
+  },
+  CLEAR_USER (state) {
+    state.user = {}
+  },
+  CLEAR_PERMISSIONS (state) {
+    state.access.friends = false
+    state.access.photos = false
+    state.access.video = false
+    state.access.status = false
+    state.access.messages = false
+    state.access.wall = false
+    state.access.docs = false
+    state.access.groups = false
   }
 }
 
@@ -44,8 +61,13 @@ const actions = {
   setPermissions: ({commit}, number) => {
     commit('SET_PERMISSIONS', number)
   },
-  clearToken: ({commit}) => {
+  setUser: ({commit}, obj) => {
+    commit('SET_USER', obj)
+  },
+  exit: ({commit}) => {
     commit('CLEAR_TOKEN')
+    commit('CLEAR_USER')
+    commit('CLEAR_PERMISSIONS')
   }
 }
 
