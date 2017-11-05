@@ -3,6 +3,7 @@
 </template>
 
 <script>
+  // TODO: complete in future
   import { get } from '../helpers/vk'
 
   export default {

@@ -28,6 +28,8 @@ export default new VueRouter({
     { path: '/', name: 'dashboard', component: load('Dashboard') },
     { path: '/token', name: 'token', component: load('Token') },
     { path: '/friends', name: 'friends', component: load('Friends') },
+    { path: '/wall', name: 'wall', component: load('Wall') },
+    { path: '/docs', name: 'docs', component: load('Docs') },
 
     // Always leave this last one
     { path: '*', component: load('Error404') } // Not found

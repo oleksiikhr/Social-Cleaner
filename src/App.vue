@@ -49,10 +49,12 @@
         <q-side-link :disabled="!linkWall" item :to="linkWall">
           <q-item-side icon="dashboard" />
           <q-item-main label="Wall" sublabel="https://vk.com/dev/wall" />
+          <q-chip v-if="linkWall" small color="primary">{{ $store.state.vk.user.counters.wall }}</q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkDocs" item :to="linkDocs">
           <q-item-side icon="bookmark" />
           <q-item-main label="Docs" sublabel="https://vk.com/dev/docs" />
+          <q-chip v-if="linkDocs" small color="primary">{{ $store.state.vk.user.counters.docs }}</q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkGroups" item :to="linkGroups">
           <q-item-side icon="people" />

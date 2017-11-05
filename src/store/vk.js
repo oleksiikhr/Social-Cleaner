@@ -22,6 +22,9 @@ const mutations = {
   SET_TOKEN (state, token) {
     state.token = token
   },
+  CLEAR_TOKEN (state) {
+    state.token = null
+  },
   SET_PERMISSIONS (state, number) {
     /** @see https://vk.com/dev/permissions Bitmask */
     state.access.friends = !!(number & 2)
@@ -33,15 +36,6 @@ const mutations = {
     state.access.docs = !!(number & 1311072)
     state.access.groups = !!(number & 262144)
   },
-  SET_USER (state, obj) {
-    state.user = obj
-  },
-  CLEAR_TOKEN (state) {
-    state.token = null
-  },
-  CLEAR_USER (state) {
-    state.user = {}
-  },
   CLEAR_PERMISSIONS (state) {
     state.access.friends = false
     state.access.photos = false
@@ -51,6 +45,12 @@ const mutations = {
     state.access.wall = false
     state.access.docs = false
     state.access.groups = false
+  },
+  SET_USER (state, obj) {
+    state.user = obj
+  },
+  CLEAR_USER (state) {
+    state.user = {}
   }
 }
 

@@ -16,6 +16,7 @@ import VueResource from 'vue-resource'
 import Quasar, { Toast } from 'quasar'
 import router from './router'
 import store from 'store/index'
+import { version } from 'helpers/vk'
 
 Vue.config.productionTip = false
 Vue.use(Quasar) // Install Quasar Framework
@@ -33,7 +34,7 @@ import 'quasar-extras/material-icons'
 Vue.http.interceptor.before = (request, next) => {
   request.emulateJSON = true
   request.emulateHTTP = true
-  request.params.v = '5.69'
+  request.params.v = version
 
   next((res) => {
     var body = res.body
