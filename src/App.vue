@@ -26,17 +26,17 @@
         <q-side-link :disabled="!linkFriends" item :to="linkFriends">
           <q-item-side icon="people_outline" />
           <q-item-main label="Friends" sublabel="https://vk.com/dev/friends" />
-          <q-chip v-if="linkFriends" small color="primary">{{ $store.state.vk.user.counters.friends }}</q-chip>
+          <q-chip v-if="$store.state.vk.user.counters && linkFriends" small color="primary">{{ $store.state.vk.user.counters.friends }}</q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkPhotos" item :to="linkPhotos">
           <q-item-side icon="photo" />
           <q-item-main label="Photos" sublabel="https://vk.com/dev/photos" />
-          <q-chip v-if="linkPhotos" small color="primary">{{ $store.state.vk.user.counters.photos }}</q-chip>
+          <q-chip v-if="$store.state.vk.user.counters && linkPhotos" small color="primary">{{ $store.state.vk.user.counters.photos }}</q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkVideo" item :to="linkVideo">
           <q-item-side icon="video_library" />
           <q-item-main label="Video" sublabel="https://vk.com/dev/video" />
-          <q-chip v-if="linkVideo" small color="primary">{{ $store.state.vk.user.counters.videos }}</q-chip>
+          <q-chip v-if="$store.state.vk.user.counters && linkVideo" small color="primary">{{ $store.state.vk.user.counters.videos }}</q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkStatus" item :to="linkStatus">
           <q-item-side icon="done" />
@@ -49,17 +49,21 @@
         <q-side-link :disabled="!linkWall" item :to="linkWall">
           <q-item-side icon="dashboard" />
           <q-item-main label="Wall" sublabel="https://vk.com/dev/wall" />
-          <q-chip v-if="linkWall" small color="primary">{{ $store.state.vk.user.counters.wall }}</q-chip>
+          <q-chip v-if="linkWall && $store.state.vk.user.counters" small color="primary">
+            {{ $store.state.vk.user.counters.wall ? $store.state.vk.user.counters.wall : '?' }}
+          </q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkDocs" item :to="linkDocs">
           <q-item-side icon="bookmark" />
           <q-item-main label="Docs" sublabel="https://vk.com/dev/docs" />
-          <q-chip v-if="linkDocs" small color="primary">{{ $store.state.vk.user.counters.docs }}</q-chip>
+          <q-chip v-if="linkDocs && $store.state.vk.user.counters" small color="primary">
+            {{ $store.state.vk.user.counters.docs ? $store.state.vk.user.counters.docs : '?' }}
+          </q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkGroups" item :to="linkGroups">
           <q-item-side icon="people" />
           <q-item-main label="Groups" sublabel="https://vk.com/dev/groups" />
-          <q-chip v-if="linkGroups" small color="primary">{{ $store.state.vk.user.counters.groups }}</q-chip>
+          <q-chip v-if="$store.state.vk.user.counters && linkGroups" small color="primary">{{ $store.state.vk.user.counters.groups }}</q-chip>
         </q-side-link>
       </q-list>
     </div>

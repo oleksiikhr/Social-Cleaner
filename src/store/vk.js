@@ -51,6 +51,9 @@ const mutations = {
   },
   CLEAR_USER (state) {
     state.user = {}
+  },
+  WALL_COUNTER_DECREMENT (state) {
+    state.user.counters.wall -= 1
   }
 }
 
@@ -63,6 +66,9 @@ const actions = {
   },
   setUser: ({commit}, obj) => {
     commit('SET_USER', obj)
+  },
+  wallCounterDecrement: ({commit}) => {
+    commit('WALL_COUNTER_DECREMENT')
   },
   exit: ({commit}) => {
     commit('CLEAR_TOKEN')
