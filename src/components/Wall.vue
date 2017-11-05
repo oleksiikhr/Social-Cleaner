@@ -3,14 +3,18 @@
     <h4>Wall</h4>
     <template v-if="'items' in wall">
       <div class="row">
-        <div class="col"><q-input v-model="count" type="number" float-label="Count" /></div>
-        <div class="col"><q-input v-model="offset" type="number" float-label="Offset" /></div>
+        <div class="col">
+          <q-input v-model="count" :disabled="processDelete" type="number" float-label="Count" />
+        </div>
+        <div class="col">
+          <q-input v-model="offset" :disabled="processDelete" type="number" float-label="Offset" />
+        </div>
       </div>
       <q-field icon="label" count helper="Example: 351, 16" style="margin-bottom: 2rem;">
-        <q-chips-input float-label="ID's undelete posts" v-model="itemsNoDelete" />
+        <q-chips-input :disabled="processDelete" float-label="ID's undelete posts" v-model="itemsNoDelete" />
       </q-field>
       <q-btn icon="delete" color="red" loader outline class="full-width" v-model="processDelete"
-             @click.native="fetchDeleteWall(offset, count)">
+             :disabled="count < 1" @click.native="fetchDeleteWall(offset)">
         Delete
       </q-btn>
     </template>
@@ -51,24 +55,18 @@
               this.count = res.body.response.count
             }
             else {
-              Toast.create.negative({
-                html: res.body.error.error_msg
-              })
+              Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Error from VK' })
             }
           }, res => {
-            Toast.create.negative({
-              html: 'Error from VK'
-            })
+            Toast.create.negative({ html: 'Error from VK' })
           })
       },
-      fetchDeleteWall (offset, count) {
+      fetchDeleteWall (offset) {
         this.processDelete = true
 
-        if (offset >= this.offset + count) {
+        if (offset >= this.offset + this.count) {
           this.processDelete = false
-          return Toast.create.positive({
-            html: 'All posts deleted'
-          })
+          return Toast.create.positive({ html: 'All posts deleted' })
         }
 
         sleep(randomInteger(500, 3000)).then(() => {
@@ -82,7 +80,7 @@
                 let id = res.body.response.items[0].id
                 if (this.itemsNoDelete.indexOf(id.toString()) > -1) {
                   this.$store.dispatch('addLog', { message: 'Saved id: ' + id, section: 'wall' })
-                  return this.fetchDeleteWall(offset + 1, count)
+                  return this.fetchDeleteWall(offset)
                 }
                 get('wall.delete', {
                   access_token: this.$store.state.vk.token,
@@ -93,7 +91,7 @@
                       this.$store.dispatch('wallCounterDecrement')
                       this.$store.dispatch('addLog', { message: 'Deleted id: ' + id, section: 'wall' })
                       this.count -= 1
-                      return this.fetchDeleteWall(offset + 1, count)
+                      return this.fetchDeleteWall(offset)
                     }
                     this.processDelete = false
                     return Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'No deleted' })
@@ -120,7 +118,6 @@
   }
 
   function randomInteger (min, max) {
-    let rand = min - 0.5 + Math.random() * (max - min + 1)
-    return Math.round(rand)
+    return Math.round(min - 0.5 + Math.random() * (max - min + 1))
   }
 </script>

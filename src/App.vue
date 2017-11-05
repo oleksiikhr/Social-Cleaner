@@ -69,7 +69,6 @@
     </div>
     <!-- Right Side Panel -->
     <div slot="right">
-      <!-- TODO: Temporary -->
       <q-list highlight>
         <q-list-header>Log</q-list-header>
         <q-item v-for="(item, index) in $store.state.vk.log" :key="index">
