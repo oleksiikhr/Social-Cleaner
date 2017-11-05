@@ -13,7 +13,7 @@ require(`quasar/dist/quasar.${__THEME}.css`)
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
-import Quasar, { Toast } from 'quasar'
+import Quasar from 'quasar'
 import router from './router'
 import store from 'store/index'
 import { version } from 'helpers/vk'
@@ -52,9 +52,6 @@ Vue.http.interceptor.before = (request, next) => {
     }
 
     if (body.error && body.error.error_code === 5 && store.state.vk.user) {
-      Toast.create.negative({
-        html: 'Token expiration time'
-      })
       store.dispatch('exit')
       router.push({ name: 'token' })
     }

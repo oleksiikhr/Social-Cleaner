@@ -7,9 +7,12 @@
         <div class="col"><q-input v-model="offset" type="number" float-label="Offset" /></div>
       </div>
       <q-field icon="label" count helper="Example: 351, 16" style="margin-bottom: 2rem;">
-        <q-chips-input float-label="ID's undelete posts" v-model="noDelete" />
+        <q-chips-input float-label="ID's undelete posts" v-model="itemsNoDelete" />
       </q-field>
-      <q-btn icon="delete" color="red" outline class="full-width" @click.native="fetchDeleteWall()">Delete</q-btn>
+      <q-btn icon="delete" color="red" loader outline class="full-width" v-model="processDelete"
+             @click.native="fetchDeleteWall(offset, count)">
+        Delete
+      </q-btn>
     </template>
     <q-spinner-cube v-else color="primary" :size="60" />
   </div>
@@ -26,9 +29,10 @@
     data () {
       return {
         wall: {},
-        noDelete: [],
+        itemsNoDelete: [],
         count: 1,
-        offset: 0
+        offset: 0,
+        processDelete: false
       }
     },
     created () {
@@ -57,8 +61,56 @@
             })
           })
       },
-      fetchDeleteWall () {
-        // Recursion
+      fetchDeleteWall (offset, count) {
+        this.processDelete = true
+
+        if (offset >= this.offset + count) {
+          this.processDelete = false
+          return Toast.create.positive({
+            html: 'All posts deleted'
+          })
+        }
+
+        sleep(randomInteger(500, 3000)).then(() => {
+          get('wall.get', {
+            access_token: this.$store.state.vk.token,
+            offset: offset + 1,
+            count: 1
+          })
+            .then(res => {
+              if (res.body.response && res.body.response.items.length) {
+                let id = res.body.response.items[0].id
+                if (this.itemsNoDelete.indexOf(id.toString()) > -1) {
+                  this.$store.dispatch('addLog', { message: 'Saved id: ' + id, section: 'wall' })
+                  return this.fetchDeleteWall(offset + 1, count)
+                }
+                get('wall.delete', {
+                  access_token: this.$store.state.vk.token,
+                  post_id: id
+                })
+                  .then(res => {
+                    if (res.body.response) {
+                      this.$store.dispatch('wallCounterDecrement')
+                      this.$store.dispatch('addLog', { message: 'Deleted id: ' + id, section: 'wall' })
+                      this.count -= 1
+                      return this.fetchDeleteWall(offset + 1, count)
+                    }
+                    this.processDelete = false
+                    return Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'No deleted' })
+                  }, res => {
+                    this.processDelete = false
+                    return Toast.create.negative({ html: 'Error from VK' })
+                  })
+              }
+              else {
+                this.processDelete = false
+                return Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'No items' })
+              }
+            }, res => {
+              this.processDelete = false
+              return Toast.create.negative({ html: 'Error from VK' })
+            })
+        })
       }
     }
   }

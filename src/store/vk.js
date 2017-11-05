@@ -15,7 +15,8 @@ const state = {
     wall: false,
     docs: false,
     groups: false
-  }
+  },
+  log: []
 }
 
 const mutations = {
@@ -54,6 +55,12 @@ const mutations = {
   },
   WALL_COUNTER_DECREMENT (state) {
     state.user.counters.wall -= 1
+  },
+  ADD_LOG (state, obj) {
+    state.log.unshift(obj)
+  },
+  CLEAR_LOG (state) {
+    state.log = []
   }
 }
 
@@ -70,10 +77,14 @@ const actions = {
   wallCounterDecrement: ({commit}) => {
     commit('WALL_COUNTER_DECREMENT')
   },
+  addLog: ({commit}, obj) => {
+    commit('ADD_LOG', obj)
+  },
   exit: ({commit}) => {
     commit('CLEAR_TOKEN')
     commit('CLEAR_USER')
     commit('CLEAR_PERMISSIONS')
+    commit('CLEAR_LOG')
   }
 }
 

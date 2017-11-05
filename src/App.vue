@@ -69,8 +69,17 @@
     </div>
     <!-- Right Side Panel -->
     <div slot="right">
-      <!-- TODO: Vuex for every section* -->
-      Logs
+      <!-- TODO: Temporary -->
+      <q-list highlight>
+        <q-list-header>Log</q-list-header>
+        <q-item v-for="(item, index) in $store.state.vk.log" :key="index">
+          <q-item-main>
+            <q-item-tile label>{{ item.message }}</q-item-tile>
+            <q-item-tile sublabel>{{ item.section }}</q-item-tile>
+          </q-item-main>
+        </q-item>
+      </q-list>
+
     </div>
     <!-- sub-routes get injected here: -->
     <div style="padding: 20px;">
@@ -95,7 +104,9 @@
     QListHeader,
     QScrollArea,
     QList,
-    QChip
+    QChip,
+    QItem,
+    QItemTile
   } from 'quasar'
 
   export default {
@@ -114,7 +125,9 @@
       QListHeader,
       QScrollArea,
       QList,
-      QChip
+      QChip,
+      QItem,
+      QItemTile
     },
     computed: {
       linkFriends () {
