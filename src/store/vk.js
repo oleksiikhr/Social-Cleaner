@@ -53,14 +53,19 @@ const mutations = {
   CLEAR_USER (state) {
     state.user = {}
   },
-  WALL_COUNTER_DECREMENT (state) {
-    state.user.counters.wall -= 1
-  },
   ADD_LOG (state, obj) {
     state.log.unshift(obj)
   },
   CLEAR_LOG (state) {
     state.log = []
+  },
+  COUNTER_USER_DECREMENT (state, key) {
+    let val = state.user.counters[key]
+    Vue.set(state.user.counters, key, val && val > 0 ? --val : 0)
+  },
+  SET_USER_COUNTER (state, obj) {
+    /** @see https://vuejs.org/v2/guide/list.html#Caveats */
+    Vue.set(state.user.counters, obj.key, obj.val)
   }
 }
 
@@ -74,8 +79,11 @@ const actions = {
   setUser: ({commit}, obj) => {
     commit('SET_USER', obj)
   },
-  wallCounterDecrement: ({commit}) => {
-    commit('WALL_COUNTER_DECREMENT')
+  counterUserDecrement: ({commit}, key) => {
+    commit('COUNTER_USER_DECREMENT', key)
+  },
+  setUserCounter: ({commit}, obj) => {
+    commit('SET_USER_COUNTER', obj)
   },
   addLog: ({commit}, obj) => {
     commit('ADD_LOG', obj)

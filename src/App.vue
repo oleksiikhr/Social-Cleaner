@@ -49,16 +49,12 @@
         <q-side-link :disabled="!linkWall" item :to="linkWall">
           <q-item-side icon="dashboard" />
           <q-item-main label="Wall" sublabel="https://vk.com/dev/wall" />
-          <q-chip v-if="linkWall && $store.state.vk.user.counters" small color="primary">
-            {{ $store.state.vk.user.counters.wall ? $store.state.vk.user.counters.wall : '?' }}
-          </q-chip>
+          <q-chip v-if="$store.state.vk.user.counters && linkWall" small color="primary">{{ countWall }}</q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkDocs" item :to="linkDocs">
           <q-item-side icon="bookmark" />
           <q-item-main label="Docs" sublabel="https://vk.com/dev/docs" />
-          <q-chip v-if="linkDocs && $store.state.vk.user.counters" small color="primary">
-            {{ $store.state.vk.user.counters.docs ? $store.state.vk.user.counters.docs : '?' }}
-          </q-chip>
+          <q-chip v-if="$store.state.vk.user.counters && linkDocs" small color="primary">{{ $store.state.vk.user.counters.docs }}</q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkGroups" item :to="linkGroups">
           <q-item-side icon="people" />
@@ -152,11 +148,26 @@
       },
       linkGroups () {
         return this.$store.state.vk.access.groups ? '/groups' : ''
+      },
+      countWall () {
+        if (typeof this.$store.state.vk.user.counters.wall === 'undefined') {
+          return '?'
+        }
+        return this.$store.state.vk.user.counters.wall || 0
+      },
+      countDocs () {
+        if (typeof this.$store.state.vk.user.counters.docs === 'undefined') {
+          return '?'
+        }
+        return this.$store.state.vk.user.counters.docs || 0
       }
     },
     methods: {
       linkGithub () {
         return window.open('https://github.com/Alexeykhr', '_blank')
+      },
+      exit () {
+        this.$store.dispatch('exit')
       }
     }
   }

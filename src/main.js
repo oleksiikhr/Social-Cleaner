@@ -31,6 +31,7 @@ import 'quasar-extras/material-icons'
 // import 'quasar-extras/fontawesome'
 // import 'quasar-extras/animate'
 
+// TODO: global error => exit from App*
 Vue.http.interceptor.before = (request, next) => {
   request.emulateJSON = true
   request.emulateHTTP = true

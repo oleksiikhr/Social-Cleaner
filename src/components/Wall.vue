@@ -10,7 +10,7 @@
           <q-input v-model="offset" :disabled="processDelete" type="number" float-label="Offset" />
         </div>
       </div>
-      <q-field icon="label" count helper="Example: 351, 16" style="margin-bottom: 2rem;">
+      <q-field icon="label" count helper="Press: Enter" style="margin-bottom: 2rem;">
         <q-chips-input :disabled="processDelete" float-label="ID's undelete posts" v-model="itemsNoDelete" />
       </q-field>
       <q-btn icon="delete" color="red" loader outline class="full-width" v-model="processDelete"
@@ -51,8 +51,8 @@
           .then(res => {
             if (res.body.response) {
               this.wall = res.body.response
-              this.$store.state.vk.user.counters.wall = res.body.response.count
               this.count = res.body.response.count
+              this.$store.dispatch('setUserCounter', { key: 'wall', val: this.count })
             }
             else {
               Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Error from VK' })
@@ -66,7 +66,7 @@
 
         if (offset >= this.offset + this.count) {
           this.processDelete = false
-          return Toast.create.positive({ html: 'All posts deleted' })
+          return Toast.create.positive({ html: 'Posts deleted' })
         }
 
         sleep(randomInteger(500, 3000)).then(() => {
@@ -88,9 +88,9 @@
                 })
                   .then(res => {
                     if (res.body.response) {
-                      this.$store.dispatch('wallCounterDecrement')
+                      this.$store.dispatch('counterUserDecrement', 'wall')
                       this.$store.dispatch('addLog', { message: 'Deleted id: ' + id, section: 'wall' })
-                      this.count -= 1
+                      this.count--
                       return this.fetchDeleteWall(offset)
                     }
                     this.processDelete = false
