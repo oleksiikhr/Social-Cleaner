@@ -97,7 +97,6 @@
                     return Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'No deleted' })
                   }, res => {
                     this.processDelete = false
-                    return Toast.create.negative({ html: 'Error from VK' })
                   })
               }
               else {
@@ -106,7 +105,6 @@
               }
             }, res => {
               this.processDelete = false
-              return Toast.create.negative({ html: 'Error from VK' })
             })
         })
       }

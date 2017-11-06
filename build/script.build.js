@@ -10,7 +10,7 @@ var
   config = require('../config'),
   webpack = require('webpack'),
   webpackConfig = require('./webpack.prod.conf'),
-  targetPath = path.join(__dirname, '../dist')
+  targetPath = path.join(__dirname, '../docs')
 
 console.log(' WARNING!'.bold)
 console.log(' Do NOT use VueRouter\'s "history" mode if')
@@ -25,7 +25,7 @@ shell.cp('-R', 'src/statics', targetPath)
 function finalize () {
   console.log((
     '\n Build complete with "' + env.platform.theme.bold + '" theme in ' +
-    '"/dist"'.bold + ' folder.\n').cyan)
+    '"/docs"'.bold + ' folder.\n').cyan)
 
   console.log(' Built files are meant to be served over an HTTP server.'.bold)
   console.log(' Opening index.html over file:// won\'t work.'.bold)

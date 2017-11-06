@@ -6,7 +6,7 @@
         <q-icon name="menu" />
       </q-btn>
       <q-toolbar-title>
-        VK Clean
+        Cleaner Social
       </q-toolbar-title>
       <q-btn flat @click.native="linkGithub">
         <q-icon name="link" />
