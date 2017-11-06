@@ -1,6 +1,4 @@
-# VK clean
-
-> Data cleaning
+# Social Cleaner
 
 ## Build Setup
 
