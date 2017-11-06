@@ -24,7 +24,7 @@
 
 <script>
   import { Toast, QSpinnerCube, QField, QChipsInput, QInput, QBtn } from 'quasar'
-  import { get } from '../helpers/vk'
+  import { get } from '../../helpers/vk'
 
   export default {
     components: {

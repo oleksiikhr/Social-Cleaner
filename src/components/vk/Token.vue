@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import { clientId, urlOauth, version, get } from '../helpers/vk'
+  import { clientId, urlOauth, version, get } from '../../helpers/vk'
   import { QOptionGroup, QBtn, Toast, QInput, QAlert } from 'quasar'
 
   export default {

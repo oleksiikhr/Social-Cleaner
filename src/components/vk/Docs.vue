@@ -4,7 +4,7 @@
 
 <script>
   import { Toast } from 'quasar'
-  import { get } from '../helpers/vk'
+  import { get } from '../../helpers/vk'
 
   export default {
     data () {

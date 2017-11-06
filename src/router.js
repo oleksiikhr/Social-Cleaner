@@ -21,18 +21,31 @@ const router = new VueRouter({
    * build publicPath back to '' so Cordova builds work again.
    */
 
-  mode: 'hash',
+  mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
 
   routes: [
-    { path: '/', name: 'dashboard', component: load('Dashboard') },
-    { path: '/token', name: 'token', component: load('Token') },
-    { path: '/friends', name: 'friends', component: load('Friends') },
-    { path: '/wall', name: 'wall', component: load('Wall') },
-    { path: '/docs', name: 'docs', component: load('Docs') },
-
-    // Always leave this last one
-    { path: '*', component: load('Error404') } // Not found
+    {
+      path: '/',
+      name: 'dashboard',
+      component: load('Dashboard')
+    },
+    {
+      path: '/vk',
+      name: 'vk-dashboard',
+      component: load('vk/Dashboard'),
+      children: [
+        { path: 'token', name: 'vk-token', component: load('vk/Token') },
+        { path: 'friends', name: 'vk-friends', component: load('vk/Friends') },
+        { path: 'wall', name: 'vk-wall', component: load('vk/Wall') },
+        { path: 'docs', name: 'vk-docs', component: load('vk/Docs') }
+      ]
+    },
+    {
+      path: '*',
+      name: 'error404',
+      component: load('Error404')
+    }
   ]
 })
 

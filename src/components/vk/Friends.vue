@@ -4,7 +4,7 @@
 
 <script>
   // TODO: complete in future
-  import { get } from '../helpers/vk'
+  import { get } from '../../helpers/vk'
 
   export default {
     created () {

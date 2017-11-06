@@ -19,7 +19,7 @@
     <div slot="left">
       <q-list no-border link inset-separator>
         <q-list-header>Sections</q-list-header>
-        <q-side-link item to="/token">
+        <q-side-link item :to="linkToken">
           <q-item-side icon="vpn_key" />
           <q-item-main label="Token" sublabel="https://vk.com/dev/access_token" />
         </q-side-link>
@@ -54,7 +54,7 @@
         <q-side-link :disabled="!linkDocs" item :to="linkDocs">
           <q-item-side icon="bookmark" />
           <q-item-main label="Docs" sublabel="https://vk.com/dev/docs" />
-          <q-chip v-if="$store.state.vk.user.counters && linkDocs" small color="primary">{{ $store.state.vk.user.counters.docs }}</q-chip>
+          <q-chip v-if="$store.state.vk.user.counters && linkDocs" small color="primary">{{ countDocs }}</q-chip>
         </q-side-link>
         <q-side-link :disabled="!linkGroups" item :to="linkGroups">
           <q-item-side icon="people" />
@@ -74,7 +74,6 @@
           </q-item-main>
         </q-item>
       </q-list>
-
     </div>
     <!-- sub-routes get injected here: -->
     <div style="padding: 20px;">
@@ -125,29 +124,32 @@
       QItemTile
     },
     computed: {
+      linkToken () {
+        return '/vk/token'
+      },
       linkFriends () {
-        return this.$store.state.vk.access.friends ? '/friends' : ''
+        return this.$store.state.vk.access.friends ? '/vk/friends' : ''
       },
       linkPhotos () {
-        return this.$store.state.vk.access.photos ? '/photos' : ''
+        return this.$store.state.vk.access.photos ? '/vk/photos' : ''
       },
       linkVideo () {
-        return this.$store.state.vk.access.video ? '/video' : ''
+        return this.$store.state.vk.access.video ? '/vk/video' : ''
       },
       linkStatus () {
-        return this.$store.state.vk.access.status ? '/status' : ''
+        return this.$store.state.vk.access.status ? '/vk/status' : ''
       },
       linkMessages () {
-        return this.$store.state.vk.access.messages ? '/messages' : ''
+        return this.$store.state.vk.access.messages ? '/vk/messages' : ''
       },
       linkWall () {
-        return this.$store.state.vk.access.wall ? '/wall' : ''
+        return this.$store.state.vk.access.wall ? '/vk/wall' : ''
       },
       linkDocs () {
-        return this.$store.state.vk.access.docs ? '/docs' : ''
+        return this.$store.state.vk.access.docs ? '/vk/docs' : ''
       },
       linkGroups () {
-        return this.$store.state.vk.access.groups ? '/groups' : ''
+        return this.$store.state.vk.access.groups ? '/vk/groups' : ''
       },
       countWall () {
         if (typeof this.$store.state.vk.user.counters.wall === 'undefined') {
