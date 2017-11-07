@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: Blocks -->
   <span>General Dashboard</span>
 </template>
 

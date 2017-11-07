@@ -7,8 +7,8 @@ require(`quasar/dist/quasar.${__THEME}.css`)
 // ==============================
 
 // Uncomment the following lines if you need IE11/Edge support
-// require(`quasar/dist/quasar.ie`)
-// require(`quasar/dist/quasar.ie.${__THEME}.css`)
+require(`quasar/dist/quasar.ie`)
+require(`quasar/dist/quasar.ie.${__THEME}.css`)
 
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -19,7 +19,7 @@ import store from 'store/index'
 import { version } from 'helpers/vk'
 
 Vue.config.productionTip = false
-Vue.use(Quasar) // Install Quasar Framework
+Vue.use(Quasar)
 Vue.use(Vuex)
 Vue.use(VueResource)
 
@@ -35,7 +35,6 @@ import 'quasar-extras/fontawesome'
 Vue.http.interceptor.before = (request, next) => {
   request.emulateJSON = true
   request.emulateHTTP = true
-  request.params.v = version
 
   next((res) => {
     var body = res.body
@@ -52,9 +51,11 @@ Vue.http.interceptor.before = (request, next) => {
       return console.log('Error: Response format')
     }
 
+    console.log(res)
+
     if (body.error && body.error.error_code === 5 && store.state.vk.user) {
       store.dispatch('exit')
-      router.push({ name: 'token' })
+      router.push({ name: 'vk-token' })
     }
   })
 }

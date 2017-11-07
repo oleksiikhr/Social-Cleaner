@@ -8,7 +8,7 @@
         </q-item-main>
       </q-item>
     </q-list>
-    <div class="text-center centered" style="padding: 20px;" v-else>
+    <div class="q-list-header" style="padding-top: 8px;" v-else>
       Logs
     </div>
   </div>

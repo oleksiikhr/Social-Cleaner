@@ -4,7 +4,7 @@
 
 <script>
   import { Toast } from 'quasar'
-  import { get } from '../../helpers/vk'
+  import { jsonp } from '../../helpers/vk'
 
   export default {
     data () {
@@ -17,7 +17,7 @@
     },
     methods: {
       fetchGetDocs () {
-        get('docs.get', {
+        jsonp('docs.get', {
           access_token: this.$store.state.vk.token
         })
           .then(res => {

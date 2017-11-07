@@ -2,7 +2,7 @@
   <q-layout id="q-app" ref="layout" view="hHh LpR fff" :right-breakpoint="1100">
     <!-- Header -->
     <q-toolbar slot="header">
-      <q-btn flat @click="$refs.layout.toggleLeft()" v-if="$store.state.templates.leftSide">
+      <q-btn flat @click="$refs.layout.toggleLeft()" :disabled="!$store.state.templates.leftSide">
         <q-icon name="menu" />
       </q-btn>
       <q-toolbar-title>
@@ -12,12 +12,12 @@
         </span>
       </q-toolbar-title>
       <q-btn flat @click.native="linkBasic">
-        <q-icon name="dashboard" />
+        <q-icon name="home" />
       </q-btn>
       <q-btn flat @click.native="linkVk">
         <q-icon name="fa-vk" />
       </q-btn>
-      <q-btn flat @click="$refs.layout.toggleRight()" v-if="$store.state.templates.rightSide">
+      <q-btn flat @click="$refs.layout.toggleRight()" :disabled="!$store.state.templates.rightSide">
         <q-icon name="menu" />
       </q-btn>
     </q-toolbar>

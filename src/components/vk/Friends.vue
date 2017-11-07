@@ -4,12 +4,12 @@
 
 <script>
   // TODO: complete in future
-  import { get } from '../../helpers/vk'
+  import { jsonp } from '../../helpers/vk'
 
   export default {
     created () {
       // TODO: If not in the store
-      get('friends.get', {
+      jsonp('friends.get', {
         count: 10000,
         access_token: this.$store.state.vk.token
       })

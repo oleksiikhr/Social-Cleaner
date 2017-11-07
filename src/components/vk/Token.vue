@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import { clientId, urlOauth, version, get } from '../../helpers/vk'
+  import { clientId, urlOauth, version, jsonp } from '../../helpers/vk'
   import { QOptionGroup, QBtn, Toast, QInput, QAlert } from 'quasar'
 
   export default {
@@ -66,7 +66,7 @@
         if (!this.token) {
           return Toast.create.negative({ html: 'The token is empty' })
         }
-        get('account.getAppPermissions', {
+        jsonp('account.getAppPermissions', {
           access_token: this.token
         })
           .then(res => {
@@ -84,9 +84,8 @@
           })
       },
       fetchGetUser () {
-        get('users.get', {
-          fields: 'has_photo,photo_100,counters',
-          access_token: this.token
+        jsonp('users.get', {
+          fields: 'has_photo,photo_100,counters'
         })
           .then(res => {
             if (res.body.response) {

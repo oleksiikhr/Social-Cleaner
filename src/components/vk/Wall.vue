@@ -24,7 +24,7 @@
 
 <script>
   import { Toast, QSpinnerCube, QField, QChipsInput, QInput, QBtn } from 'quasar'
-  import { get } from '../../helpers/vk'
+  import { jsonp } from '../../helpers/vk'
 
   export default {
     components: {
@@ -44,8 +44,7 @@
     },
     methods: {
       fetchGetWall () {
-        get('wall.get', {
-          access_token: this.$store.state.vk.token,
+        jsonp('wall.get', {
           count: 1
         })
           .then(res => {
@@ -70,8 +69,7 @@
         }
 
         sleep(randomInteger(500, 3000)).then(() => {
-          get('wall.get', {
-            access_token: this.$store.state.vk.token,
+          jsonp('wall.get', {
             offset: offset + 1,
             count: 1
           })
@@ -82,8 +80,7 @@
                   this.$store.dispatch('addLog', { message: 'Saved id: ' + id, section: 'wall' })
                   return this.fetchDeleteWall(offset)
                 }
-                get('wall.delete', {
-                  access_token: this.$store.state.vk.token,
+                jsonp('wall.delete', {
                   post_id: id
                 })
                   .then(res => {
