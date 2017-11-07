@@ -1,5 +1,5 @@
 <template>
-  <div id="token">
+  <div id="token" style="padding: 20px;">
     <template v-if="!haveToken">
       <h5>Getting a token</h5>
       <p class="caption">To run most API methods you need to pass an access_token, a special access key.

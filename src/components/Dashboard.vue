@@ -4,6 +4,9 @@
 
 <script>
   export default {
-
+    created () {
+      this.$store.dispatch('clearTemplateLeftSide')
+      this.$store.dispatch('clearTemplateRightSide')
+    }
   }
 </script>
