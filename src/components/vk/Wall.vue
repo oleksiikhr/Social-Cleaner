@@ -1,5 +1,6 @@
 <template>
   <div id="wall" style="padding: 0 20px 20px;">
+    <!-- TODO: btn for update -->
     <h4 style="margin: 0; padding: 15px 0 10px">Wall</h4>
     <template v-if="'items' in wall">
       <div class="row">
@@ -14,7 +15,7 @@
         <q-chips-input :disabled="processDelete" float-label="ID's undelete posts" v-model="itemsNoDelete" />
       </q-field>
       <q-btn icon="delete" color="red" loader outline class="full-width" v-model="processDelete"
-             :disabled="count < 1" @click.native="fetchDeleteWall(offset)">
+             :disabled="count < 1" @click.native="fetchGetPostsForDelete(offset, count)">
         Delete
       </q-btn>
     </template>
@@ -36,72 +37,82 @@
         itemsNoDelete: [],
         count: 1,
         offset: 0,
+        pass: 50,
         processDelete: false
       }
     },
     created () {
-      this.fetchGetWall()
+      jsonp('wall.get', {
+        count: 1
+      })
+        .then(res => {
+          if (res.body.response) {
+            this.wall = res.body.response
+            this.count = res.body.response.count
+            this.$store.dispatch('vkSetUserCounter', { key: 'wall', val: this.count })
+          }
+          else {
+            Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Error from VK' })
+          }
+        }, res => {
+          Toast.create.negative({ html: 'Error from VK' })
+        })
     },
     methods: {
-      fetchGetWall () {
-        jsonp('wall.get', {
-          count: 1
-        })
-          .then(res => {
-            if (res.body.response) {
-              this.wall = res.body.response
-              this.count = res.body.response.count
-              this.$store.dispatch('vkSetUserCounter', { key: 'wall', val: this.count })
-            }
-            else {
-              Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Error from VK' })
-            }
-          }, res => {
-            Toast.create.negative({ html: 'Error from VK' })
-          })
-      },
-      fetchDeleteWall (offset) {
+      fetchGetPostsForDelete (offset, count) {
         this.processDelete = true
 
-        if (offset >= this.offset + this.count) {
+        if (offset >= count) {
           this.processDelete = false
-          return Toast.create.positive({ html: 'Posts deleted' })
+          Toast.create.negative({ html: 'Wall: posts deleted' })
+          return this.$store.dispatch('vkAddLog', { message: 'Complete', section: 'wall', type: 'success' })
         }
 
-        sleep(randomInteger(500, 3000)).then(() => {
-          jsonp('wall.get', {
-            offset: offset + 1,
-            count: 1
+        jsonp('wall.get', {
+          offset: offset,
+          count: this.pass
+        })
+          .then(res => {
+            if (res.body.response && res.body.response.items.length) {
+              this.$store.dispatch('vkAddLog', { message: 'Received new posts for removal', section: 'wall', type: 'info' })
+              return this.fetchDeletePost(res.body.response.items, 0, offset, count)
+            }
+          }, res => {
+            this.processDelete = false
+            Toast.create.negative({ html: 'Wall: stop deleting' })
+            return this.$store.dispatch('vkAddLog', { message: 'Stop deleting', section: 'wall', type: 'error' })
+          })
+      },
+      fetchDeletePost (items, index, offset, count) {
+        if (typeof items[index] === 'undefined') {
+          return this.fetchGetPostsForDelete(offset, count - this.pass)
+        }
+
+        let item = items[index]
+        delete items[index]
+
+        if (this.itemsNoDelete.indexOf(item.id.toString()) > -1) {
+          this.$store.dispatch('vkAddLog', { message: 'Saved id: ' + item.id, section: 'wall', type: 'success' })
+          return this.fetchDeletePost(items, ++index, offset, count)
+        }
+
+        sleep(randomInteger(500, 2000)).then(() => {
+          jsonp('wall.delete', {
+            post_id: item.id
           })
             .then(res => {
-              if (res.body.response && res.body.response.items.length) {
-                let id = res.body.response.items[0].id
-                if (this.itemsNoDelete.indexOf(id.toString()) > -1) {
-                  this.$store.dispatch('vkAddLog', { message: 'Saved id: ' + id, section: 'wall' })
-                  return this.fetchDeleteWall(offset)
-                }
-                jsonp('wall.delete', {
-                  post_id: id
-                })
-                  .then(res => {
-                    if (res.body.response) {
-                      this.$store.dispatch('vkCounterUserDecrement', 'wall')
-                      this.$store.dispatch('vkAddLog', { message: 'Deleted id: ' + id, section: 'wall' })
-                      this.count--
-                      return this.fetchDeleteWall(offset)
-                    }
-                    this.processDelete = false
-                    return Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'No deleted' })
-                  }, res => {
-                    this.processDelete = false
-                  })
-              }
-              else {
-                this.processDelete = false
-                return Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'No items' })
-              }
+              this.$store.dispatch('vkAddLog', {
+                message: res.body.response ? 'Deleted id: ' + item.id : 'Not deleted id: ' + item.id,
+                section: 'wall',
+                type: res.body.response ? 'success' : 'error'
+              })
+              this.$store.dispatch('vkCounterUserDecrement', 'wall')
+              this.count--
+              return this.fetchDeletePost(items, ++index, offset, count)
             }, res => {
               this.processDelete = false
+              Toast.create.negative({ html: 'Wall: stop deleting' })
+              return this.$store.dispatch('vkAddLog', { message: 'Stop deleting', section: 'wall', type: 'error' })
             })
         })
       }

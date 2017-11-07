@@ -51,7 +51,7 @@ Vue.http.interceptor.before = (request, next) => {
 
     if (res.url.indexOf('api.vk.com') > -1) {
       if (body.error && body.error.error_code === 5 && store.state.vk.user) {
-        store.dispatch('exit')
+        store.dispatch('vkExit')
         router.push({ name: 'vk-token' })
       }
     }
