@@ -20,13 +20,13 @@ const state = {
 }
 
 const mutations = {
-  SET_TOKEN (state, token) {
+  VK_SET_TOKEN (state, token) {
     state.token = token
   },
-  CLEAR_TOKEN (state) {
+  VK_CLEAR_TOKEN (state) {
     state.token = null
   },
-  SET_PERMISSIONS (state, number) {
+  VK_SET_PERMISSIONS (state, number) {
     /** @see https://vk.com/dev/permissions Bitmask */
     state.access.friends = !!(number & 2)
     state.access.photos = !!(number & 4)
@@ -37,7 +37,7 @@ const mutations = {
     state.access.docs = !!(number & 1311072)
     state.access.groups = !!(number & 262144)
   },
-  CLEAR_PERMISSIONS (state) {
+  VK_CLEAR_PERMISSIONS (state) {
     state.access.friends = false
     state.access.photos = false
     state.access.video = false
@@ -47,52 +47,52 @@ const mutations = {
     state.access.docs = false
     state.access.groups = false
   },
-  SET_USER (state, obj) {
+  VK_SET_USER (state, obj) {
     state.user = obj
   },
-  CLEAR_USER (state) {
+  VK_CLEAR_USER (state) {
     state.user = {}
   },
-  ADD_LOG (state, obj) {
+  VK_ADD_LOG (state, obj) {
     state.log.unshift(obj)
   },
-  CLEAR_LOG (state) {
+  VK_CLEAR_LOG (state) {
     state.log = []
   },
-  COUNTER_USER_DECREMENT (state, key) {
+  VK_COUNTER_USER_DECREMENT (state, key) {
     let val = state.user.counters[key]
     Vue.set(state.user.counters, key, val && val > 0 ? --val : 0)
   },
-  SET_USER_COUNTER (state, obj) {
+  VK_SET_USER_COUNTER (state, obj) {
     /** @see https://vuejs.org/v2/guide/list.html#Caveats */
     Vue.set(state.user.counters, obj.key, obj.val)
   }
 }
 
 const actions = {
-  setToken: ({commit}, token) => {
-    commit('SET_TOKEN', token)
+  vkSetToken: ({commit}, token) => {
+    commit('VK_SET_TOKEN', token)
   },
-  setPermissions: ({commit}, number) => {
-    commit('SET_PERMISSIONS', number)
+  vkSetPermissions: ({commit}, number) => {
+    commit('VK_SET_PERMISSIONS', number)
   },
-  setUser: ({commit}, obj) => {
-    commit('SET_USER', obj)
+  vkSetUser: ({commit}, obj) => {
+    commit('VK_SET_USER', obj)
   },
-  counterUserDecrement: ({commit}, key) => {
-    commit('COUNTER_USER_DECREMENT', key)
+  vkCounterUserDecrement: ({commit}, key) => {
+    commit('VK_COUNTER_USER_DECREMENT', key)
   },
-  setUserCounter: ({commit}, obj) => {
-    commit('SET_USER_COUNTER', obj)
+  vkSetUserCounter: ({commit}, obj) => {
+    commit('VK_SET_USER_COUNTER', obj)
   },
-  addLog: ({commit}, obj) => {
-    commit('ADD_LOG', obj)
+  vkAddLog: ({commit}, obj) => {
+    commit('VK_ADD_LOG', obj)
   },
-  exit: ({commit}) => {
-    commit('CLEAR_TOKEN')
-    commit('CLEAR_USER')
-    commit('CLEAR_PERMISSIONS')
-    commit('CLEAR_LOG')
+  vkExit: ({commit}) => {
+    commit('VK_CLEAR_TOKEN')
+    commit('VK_CLEAR_USER')
+    commit('VK_CLEAR_PERMISSIONS')
+    commit('VK_CLEAR_LOG')
   }
 }
 

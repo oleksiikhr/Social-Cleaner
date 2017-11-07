@@ -43,7 +43,7 @@ webpack(webpackConfig, function (err, stats) {
   }) + '\n')
 
   if (stats.hasErrors()) {
-    process.exit(1)
+    process.vkExit(1)
   }
 
   if (config.build.purifyCSS) {

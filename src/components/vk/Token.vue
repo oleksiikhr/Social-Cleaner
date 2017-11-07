@@ -71,8 +71,8 @@
         })
           .then(res => {
             if (res.body.response) {
-              this.$store.dispatch('setPermissions', res.body.response)
-              this.$store.dispatch('setToken', this.token)
+              this.$store.dispatch('vkSetPermissions', res.body.response)
+              this.$store.dispatch('vkSetToken', this.token)
               this.fetchGetUser()
               Toast.create.positive({ html: 'Token installed' })
               this.token = ''
@@ -89,7 +89,7 @@
         })
           .then(res => {
             if (res.body.response) {
-              this.$store.dispatch('setUser', res.body.response[0])
+              this.$store.dispatch('vkSetUser', res.body.response[0])
             }
             else {
               Toast.create.negative({ html: 'User not received' })
@@ -100,6 +100,9 @@
         this.seePlaceWriteToken = true
         window.open(urlOauth + '?client_id=' + clientId + '&display=page&redirect_uri=https://oauth.vk.com/blank.html' +
           '&scope=' + this.scope.join(',') + '&response_type=token&v=' + version, '_blank')
+      },
+      exit () {
+        this.$store.dispatch('vkExit')
       }
     }
   }

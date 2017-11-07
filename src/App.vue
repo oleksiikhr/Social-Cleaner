@@ -100,9 +100,6 @@
       },
       linkBasic () {
         return this.$router.push({ name: 'dashboard' })
-      },
-      exit () {
-        this.$store.dispatch('exit')
       }
     }
   }

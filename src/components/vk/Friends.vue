@@ -10,8 +10,7 @@
     created () {
       // TODO: If not in the store
       jsonp('friends.get', {
-        count: 10000,
-        access_token: this.$store.state.vk.token
+        count: 10000
       })
         .then(res => {
           console.log(res.body)

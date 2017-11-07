@@ -51,7 +51,7 @@
             if (res.body.response) {
               this.wall = res.body.response
               this.count = res.body.response.count
-              this.$store.dispatch('setUserCounter', { key: 'wall', val: this.count })
+              this.$store.dispatch('vkSetUserCounter', { key: 'wall', val: this.count })
             }
             else {
               Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Error from VK' })
@@ -77,7 +77,7 @@
               if (res.body.response && res.body.response.items.length) {
                 let id = res.body.response.items[0].id
                 if (this.itemsNoDelete.indexOf(id.toString()) > -1) {
-                  this.$store.dispatch('addLog', { message: 'Saved id: ' + id, section: 'wall' })
+                  this.$store.dispatch('vkAddLog', { message: 'Saved id: ' + id, section: 'wall' })
                   return this.fetchDeleteWall(offset)
                 }
                 jsonp('wall.delete', {
@@ -85,8 +85,8 @@
                 })
                   .then(res => {
                     if (res.body.response) {
-                      this.$store.dispatch('counterUserDecrement', 'wall')
-                      this.$store.dispatch('addLog', { message: 'Deleted id: ' + id, section: 'wall' })
+                      this.$store.dispatch('vkCounterUserDecrement', 'wall')
+                      this.$store.dispatch('vkAddLog', { message: 'Deleted id: ' + id, section: 'wall' })
                       this.count--
                       return this.fetchDeleteWall(offset)
                     }

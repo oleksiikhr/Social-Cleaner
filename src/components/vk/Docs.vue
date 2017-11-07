@@ -17,9 +17,7 @@
     },
     methods: {
       fetchGetDocs () {
-        jsonp('docs.get', {
-          access_token: this.$store.state.vk.token
-        })
+        jsonp('docs.get')
           .then(res => {
             if (res.body.response) {
               this.docs = res.body.response
