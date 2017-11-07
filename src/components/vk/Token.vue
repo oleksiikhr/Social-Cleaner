@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import { clientId, urlOauth, version, jsonp } from '../../helpers/vk'
+  import { clientId, urlOauth, version, redirectUri, jsonp } from '../../helpers/vk'
   import { QOptionGroup, QBtn, Toast, QInput, QAlert } from 'quasar'
 
   export default {
@@ -98,7 +98,7 @@
       },
       linkGetToken () {
         this.seePlaceWriteToken = true
-        window.open(urlOauth + '?client_id=' + clientId + '&display=page&redirect_uri=https://oauth.vk.com/blank.html' +
+        window.open(urlOauth + '?client_id=' + clientId + '&display=page&redirect_uri=' + redirectUri +
           '&scope=' + this.scope.join(',') + '&response_type=token&v=' + version, '_blank')
       },
       exit () {

@@ -3,6 +3,7 @@ import store from 'store/index'
 
 export const urlOauth = 'https://oauth.vk.com/authorize/'
 export const urlApi = 'https://api.vk.com/method/'
+export const redirectUri = 'https://alexeykhr.github.io/Social-Cleaner/' // https://oauth.vk.com/blank.html
 export const clientId = 6244330
 export const version = '5.69'
 
