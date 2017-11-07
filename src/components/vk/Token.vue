@@ -29,7 +29,7 @@
         Get a token
       </q-btn>
       <q-input v-if="seePlaceWriteToken" v-model="token" clearable type="password" color="red" stack-label="Token insert here"
-               :after="[{icon: 'done', handler () { fetchGetPermissions() }}]"/>
+               autofocus :after="[{icon: 'done', handler () { fetchGetPermissions() }}]"/>
     </template>
 
     <template v-else>

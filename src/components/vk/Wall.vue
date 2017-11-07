@@ -1,6 +1,6 @@
 <template>
   <div id="wall" style="padding: 0 20px 20px;">
-    <h4>Wall</h4>
+    <h4 style="margin: 0; padding: 15px 0 10px">Wall</h4>
     <template v-if="'items' in wall">
       <div class="row">
         <div class="col">
