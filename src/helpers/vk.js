@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import store from 'store/index'
+import store from '../store/index'
 
 export const urlOauth = 'https://oauth.vk.com/authorize/'
 export const urlApi = 'https://api.vk.com/method/'

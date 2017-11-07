@@ -21,3 +21,6 @@ $ quasar build
 # lint code
 $ quasar lint
 ```
+
+## License
+MIT
