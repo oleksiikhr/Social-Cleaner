@@ -54,6 +54,10 @@ const mutations = {
     state.user = {}
   },
   VK_ADD_LOG (state, obj) {
+    // TODO: if items > 100 => delete last*
+    if (obj.type && ['positive', 'negative', 'warning', 'info'].indexOf(obj.type) === -1) {
+      console.log('Log: error the type', obj)
+    }
     state.log.unshift(obj)
   },
   VK_CLEAR_LOG (state) {

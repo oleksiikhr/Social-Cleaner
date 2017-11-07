@@ -1,5 +1,11 @@
 # Social Cleaner
 
+> In developing..
+
+## TODO
+
+- I18n: https://github.com/kazupon/vue-i18n
+
 ## Build Setup
 
 ``` bash

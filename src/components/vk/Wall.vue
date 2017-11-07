@@ -1,6 +1,8 @@
 <template>
   <div id="wall" style="padding: 0 20px 20px;">
-    <!-- TODO: btn for update -->
+    <!-- TODO: Btn for update count -->
+    <!-- TODO: Design -->
+    <!-- TODO: Show post  -->
     <h4 style="margin: 0; padding: 15px 0 10px">Wall</h4>
     <template v-if="'items' in wall">
       <div class="row">
@@ -42,30 +44,31 @@
       }
     },
     created () {
-      jsonp('wall.get', {
-        count: 1
-      })
-        .then(res => {
-          if (res.body.response) {
-            this.wall = res.body.response
-            this.count = res.body.response.count
-            this.$store.dispatch('vkSetUserCounter', { key: 'wall', val: this.count })
-          }
-          else {
-            Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Error from VK' })
-          }
-        }, res => {
-          Toast.create.negative({ html: 'Error from VK' })
-        })
+      this.fetchGetPosts()
     },
     methods: {
+      fetchGetPosts (count) {
+        jsonp('wall.get', {
+          count: count
+        })
+          .then(res => {
+            if (res.body.response) {
+              this.wall = res.body.response
+              this.count = res.body.response.count
+              this.$store.dispatch('vkSetUserCounter', { key: 'wall', val: this.count })
+            }
+            else {
+              Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Error: Wall' })
+            }
+          })
+      },
       fetchGetPostsForDelete (offset, count) {
         this.processDelete = true
 
         if (offset >= count) {
           this.processDelete = false
-          Toast.create.negative({ html: 'Wall: posts deleted' })
-          return this.$store.dispatch('vkAddLog', { message: 'Complete', section: 'wall', type: 'success' })
+          Toast.create.positive({ html: 'Wall: posts deleted' })
+          return this.$store.dispatch('vkAddLog', { message: 'Delete complete', icon: 'dashboard', type: 'positive' })
         }
 
         jsonp('wall.get', {
@@ -74,13 +77,13 @@
         })
           .then(res => {
             if (res.body.response && res.body.response.items.length) {
-              this.$store.dispatch('vkAddLog', { message: 'Received new posts for removal', section: 'wall', type: 'info' })
+              this.$store.dispatch('vkAddLog', { message: 'Receiving posts for removal', icon: 'dashboard', type: 'info' })
               return this.fetchDeletePost(res.body.response.items, 0, offset, count)
             }
           }, res => {
             this.processDelete = false
             Toast.create.negative({ html: 'Wall: stop deleting' })
-            return this.$store.dispatch('vkAddLog', { message: 'Stop deleting', section: 'wall', type: 'error' })
+            return this.$store.dispatch('vkAddLog', { message: 'Stop deleting', icon: 'dashboard', type: 'negative' })
           })
       },
       fetchDeletePost (items, index, offset, count) {
@@ -92,7 +95,7 @@
         delete items[index]
 
         if (this.itemsNoDelete.indexOf(item.id.toString()) > -1) {
-          this.$store.dispatch('vkAddLog', { message: 'Saved id: ' + item.id, section: 'wall', type: 'success' })
+          this.$store.dispatch('vkAddLog', { message: 'Saved id: ' + item.id, icon: 'dashboard', type: 'positive' })
           return this.fetchDeletePost(items, ++index, offset, count)
         }
 
@@ -103,8 +106,8 @@
             .then(res => {
               this.$store.dispatch('vkAddLog', {
                 message: res.body.response ? 'Deleted id: ' + item.id : 'Not deleted id: ' + item.id,
-                section: 'wall',
-                type: res.body.response ? 'success' : 'error'
+                icon: 'dashboard',
+                type: res.body.response ? 'positive' : 'negative'
               })
               this.$store.dispatch('vkCounterUserDecrement', 'wall')
               this.count--
@@ -112,7 +115,7 @@
             }, res => {
               this.processDelete = false
               Toast.create.negative({ html: 'Wall: stop deleting' })
-              return this.$store.dispatch('vkAddLog', { message: 'Stop deleting', section: 'wall', type: 'error' })
+              return this.$store.dispatch('vkAddLog', { message: 'Stop deleting', icon: 'dashboard', type: 'negative' })
             })
         })
       }

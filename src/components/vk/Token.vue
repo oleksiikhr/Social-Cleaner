@@ -2,6 +2,7 @@
   <div id="token" style="padding: 20px;">
     <template v-if="!haveToken">
       <h5>Getting a token</h5>
+      <!-- TODO: text* -->
       <p class="caption">To run most API methods you need to pass an access_token, a special access key.
         Token is a string of digits and latin characters and may refer to a user, community or application itself.</p>
       <q-option-group
@@ -29,7 +30,7 @@
         Get a token
       </q-btn>
       <q-input v-if="seePlaceWriteToken" v-model="token" clearable type="password" color="red" stack-label="Token insert here"
-               autofocus :after="[{icon: 'done', handler () { fetchGetPermissions() }}]"/>
+               autofocus :after="[{icon: 'done', content: true, handler () { fetchGetPermissions() }}]"/>
     </template>
 
     <template v-else>
@@ -63,9 +64,6 @@
     },
     methods: {
       fetchGetPermissions () {
-        if (!this.token) {
-          return Toast.create.negative({ html: 'The token is empty' })
-        }
         jsonp('account.getAppPermissions', {
           access_token: this.token
         })
@@ -73,6 +71,7 @@
             if (res.body.response) {
               this.$store.dispatch('vkSetPermissions', res.body.response)
               this.$store.dispatch('vkSetToken', this.token)
+              this.$store.dispatch('vkAddLog', { message: 'Token installed', icon: 'vpn_key', type: 'positive' })
               this.fetchGetUser()
               Toast.create.positive({ html: 'Token installed' })
               this.token = ''

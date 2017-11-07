@@ -49,6 +49,7 @@ const router = new VueRouter({
   ]
 })
 
+// TODO: If the token is not
 router.beforeResolve((from, to, next) => {
   next()
 })
