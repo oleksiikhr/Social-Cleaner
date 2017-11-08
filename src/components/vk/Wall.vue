@@ -80,6 +80,9 @@
               this.$store.dispatch('vkAddLog', { message: 'Receiving posts for removal', icon: 'dashboard', type: 'info' })
               return this.fetchDeletePost(res.body.response.items, 0, offset, count)
             }
+            this.processDelete = false
+            Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Wall: stop deleting' })
+            this.$store.dispatch('vkAddLog', { message: 'Stop deleting', icon: 'dashboard', type: this.count > 0 ? 'negative' : 'positive' })
           }, res => {
             this.processDelete = false
             Toast.create.negative({ html: 'Wall: stop deleting' })
