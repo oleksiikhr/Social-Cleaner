@@ -139,7 +139,7 @@
             this.processDelete = false
             Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Wall: stop deleting' })
             this.$store.dispatch('vkAddLog', { message: 'Stop deleting', icon: 'dashboard', type: 'negative' })
-          },res => {
+          }, res => {
             this.processDelete = false
             Toast.create.negative({ html: 'Wall: stop deleting' })
             return this.$store.dispatch('vkAddLog', { message: 'Stop deleting', icon: 'dashboard', type: 'negative' })
