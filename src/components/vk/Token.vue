@@ -48,7 +48,7 @@
 
   export default {
     components: {
-      QOptionGroup, QBtn, Toast, QInput, QAlert
+      QOptionGroup, QBtn, QInput, QAlert
     },
     data () {
       return {
