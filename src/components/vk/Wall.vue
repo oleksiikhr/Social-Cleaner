@@ -1,6 +1,5 @@
 <template>
   <!-- TODO: Show posts  -->
-  <!-- TODO: Filter -->
   <q-card style="margin: 0;">
     <q-card-title>
       <q-icon name="dashboard" /> Wall
@@ -23,13 +22,11 @@
         <q-chips-input :disabled="processDelete" float-label="Keep posts [ID's]" v-model="itemsNoDelete" />
       </q-field>
       <q-select v-model="filter" float-label="Filter" :options="selectFilters" style="margin-bottom: 1.5rem;"/>
-      <!-- TODO: OpenDialogDelete -->
-      <q-btn icon="delete" color="red" loader outline class="full-width" v-model="processDelete"
-             :disabled="countPosts < 1 || processDelete"
-             @click.native="fetchGetPostsForDelete(countPosts)">
+      <q-btn v-if="!processDelete" icon="delete" color="red" outline v-model="processDelete"
+             class="full-width" :disabled="countPosts < 1" @click.native="openDialogDelete()">
         Delete {{ countPosts }} post{{ countPosts > 1 ? 's' : '' }}
       </q-btn>
-      <q-btn icon="stop" class="full-width" outline :disabled="!processDelete || stopDeleting" style="margin-top: 1rem;"
+      <q-btn v-else icon="stop" class="full-width" outline :disabled="!processDelete || stopDeleting"
              @click="actionStopDeleting()">
         Stop
       </q-btn>
@@ -56,7 +53,8 @@
     QItem,
     QItemSide,
     QItemMain,
-    QSelect
+    QSelect,
+    Dialog
   } from 'quasar'
 
   export default {
@@ -85,7 +83,7 @@
 
         pass: 50,
         maxCount: 0,
-        range: { min: 1, max: 1 },
+        range: { min: 1, max: 0 },
         filter: 'all',
 
         selectFilters: [
@@ -104,7 +102,9 @@
         ],
 
         processDelete: false,
-        processRefresh: false
+        processRefresh: false,
+
+        dialogDelete: false
       }
     },
     created () {
@@ -202,6 +202,30 @@
             })
         })
       },
+      openDialogDelete () {
+        this.processDelete = false
+
+        Dialog.create({
+          title: 'Delete posts',
+          message: 'Are you sure you want to delete posts?<br><b>It is impossible to restore!</b>',
+          buttons: [
+            {
+              label: 'Cancel',
+              color: 'negative'
+            },
+            {
+              label: 'Delete',
+              handler: () => {
+                this.fetchGetPostsForDelete(this.countPosts)
+              }
+            }
+          ]
+        })
+      },
+      actionStopDeleting () {
+        this.stopDeleting = true
+        this.$store.dispatch('vkAddLog', { message: 'Stopping..', icon: 'dashboard', type: 'info' })
+      },
       stopDelete (isPositive = true, text = 'Stop deleting') {
         this.processDelete = false
 
@@ -212,10 +236,6 @@
         })
 
         isPositive ? Toast.create.positive({ html: 'Wall: ' + text }) : Toast.create.negative({ html: 'Wall: ' + text })
-      },
-      actionStopDeleting () {
-        this.stopDeleting = true
-        this.$store.dispatch('vkAddLog', { message: 'Stopping..', icon: 'dashboard', type: 'info' })
       }
     },
     watch: {

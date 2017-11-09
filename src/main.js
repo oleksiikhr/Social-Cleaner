@@ -39,7 +39,7 @@ Vue.http.interceptor.before = (request, next) => {
       return Toast.create.negative({ html: 'Response: 500: Check the site' })
     }
 
-    var body = res.body
+    let body = res.body
 
     if (typeof res.body === 'string') {
       try {
