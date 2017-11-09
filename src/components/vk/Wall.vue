@@ -1,7 +1,6 @@
 <template>
   <!-- TODO: Show posts  -->
   <!-- TODO: Filter -->
-  <!-- TODO: Stop btn -->
   <q-card style="margin: 0;">
     <q-card-title>
       <q-icon name="dashboard" /> Wall
@@ -29,6 +28,10 @@
                :disabled="countPosts < 1 || processDelete"
                @click.native="fetchGetPostsForDelete(countPosts)">
           Delete {{ countPosts }} post{{ countPosts > 1 ? 's' : '' }}
+        </q-btn>
+        <q-btn icon="stop" class="full-width" outline :disabled="!processDelete" style="margin-top: 1rem;"
+               @click="actionStopDeleting()">
+          Stop
         </q-btn>
       </template>
       <template v-else>
@@ -80,6 +83,7 @@
     data () {
       return {
         itemsNoDelete: [],
+        stopDeleting: false,
 
         pass: 50,
         maxCount: 0,
@@ -107,6 +111,7 @@
           .then(res => {
             if (res.body.response) {
               this.maxCount = res.body.response.count
+              this.range.min = 1
               this.range.max = this.maxCount
               this.$store.dispatch('vkSetUserCounter', { key: 'wall', val: this.maxCount })
             }
@@ -122,9 +127,7 @@
         this.processDelete = true
 
         if (count < 1) {
-          this.processDelete = false
-          Toast.create.positive({ html: 'Wall: posts deleted' })
-          return this.$store.dispatch('vkAddLog', { message: 'Delete complete', icon: 'dashboard', type: 'positive' })
+          return this.stopDelete(true, 'Delete complete')
         }
 
         jsonp('wall.get', {
@@ -136,16 +139,17 @@
               this.$store.dispatch('vkAddLog', { message: 'Receiving posts for removal', icon: 'dashboard', type: 'info' })
               return this.fetchDeletePost(res.body.response.items, 0, count)
             }
-            this.processDelete = false
-            Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Wall: stop deleting' })
-            this.$store.dispatch('vkAddLog', { message: 'Stop deleting', icon: 'dashboard', type: 'negative' })
+            this.stopDelete(false, res.body.error ? res.body.error.error_msg : 'Stop deleting')
           }, res => {
-            this.processDelete = false
-            Toast.create.negative({ html: 'Wall: stop deleting' })
-            return this.$store.dispatch('vkAddLog', { message: 'Stop deleting', icon: 'dashboard', type: 'negative' })
+            this.stopDelete(false)
           })
       },
       fetchDeletePost (items, index, count) {
+        if (this.stopDeleting) {
+          this.stopDeleting = false
+          return this.fetchGetPostsForDelete(0)
+        }
+
         if (typeof items[index] === 'undefined') {
           return this.fetchGetPostsForDelete(count - this.pass)
         }
@@ -178,11 +182,28 @@
 
               return this.fetchDeletePost(items, ++index, count)
             }, res => {
-              this.processDelete = false
-              Toast.create.negative({ html: 'Wall: stop deleting' })
-              return this.$store.dispatch('vkAddLog', { message: 'Stop deleting', icon: 'dashboard', type: 'negative' })
+              this.stopDelete(false)
             })
         })
+      },
+      stopDelete (isPositive = true, text = 'Stop deleting') {
+        this.processDelete = false
+
+        this.$store.dispatch('vkAddLog', {
+          message: text,
+          icon: 'dashboard',
+          type: isPositive ? 'positive' : 'negative'
+        })
+
+        if (isPositive) {
+          Toast.create.positive({ html: 'Wall: ' + text })
+        } else {
+          Toast.create.negative({ html: 'Wall: ' + text })
+        }
+      },
+      actionStopDeleting () {
+        this.stopDeleting = true
+        this.$store.dispatch('vkAddLog', { message: 'Stopping..', icon: 'dashboard', type: 'info' })
       }
     }
   }
