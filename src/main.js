@@ -13,7 +13,7 @@ require(`quasar/dist/quasar.ie.${__THEME}.css`)
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
-import Quasar from 'quasar'
+import Quasar, { Toast } from 'quasar'
 import router from './router'
 import store from 'store/index'
 
@@ -34,8 +34,12 @@ Vue.http.interceptor.before = (request, next) => {
   request.emulateJSON = true
   request.emulateHTTP = true
 
-  next((res) => {
-    var body = res.body
+  next(res => {
+    if (res.status === 500) {
+      return Toast.create.negative({ html: 'Response: 500: Check the site' })
+    }
+
+    let body = res.body
 
     if (typeof res.body === 'string') {
       try {

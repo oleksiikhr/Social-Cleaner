@@ -1,7 +1,5 @@
 <template>
   <!-- TODO: Show posts  -->
-  <!-- TODO: Filter -->
-  <!-- TODO: Stop btn -->
   <q-card style="margin: 0;">
     <q-card-title>
       <q-icon name="dashboard" /> Wall
@@ -11,29 +9,27 @@
       </q-btn>
     </q-card-title>
     <q-card-main>
-      <template v-if="maxCount > 0">
-        <q-list v-if="maxCount > 1">
-          <q-item>
-            <q-item-side>Range</q-item-side>
-            <q-item-main>
-              <q-range v-model="range" :min="1" :disabled="processDelete" :max="maxCount" :step="1" label />
-            </q-item-main>
-          </q-item>
-        </q-list>
-        <small v-else>Last post</small>
-        <q-field icon="save" count helper="Press: Enter" style="margin-bottom: 2rem;">
-          <q-chips-input :disabled="processDelete" float-label="Keep posts [ID's]" v-model="itemsNoDelete" />
-        </q-field>
-        <!-- TODO: OpenDialogDelete -->
-        <q-btn icon="delete" color="red" loader outline class="full-width" v-model="processDelete"
-               :disabled="countPosts < 1 || processDelete"
-               @click.native="fetchGetPostsForDelete(countPosts)">
-          Delete {{ countPosts }} post{{ countPosts > 1 ? 's' : '' }}
-        </q-btn>
-      </template>
-      <template v-else>
-        The wall is empty
-      </template>
+      <q-list v-if="maxCount > 1">
+        <q-item>
+          <q-item-side>Range</q-item-side>
+          <q-item-main>
+            <q-range v-model="range" :min="1" :disabled="processDelete" :max="maxCount" :step="1" label />
+          </q-item-main>
+        </q-item>
+      </q-list>
+      <small v-else>{{ maxCount === 1 ? 'Last post.' : 'The wall is empty' }}</small>
+      <q-field icon="save" count helper="Press: Enter" style="margin-bottom: 2rem;">
+        <q-chips-input :disabled="processDelete" float-label="Keep posts [ID's]" v-model="itemsNoDelete" />
+      </q-field>
+      <q-select v-model="filter" float-label="Filter" :options="selectFilters" style="margin-bottom: 1.5rem;"/>
+      <q-btn v-if="!processDelete" icon="delete" color="red" outline v-model="processDelete"
+             class="full-width" :disabled="countPosts < 1" @click.native="openDialogDelete()">
+        Delete {{ countPosts }} post{{ countPosts > 1 ? 's' : '' }}
+      </q-btn>
+      <q-btn v-else icon="stop" class="full-width" outline :disabled="!processDelete || stopDeleting"
+             @click="actionStopDeleting()">
+        Stop
+      </q-btn>
     </q-card-main>
   </q-card>
 </template>
@@ -56,7 +52,9 @@
     QList,
     QItem,
     QItemSide,
-    QItemMain
+    QItemMain,
+    QSelect,
+    Dialog
   } from 'quasar'
 
   export default {
@@ -75,18 +73,38 @@
       QList,
       QItem,
       QItemSide,
-      QItemMain
+      QItemMain,
+      QSelect
     },
     data () {
       return {
         itemsNoDelete: [],
+        stopDeleting: false,
 
         pass: 50,
         maxCount: 0,
         range: { min: 1, max: 0 },
+        filter: 'all',
+
+        selectFilters: [
+          {
+            label: 'Posts by the wall owner and others',
+            value: 'all'
+          },
+          {
+            label: 'Posts by the wall owner',
+            value: 'owner'
+          },
+          {
+            label: 'Posts by someone else',
+            value: 'others'
+          }
+        ],
 
         processDelete: false,
-        processRefresh: false
+        processRefresh: false,
+
+        dialogDelete: false
       }
     },
     created () {
@@ -102,11 +120,13 @@
         this.processRefresh = true
 
         jsonp('wall.get', {
-          count: 1
+          count: 1,
+          filter: this.filter
         })
           .then(res => {
             if (res.body.response) {
               this.maxCount = res.body.response.count
+              this.range.min = 1
               this.range.max = this.maxCount
               this.$store.dispatch('vkSetUserCounter', { key: 'wall', val: this.maxCount })
             }
@@ -122,30 +142,30 @@
         this.processDelete = true
 
         if (count < 1) {
-          this.processDelete = false
-          Toast.create.positive({ html: 'Wall: posts deleted' })
-          return this.$store.dispatch('vkAddLog', { message: 'Delete complete', icon: 'dashboard', type: 'positive' })
+          return this.stopDelete(true, 'Delete complete')
         }
 
         jsonp('wall.get', {
-          offset: this.range.min,
-          count: count > this.pass ? this.pass : count
+          offset: this.range.min > this.maxCount ? this.maxCount : this.range.min,
+          count: count > this.pass ? this.pass : count,
+          filter: this.filter
         })
           .then(res => {
             if (res.body.response && res.body.response.items.length) {
               this.$store.dispatch('vkAddLog', { message: 'Receiving posts for removal', icon: 'dashboard', type: 'info' })
               return this.fetchDeletePost(res.body.response.items, 0, count)
             }
-            this.processDelete = false
-            Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Wall: stop deleting' })
-            this.$store.dispatch('vkAddLog', { message: 'Stop deleting', icon: 'dashboard', type: 'negative' })
+            this.stopDelete(false, res.body.error ? res.body.error.error_msg : 'Stop deleting')
           }, res => {
-            this.processDelete = false
-            Toast.create.negative({ html: 'Wall: stop deleting' })
-            return this.$store.dispatch('vkAddLog', { message: 'Stop deleting', icon: 'dashboard', type: 'negative' })
+            this.stopDelete(false)
           })
       },
       fetchDeletePost (items, index, count) {
+        if (this.stopDeleting) {
+          this.stopDeleting = false
+          return this.fetchGetPostsForDelete(0)
+        }
+
         if (typeof items[index] === 'undefined') {
           return this.fetchGetPostsForDelete(count - this.pass)
         }
@@ -155,7 +175,7 @@
 
         if (this.itemsNoDelete.indexOf(item.id.toString()) > -1) {
           this.$store.dispatch('vkAddLog', { message: 'Keep id: ' + item.id, icon: 'dashboard', type: 'positive' })
-          this.range.max--
+          this.range.min++
           return this.fetchDeletePost(items, ++index, count)
         }
 
@@ -174,19 +194,53 @@
                 this.$store.dispatch('vkCounterUserDecrement', 'wall')
                 this.maxCount--
                 this.range.max--
-                if (this.range.min > this.maxCount) {
-                  this.range.min = this.maxCount
-                  return this.fetchGetPostsForDelete(0)
-                }
               }
 
               return this.fetchDeletePost(items, ++index, count)
             }, res => {
-              this.processDelete = false
-              Toast.create.negative({ html: 'Wall: stop deleting' })
-              return this.$store.dispatch('vkAddLog', { message: 'Stop deleting', icon: 'dashboard', type: 'negative' })
+              this.stopDelete(false)
             })
         })
+      },
+      openDialogDelete () {
+        this.processDelete = false
+
+        Dialog.create({
+          title: 'Delete posts',
+          message: 'Are you sure you want to delete posts?<br><b>It is impossible to restore!</b>',
+          buttons: [
+            {
+              label: 'Cancel',
+              color: 'negative'
+            },
+            {
+              label: 'Delete',
+              handler: () => {
+                this.fetchGetPostsForDelete(this.countPosts)
+              }
+            }
+          ]
+        })
+      },
+      actionStopDeleting () {
+        this.stopDeleting = true
+        this.$store.dispatch('vkAddLog', { message: 'Stopping..', icon: 'dashboard', type: 'info' })
+      },
+      stopDelete (isPositive = true, text = 'Stop deleting') {
+        this.processDelete = false
+
+        this.$store.dispatch('vkAddLog', {
+          message: text,
+          icon: 'dashboard',
+          type: isPositive ? 'positive' : 'negative'
+        })
+
+        isPositive ? Toast.create.positive({ html: 'Wall: ' + text }) : Toast.create.negative({ html: 'Wall: ' + text })
+      }
+    },
+    watch: {
+      filter () {
+        this.fetchGetCountPosts()
       }
     }
   }
