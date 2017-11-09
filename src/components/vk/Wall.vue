@@ -20,7 +20,7 @@
             </q-item-main>
           </q-item>
         </q-list>
-        <small v-else>Last post</small>
+        <small v-else>Last post.</small>
         <q-field icon="save" count helper="Press: Enter" style="margin-bottom: 2rem;">
           <q-chips-input :disabled="processDelete" float-label="Keep posts [ID's]" v-model="itemsNoDelete" />
         </q-field>
@@ -32,7 +32,7 @@
         </q-btn>
       </template>
       <template v-else>
-        The wall is empty
+        The wall is empty.
       </template>
     </q-card-main>
   </q-card>
@@ -83,7 +83,7 @@
 
         pass: 50,
         maxCount: 0,
-        range: { min: 1, max: 0 },
+        range: { min: 1, max: 1 },
 
         processDelete: false,
         processRefresh: false
@@ -128,7 +128,7 @@
         }
 
         jsonp('wall.get', {
-          offset: this.range.min,
+          offset: this.range.min > this.maxCount ? this.maxCount : this.range.min,
           count: count > this.pass ? this.pass : count
         })
           .then(res => {
@@ -155,7 +155,7 @@
 
         if (this.itemsNoDelete.indexOf(item.id.toString()) > -1) {
           this.$store.dispatch('vkAddLog', { message: 'Keep id: ' + item.id, icon: 'dashboard', type: 'positive' })
-          this.range.max--
+          this.range.min++
           return this.fetchDeletePost(items, ++index, count)
         }
 
@@ -174,10 +174,6 @@
                 this.$store.dispatch('vkCounterUserDecrement', 'wall')
                 this.maxCount--
                 this.range.max--
-                if (this.range.min > this.maxCount) {
-                  this.range.min = this.maxCount
-                  return this.fetchGetPostsForDelete(0)
-                }
               }
 
               return this.fetchDeletePost(items, ++index, count)
