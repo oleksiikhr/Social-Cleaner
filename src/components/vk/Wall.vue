@@ -10,33 +10,29 @@
       </q-btn>
     </q-card-title>
     <q-card-main>
-      <template v-if="maxCount > 0">
-        <q-list v-if="maxCount > 1">
-          <q-item>
-            <q-item-side>Range</q-item-side>
-            <q-item-main>
-              <q-range v-model="range" :min="1" :disabled="processDelete" :max="maxCount" :step="1" label />
-            </q-item-main>
-          </q-item>
-        </q-list>
-        <small v-else>Last post.</small>
-        <q-field icon="save" count helper="Press: Enter" style="margin-bottom: 2rem;">
-          <q-chips-input :disabled="processDelete" float-label="Keep posts [ID's]" v-model="itemsNoDelete" />
-        </q-field>
-        <!-- TODO: OpenDialogDelete -->
-        <q-btn icon="delete" color="red" loader outline class="full-width" v-model="processDelete"
-               :disabled="countPosts < 1 || processDelete"
-               @click.native="fetchGetPostsForDelete(countPosts)">
-          Delete {{ countPosts }} post{{ countPosts > 1 ? 's' : '' }}
-        </q-btn>
-        <q-btn icon="stop" class="full-width" outline :disabled="!processDelete" style="margin-top: 1rem;"
-               @click="actionStopDeleting()">
-          Stop
-        </q-btn>
-      </template>
-      <template v-else>
-        The wall is empty.
-      </template>
+      <q-list v-if="maxCount > 1">
+        <q-item>
+          <q-item-side>Range</q-item-side>
+          <q-item-main>
+            <q-range v-model="range" :min="1" :disabled="processDelete" :max="maxCount" :step="1" label />
+          </q-item-main>
+        </q-item>
+      </q-list>
+      <small v-else>{{ maxCount === 1 ? 'Last post.' : 'The wall is empty' }}</small>
+      <q-field icon="save" count helper="Press: Enter" style="margin-bottom: 2rem;">
+        <q-chips-input :disabled="processDelete" float-label="Keep posts [ID's]" v-model="itemsNoDelete" />
+      </q-field>
+      <q-select v-model="filter" float-label="Filter" :options="selectFilters" style="margin-bottom: 1.5rem;"/>
+      <!-- TODO: OpenDialogDelete -->
+      <q-btn icon="delete" color="red" loader outline class="full-width" v-model="processDelete"
+             :disabled="countPosts < 1 || processDelete"
+             @click.native="fetchGetPostsForDelete(countPosts)">
+        Delete {{ countPosts }} post{{ countPosts > 1 ? 's' : '' }}
+      </q-btn>
+      <q-btn icon="stop" class="full-width" outline :disabled="!processDelete || stopDeleting" style="margin-top: 1rem;"
+             @click="actionStopDeleting()">
+        Stop
+      </q-btn>
     </q-card-main>
   </q-card>
 </template>
@@ -59,7 +55,8 @@
     QList,
     QItem,
     QItemSide,
-    QItemMain
+    QItemMain,
+    QSelect
   } from 'quasar'
 
   export default {
@@ -78,7 +75,8 @@
       QList,
       QItem,
       QItemSide,
-      QItemMain
+      QItemMain,
+      QSelect
     },
     data () {
       return {
@@ -88,6 +86,22 @@
         pass: 50,
         maxCount: 0,
         range: { min: 1, max: 1 },
+        filter: 'all',
+
+        selectFilters: [
+          {
+            label: 'Posts by the wall owner and others',
+            value: 'all'
+          },
+          {
+            label: 'Posts by the wall owner',
+            value: 'owner'
+          },
+          {
+            label: 'Posts by someone else',
+            value: 'others'
+          }
+        ],
 
         processDelete: false,
         processRefresh: false
@@ -106,7 +120,8 @@
         this.processRefresh = true
 
         jsonp('wall.get', {
-          count: 1
+          count: 1,
+          filter: this.filter
         })
           .then(res => {
             if (res.body.response) {
@@ -132,7 +147,8 @@
 
         jsonp('wall.get', {
           offset: this.range.min > this.maxCount ? this.maxCount : this.range.min,
-          count: count > this.pass ? this.pass : count
+          count: count > this.pass ? this.pass : count,
+          filter: this.filter
         })
           .then(res => {
             if (res.body.response && res.body.response.items.length) {
@@ -195,15 +211,16 @@
           type: isPositive ? 'positive' : 'negative'
         })
 
-        if (isPositive) {
-          Toast.create.positive({ html: 'Wall: ' + text })
-        } else {
-          Toast.create.negative({ html: 'Wall: ' + text })
-        }
+        isPositive ? Toast.create.positive({ html: 'Wall: ' + text }) : Toast.create.negative({ html: 'Wall: ' + text })
       },
       actionStopDeleting () {
         this.stopDeleting = true
         this.$store.dispatch('vkAddLog', { message: 'Stopping..', icon: 'dashboard', type: 'info' })
+      }
+    },
+    watch: {
+      filter () {
+        this.fetchGetCountPosts()
       }
     }
   }
