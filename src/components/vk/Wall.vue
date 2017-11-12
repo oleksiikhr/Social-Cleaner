@@ -18,11 +18,12 @@
             </q-item-main>
           </q-item>
         </q-list>
-        <small style="display: block; margin: 0.5rem 0 2rem;">
-          <template v-if="range.min === range.max">Delete the post #{{ range.min }}</template>
-          <template v-else>Delete the post from {{ range.min }} to {{ range.max }}</template>
-        </small>
       </template>
+      <small style="display: block; margin: 0.5rem 0 2rem;">
+        <template v-if="maxCount < 1">No posts</template>
+        <template v-else-if="range.min === range.max">Delete the post #{{ range.min }}</template>
+        <template v-else>Delete the post from {{ range.min }} to {{ range.max }}</template>
+      </small>
 
       <q-card style="margin-bottom: 2rem;">
         <q-card-title>
@@ -37,8 +38,9 @@
                    @keyup.enter="addNoDeleteId()" />
           <small style="display: block; margin-bottom: 1.5rem;">Example: 1512, https://vk.com/wall207909600_690</small>
           <q-collapsible icon="remove_red_eye" label="Posts">
-            <q-chip v-for="(item, index) in itemsNoDelete" :key="index" small color="primary" title="Follow the link"
-                    style="margin: 0 5px 5px 0; cursor: pointer;" @click="goPost(item)">
+            <q-chip v-for="(item, index) in itemsNoDelete" :key="index" small color="primary"
+                    title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
+                    closable @close="closeChip(index)" @click="goPost(item)">
               {{ item }}
             </q-chip>
           </q-collapsible>
@@ -308,6 +310,9 @@
       },
       goPost (id) {
         window.open('https://vk.com/wall' + this.$store.state.vk.user.id + '_' + id)
+      },
+      closeChip (index) {
+        this.itemsNoDelete.splice(index, 1)
       }
     },
     watch: {
