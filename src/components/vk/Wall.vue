@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO: Deep filter  -->
   <q-card style="margin: 0;">
     <q-card-title>
       <q-icon name="dashboard" /> Wall
@@ -9,36 +8,43 @@
       </q-btn>
     </q-card-title>
     <q-card-main>
-      <template v-if="maxCount > 1">
-        <q-list>
-          <q-item>
-            <q-item-side>Range</q-item-side>
-            <q-item-main>
-              <q-range v-model="range" :min="1" :disabled="processDelete" :max="maxCount" :step="1" label />
-            </q-item-main>
-          </q-item>
-        </q-list>
-      </template>
-      <small style="display: block; margin: 0.5rem 0 2rem;">
-        <template v-if="maxCount < 1">No posts</template>
-        <template v-else-if="range.min === range.max">Delete the post #{{ range.min }}</template>
-        <template v-else>Delete the post from {{ range.min }} to {{ range.max }}</template>
-      </small>
+      <q-card style="margin-bottom: 2rem;">
+        <q-card-title>Config</q-card-title>
+        <q-card-separator />
+        <q-card-main>
+          <q-select v-model="filter" :options="selectFilters" style="margin-bottom: 1.5rem;"/>
+          <template v-if="maxCount > 1">
+            <q-list>
+              <q-item>
+                <q-item-side>Range</q-item-side>
+                <q-item-main>
+                  <q-range v-model="range" :min="1" :disabled="processDelete" :max="maxCount" :step="1" label />
+                </q-item-main>
+              </q-item>
+            </q-list>
+          </template>
+          <small style="display: block; margin: 0.5rem 0 2rem;">
+            <template v-if="maxCount < 1">No posts</template>
+            <template v-else-if="range.min === range.max">Delete the post #{{ range.min }}</template>
+            <template v-else>Delete the post from {{ range.min }} to {{ range.max }}</template>
+          </small>
+        </q-card-main>
+      </q-card>
 
       <q-card style="margin-bottom: 2rem;">
         <q-card-title>
           Skip posts by id
           <div slot="right" class="row items-center">
-            {{ itemsNoDelete.length }}
+            {{ postsNoDelete.length }}
           </div>
         </q-card-title>
         <q-card-separator />
         <q-card-main>
-          <q-input :disabled="processDelete" v-model="fNoDelete" placeholder="ID or link"
-                   @keyup.enter="addNoDeleteId()" />
-          <small style="display: block; margin-bottom: 1.5rem;">Example: 1512, https://vk.com/wall207909600_690</small>
+          <q-input :disabled="processDelete" v-model="fNoDeletePost" placeholder="ID or link"
+                   @keyup.enter="addNoDeletePostId()" />
+          <small style="display: block; margin-bottom: 1.5rem;">Example: 1, vk.com/wall207909600_690</small>
           <q-collapsible icon="remove_red_eye" label="Posts">
-            <q-chip v-for="(item, index) in itemsNoDelete" :key="index" small color="primary"
+            <q-chip v-for="(item, index) in postsNoDelete" :key="index" small color="primary"
                     title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
                     closable @close="closeChip(index)" @click="goPost(item)">
               {{ item }}
@@ -48,10 +54,26 @@
       </q-card>
 
       <q-card style="margin-bottom: 2rem;">
-        <q-card-title>Filter</q-card-title>
+        <q-card-title>
+          Skip groups by id
+          <div slot="right" class="row items-center">
+            {{ groupsNoDelete.length }}
+          </div>
+        </q-card-title>
         <q-card-separator />
         <q-card-main>
-          <q-select v-model="filter" :options="selectFilters" style="margin-bottom: 1.5rem;"/>
+          <q-input :disabled="processDelete" v-model="fNoDeleteGroup" placeholder="ID or link"
+                   @keyup.enter="" />
+          <small style="display: block; margin-bottom: 1.5rem;">
+            Example: 1, vk.com/eng_day, vk.com/public1
+          </small>
+          <q-collapsible icon="remove_red_eye" label="Groups">
+            <q-chip v-for="(item, index) in groupsNoDelete" :key="index" small color="primary"
+                    title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
+                    closable @close="closeChip(index)" @click="goGroup(item)">
+              {{ item }}
+            </q-chip>
+          </q-collapsible>
         </q-card-main>
       </q-card>
 
@@ -117,7 +139,8 @@
     },
     data () {
       return {
-        itemsNoDelete: [],
+        postsNoDelete: [],
+        groupsNoDelete: [],
         stopDeleting: false,
 
         pass: 50,
@@ -125,7 +148,8 @@
         range: { min: 1, max: 0 },
         filter: 'all',
 
-        fNoDelete: '',
+        fNoDeletePost: '',
+        fNoDeleteGroup: '',
 
         selectFilters: [
           {
@@ -214,7 +238,7 @@
         let item = items[index]
         delete items[index]
 
-        if (this.itemsNoDelete.indexOf(item.id) > -1) {
+        if (this.postsNoDelete.indexOf(item.id) > -1) {
           this.$store.dispatch('vkAddLog', { message: 'Keep id: ' + item.id, icon: 'dashboard', type: 'positive' })
           this.range.min++
           return this.fetchDeletePost(items, ++index, count)
@@ -278,9 +302,9 @@
 
         isPositive ? Toast.create.positive({ html: 'Wall: ' + text }) : Toast.create.negative({ html: 'Wall: ' + text })
       },
-      addNoDeleteId () {
-        let text = this.fNoDelete
-        this.fNoDelete = ''
+      addNoDeletePostId () {
+        let text = this.fNoDeletePost
+        this.fNoDeletePost = ''
         let id = parseInt(text)
         let userId = this.$store.state.vk.user.id
 
@@ -292,8 +316,8 @@
           }
         }
 
-        if (this.itemsNoDelete.indexOf(id) > -1) {
-          return this.$store.dispatch('vkAddLog', { message: 'ID: ' + id + ' exist', icon: 'dashboard', type: 'info' })
+        if (this.postsNoDelete.indexOf(id) > -1) {
+          return this.$store.dispatch('vkAddLog', { message: 'Post #' + id + ' exist', icon: 'dashboard', type: 'info' })
         }
 
         jsonp('wall.getById', {
@@ -301,18 +325,21 @@
         })
           .then(res => {
             if (res.body.response[0]) {
-              this.itemsNoDelete.push(id)
+              this.postsNoDelete.push(id)
             }
             else {
-              this.$store.dispatch('vkAddLog', { message: 'ID: ' + id + ' does not exist', icon: 'dashboard', type: 'negative' })
+              this.$store.dispatch('vkAddLog', { message: 'Post #' + id + ' does not exist', icon: 'dashboard', type: 'negative' })
             }
           })
       },
       goPost (id) {
         window.open('https://vk.com/wall' + this.$store.state.vk.user.id + '_' + id)
       },
+      goGroup (id) {
+        window.open('https://vk.com/public' + id)
+      },
       closeChip (index) {
-        this.itemsNoDelete.splice(index, 1)
+        this.postsNoDelete.splice(index, 1)
       }
     },
     watch: {
