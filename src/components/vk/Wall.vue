@@ -1,5 +1,5 @@
 <template>
-  <q-card style="margin: 0;">
+  <q-card style="margin: 0;" flat>
     <q-card-title>
       <q-icon name="dashboard" /> Wall
       <q-btn flat round small color="primary" slot="right" loader v-model="processRefresh" @click="fetchGetCountPosts()">
@@ -8,8 +8,15 @@
       </q-btn>
     </q-card-title>
     <q-card-main>
-      <q-card style="margin-bottom: 2rem;">
-        <q-card-title>Config</q-card-title>
+      <q-card style="margin-bottom: 2rem">
+        <q-card-title>
+          Config
+          <div slot="right" class="row items-center">
+            <template v-if="maxCount < 1">No posts</template>
+            <template v-else-if="range.min === range.max">Delete the post #{{ range.min }}</template>
+            <template v-else>Delete the post from {{ range.min }} to {{ range.max }}</template>
+          </div>
+        </q-card-title>
         <q-card-separator />
         <q-card-main>
           <q-select v-model="filter" :options="selectFilters" style="margin-bottom: 1.5rem;"/>
@@ -23,68 +30,66 @@
               </q-item>
             </q-list>
           </template>
-          <small style="display: block; margin: 0.5rem 0 2rem;">
-            <template v-if="maxCount < 1">No posts</template>
-            <template v-else-if="range.min === range.max">Delete the post #{{ range.min }}</template>
-            <template v-else>Delete the post from {{ range.min }} to {{ range.max }}</template>
-          </small>
         </q-card-main>
       </q-card>
 
-      <q-card style="margin-bottom: 2rem;">
+      <q-card style="margin-bottom: 2rem;" flat>
         <q-card-title>
-          Skip posts by id
+          Skip posts
           <div slot="right" class="row items-center">
-            {{ postsNoDelete.length }}
+            {{ postsNoDelete.length + groupsNoDelete.length }}
           </div>
         </q-card-title>
         <q-card-separator />
         <q-card-main>
-          <q-input :disabled="processDelete" v-model="fNoDeletePost" placeholder="ID or link"
-                   @keyup.enter="addNoDeletePostId()" />
-          <small style="display: block; margin-bottom: 1.5rem;">Example: 1, vk.com/wall207909600_690</small>
-          <q-collapsible icon="remove_red_eye" label="Posts">
-            <q-chip v-for="(item, index) in postsNoDelete" :key="index" small color="primary"
-                    title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
-                    closable @close="closeChip(index)" @click="goPost(item)">
-              {{ item }}
-            </q-chip>
-          </q-collapsible>
+          <q-tabs inverted>
+            <q-tab default :count="postsNoDelete.length" slot="title" name="tab-1" icon="description" />
+            <q-tab :count="groupsNoDelete.length" slot="title" name="tab-2" icon="people" />
+
+            <q-tab-pane name="tab-1">
+              <q-field helper="Only for your account.">
+                <q-input :disabled="processDelete" v-model="fNoDeletePost" placeholder="Id or link to post"
+                         @keyup.enter="addNoDeletePostId()" />
+              </q-field>
+              <q-collapsible icon="remove_red_eye" label="See" style="margin-top: 1rem;">
+                <q-chip v-for="(item, index) in postsNoDelete" :key="index" small color="primary"
+                        title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
+                        closable @close="closeChip(index)" @click="goPost(item)">
+                  {{ item }}
+                </q-chip>
+              </q-collapsible>
+            </q-tab-pane>
+            <q-tab-pane name="tab-2">
+              <p>Nested group entries for deletion.</p>
+              <q-field icon="attachment">
+                <q-input :disabled="processDelete" v-model="fNoDeletePost" placeholder="Id or link to group"
+                         @keyup.enter="addNoDeletePostId()" />
+              </q-field>
+              <q-toggle v-model="toggleDeleteGroup" :label="toggleDeleteGroup ? 'Delete' : 'Keep'"
+                        style="margin: 1.5rem 0;" />
+              <q-collapsible icon="remove_red_eye" label="See">
+                <!-- TODO: Object with color -->
+                <q-chip v-for="(item, index) in groupsNoDelete" :key="index" small :color="true ? 'primary' : 'red'"
+                        title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
+                        closable @close="closeChip(index)" @click="goGroup(item)">
+                  {{ item }}
+                </q-chip>
+              </q-collapsible>
+            </q-tab-pane>
+          </q-tabs>
         </q-card-main>
       </q-card>
 
-      <q-card style="margin-bottom: 2rem;">
-        <q-card-title>
-          Skip groups by id
-          <div slot="right" class="row items-center">
-            {{ groupsNoDelete.length }}
-          </div>
-        </q-card-title>
-        <q-card-separator />
-        <q-card-main>
-          <q-input :disabled="processDelete" v-model="fNoDeleteGroup" placeholder="ID or link"
-                   @keyup.enter="" />
-          <small style="display: block; margin-bottom: 1.5rem;">
-            Example: 1, vk.com/eng_day, vk.com/public1
-          </small>
-          <q-collapsible icon="remove_red_eye" label="Groups">
-            <q-chip v-for="(item, index) in groupsNoDelete" :key="index" small color="primary"
-                    title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
-                    closable @close="closeChip(index)" @click="goGroup(item)">
-              {{ item }}
-            </q-chip>
-          </q-collapsible>
-        </q-card-main>
-      </q-card>
-
-      <q-btn v-if="!processDelete" icon="delete" color="red" outline v-model="processDelete"
-             class="full-width" :disabled="countPosts < 1" @click.native="openDialogDelete()">
-        Delete
-      </q-btn>
-      <q-btn v-else icon="stop" class="full-width" outline :disabled="!processDelete || stopDeleting"
-             @click="actionStopDeleting()">
-        Stop
-      </q-btn>
+      <div style="margin-bottom: 1.5rem;">
+        <q-btn v-if="!processDelete" icon="delete" color="red" outline v-model="processDelete"
+               class="full-width" :disabled="countPosts < 1" @click.native="openDialogDelete()">
+          Delete
+        </q-btn>
+        <q-btn v-else icon="stop" class="full-width" outline :disabled="!processDelete || stopDeleting"
+               @click="actionStopDeleting()">
+          Stop
+        </q-btn>
+      </div>
     </q-card-main>
   </q-card>
 </template>
@@ -112,7 +117,11 @@
     QSelect,
     Dialog,
     QCollapsible,
-    QChip
+    QChip,
+    QTabs,
+    QTab,
+    QTabPane,
+    QToggle
   } from 'quasar'
 
   export default {
@@ -135,7 +144,11 @@
       QItemMain,
       QSelect,
       QCollapsible,
-      QChip
+      QChip,
+      QTabs,
+      QTab,
+      QTabPane,
+      QToggle
     },
     data () {
       return {
@@ -150,6 +163,8 @@
 
         fNoDeletePost: '',
         fNoDeleteGroup: '',
+
+        toggleDeleteGroup: true,
 
         selectFilters: [
           {
@@ -300,7 +315,7 @@
           type: isPositive ? 'positive' : 'negative'
         })
 
-        isPositive ? Toast.create.positive({ html: 'Wall: ' + text }) : Toast.create.negative({ html: 'Wall: ' + text })
+        isPositive ? Toast.create.positive({ html: text }) : Toast.create.negative({ html: text })
       },
       addNoDeletePostId () {
         let text = this.fNoDeletePost
