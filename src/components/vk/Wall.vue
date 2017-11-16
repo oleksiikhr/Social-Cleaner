@@ -19,7 +19,7 @@
         </q-card-title>
         <q-card-separator />
         <q-card-main>
-          <q-select v-model="filter" :options="selectFilters" style="margin-bottom: 1.5rem;"/>
+          <q-select v-model="globalFilter" :options="selectGlobalFilters" style="margin-bottom: 1.5rem;"/>
           <template v-if="maxCount > 1">
             <q-list>
               <q-item>
@@ -37,14 +37,18 @@
         <q-card-title>
           Skip posts
           <div slot="right" class="row items-center">
-            {{ postsNoDelete.length + groupsNoDelete.length }}
+            {{ countPostsConfig }}
           </div>
         </q-card-title>
         <q-card-separator />
         <q-card-main>
           <q-tabs inverted>
-            <q-tab default :count="postsNoDelete.length" slot="title" name="tab-1" icon="description" />
-            <q-tab :count="groupsNoDelete.length" slot="title" name="tab-2" icon="people" />
+            <q-tab default :count="posts.length" slot="title" name="tab-1" icon="description" />
+            <q-tab :count="groups.length" slot="title" name="tab-2" icon="people" />
+            <q-tab :count="comments.length" slot="title" name="tab-3" icon="comment" />
+            <q-tab :count="likes.length" slot="title" name="tab-4" icon="favorite" />
+            <q-tab :count="reposts.length" slot="title" name="tab-5" icon="share" />
+            <q-tab :count="views.length" slot="title" name="tab-6" icon="views" />
 
             <q-tab-pane name="tab-1">
               <q-field helper="Only for your account.">
@@ -52,30 +56,38 @@
                          @keyup.enter="addNoDeletePostId()" />
               </q-field>
               <q-collapsible icon="remove_red_eye" label="See" style="margin-top: 1rem;">
-                <q-chip v-for="(item, index) in postsNoDelete" :key="index" small color="primary"
+                <q-chip v-for="(item, index) in posts" :key="index" small color="primary"
                         title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
-                        closable @close="closeChip(index)" @click="goPost(item)">
+                        closable @close="closePostChip(index)" @click="goPost(item)">
                   {{ item }}
                 </q-chip>
               </q-collapsible>
             </q-tab-pane>
+
             <q-tab-pane name="tab-2">
               <p>Nested group entries for deletion.</p>
               <q-field icon="attachment">
                 <q-input :disabled="processDelete" v-model="fNoDeletePost" placeholder="Id or link to group"
                          @keyup.enter="addNoDeletePostId()" />
               </q-field>
-              <q-toggle v-model="toggleDeleteGroup" :label="toggleDeleteGroup ? 'Delete' : 'Keep'"
-                        style="margin: 1.5rem 0;" />
+              <q-checkbox v-model="checkDeleteGroup" label="Delete" style="margin: 1.5rem 0;" />
               <q-collapsible icon="remove_red_eye" label="See">
                 <!-- TODO: Object with color -->
-                <q-chip v-for="(item, index) in groupsNoDelete" :key="index" small :color="true ? 'primary' : 'red'"
+                <q-chip v-for="(item, index) in groups" :key="index" small :color="true ? 'primary' : 'red'"
                         title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
-                        closable @close="closeChip(index)" @click="goGroup(item)">
+                        closable @close="" @click="goGroup(item)">
                   {{ item }}
                 </q-chip>
               </q-collapsible>
             </q-tab-pane>
+
+            <q-tab-pane name="tab-3"></q-tab-pane>
+
+            <q-tab-pane name="tab-4"></q-tab-pane>
+
+            <q-tab-pane name="tab-5"></q-tab-pane>
+
+            <q-tab-pane name="tab-6"></q-tab-pane>
           </q-tabs>
         </q-card-main>
       </q-card>
@@ -121,7 +133,7 @@
     QTabs,
     QTab,
     QTabPane,
-    QToggle
+    QCheckbox
   } from 'quasar'
 
   export default {
@@ -148,25 +160,28 @@
       QTabs,
       QTab,
       QTabPane,
-      QToggle
+      QCheckbox
     },
     data () {
       return {
-        postsNoDelete: [],
-        groupsNoDelete: [],
-        stopDeleting: false,
-
-        pass: 50,
-        maxCount: 0,
-        range: { min: 1, max: 0 },
-        filter: 'all',
+        posts: [],
+        groups: [],
+        comments: [],
+        likes: [],
+        reposts: [],
+        views: [],
 
         fNoDeletePost: '',
         fNoDeleteGroup: '',
 
-        toggleDeleteGroup: true,
+        checkDeleteGroup: true,
 
-        selectFilters: [
+        pass: 50,
+        maxCount: 0,
+        range: { min: 1, max: 0 },
+
+        globalFilter: 'all',
+        selectGlobalFilters: [
           {
             label: 'Posts by the wall owner and others',
             value: 'all'
@@ -181,6 +196,8 @@
           }
         ],
 
+        stopDeleting: false,
+
         processDelete: false,
         processRefresh: false,
 
@@ -193,6 +210,10 @@
     computed: {
       countPosts () {
         return this.maxCount === 1 ? 1 : this.range.max - this.range.min + 1
+      },
+      countPostsConfig () {
+        return this.posts.length + this.groups.length + this.comments.length + this.likes.length +
+                this.reposts.length + this.views.length
       }
     },
     methods: {
@@ -201,7 +222,7 @@
 
         jsonp('wall.get', {
           count: 1,
-          filter: this.filter
+          filter: this.globalFilter
         })
           .then(res => {
             if (res.body.response) {
@@ -228,7 +249,7 @@
         jsonp('wall.get', {
           offset: this.range.min > this.maxCount ? this.maxCount : this.range.min,
           count: count > this.pass ? this.pass : count,
-          filter: this.filter
+          filter: this.globalFilter
         })
           .then(res => {
             if (res.body.response && res.body.response.items.length) {
@@ -253,7 +274,7 @@
         let item = items[index]
         delete items[index]
 
-        if (this.postsNoDelete.indexOf(item.id) > -1) {
+        if (this.posts.indexOf(item.id) > -1) {
           this.$store.dispatch('vkAddLog', { message: 'Keep id: ' + item.id, icon: 'dashboard', type: 'positive' })
           this.range.min++
           return this.fetchDeletePost(items, ++index, count)
@@ -331,7 +352,7 @@
           }
         }
 
-        if (this.postsNoDelete.indexOf(id) > -1) {
+        if (this.posts.indexOf(id) > -1) {
           return this.$store.dispatch('vkAddLog', { message: 'Post #' + id + ' exist', icon: 'dashboard', type: 'info' })
         }
 
@@ -340,7 +361,7 @@
         })
           .then(res => {
             if (res.body.response[0]) {
-              this.postsNoDelete.push(id)
+              this.posts.push(id)
             }
             else {
               this.$store.dispatch('vkAddLog', { message: 'Post #' + id + ' does not exist', icon: 'dashboard', type: 'negative' })
@@ -353,12 +374,12 @@
       goGroup (id) {
         window.open('https://vk.com/public' + id)
       },
-      closeChip (index) {
-        this.postsNoDelete.splice(index, 1)
+      closePostChip (index) {
+        this.posts.splice(index, 1)
       }
     },
     watch: {
-      filter () {
+      globalFilter () {
         this.fetchGetCountPosts()
       }
     }
