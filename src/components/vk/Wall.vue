@@ -181,6 +181,8 @@
     },
     data () {
       return {
+        init: false,
+
         posts: [],
         groups: [],
         comments: [],
@@ -225,8 +227,11 @@
         dialogDelete: false
       }
     },
-    created () {
-      this.fetchGetCountPosts()
+    activated () {
+      if (!this.init) {
+        this.init = true
+        this.fetchGetCountPosts()
+      }
     },
     computed: {
       countPosts () {
@@ -274,7 +279,12 @@
         })
           .then(res => {
             if (res.body.response && res.body.response.items.length) {
-              this.$store.dispatch('vkAddLog', { message: 'Receiving posts for removal', icon: 'dashboard', type: 'info' })
+              this.$store.dispatch('vkAddLog', {
+                message: 'Receiving posts..',
+                subMessage: 'Request to VK',
+                icon: 'dashboard',
+                type: 'info'
+              })
               return this.fetchDeletePost(res.body.response.items, 0, count)
             }
             this.stopDelete(false, res.body.error ? res.body.error.error_msg : 'Stop deleting')
@@ -295,7 +305,15 @@
         let item = items[index]
         delete items[index]
 
-        if (this.filterSkipGeneral(item)) {
+        let skippedSubMessage = this.filterSkipGeneral(item)
+
+        if (skippedSubMessage) {
+          this.$store.dispatch('vkAddLog', {
+            message: 'Skipped' + ': ' + item.id,
+            subMessage: skippedSubMessage,
+            icon: 'dashboard',
+            type: 'positive'
+          })
           this.range.min++
           return this.fetchDeletePost(items, ++index, count)
         }
@@ -306,7 +324,7 @@
           })
             .then(res => {
               this.$store.dispatch('vkAddLog', {
-                message: res.body.response ? 'Deleted id: ' + item.id : 'Not deleted id: ' + item.id,
+                message: res.body.response ? 'Deleted id: ' + item.id : 'Skipped: ' + item.id,
                 icon: 'dashboard',
                 type: res.body.response ? 'positive' : 'negative'
               })
@@ -324,26 +342,22 @@
         })
       },
       /**
+       * Check the conditions for filters.
+       *
        * @param item
        *
-       * @see https://vk.com/dev/wall.get
-       *
-       * @returns {boolean}
+       * @returns {String} SubMessage
        */
       filterSkipGeneral (item) {
-        console.log(item)
-
         if (this.filterSkipByPostsIds(item)) {
-          this.$store.dispatch('vkAddLog', { message: 'Skipped by post id: ' + item.id, icon: 'dashboard', type: 'positive' })
-          return true
+          return 'Post id'
         }
 
         if (this.filterSkipByViews(item)) {
-          this.$store.dispatch('vkAddLog', { message: 'Skipped by views: ' + item.id, icon: 'dashboard', type: 'positive' })
-          return true
+          return 'Views'
         }
 
-        return false
+        return ''
       },
       filterSkipByPostsIds (item) {
         return this.posts.indexOf(item.id) > -1
