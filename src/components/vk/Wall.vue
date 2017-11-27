@@ -35,7 +35,7 @@
 
       <q-card style="margin-bottom: 2rem;" flat>
         <q-card-title>
-          Skip posts
+          Filter
           <div slot="right" class="row items-center">
             {{ countPostsConfig }}
           </div>
@@ -44,50 +44,63 @@
         <q-card-main>
           <q-tabs inverted>
             <q-tab default :count="posts.length" slot="title" name="tab-1" icon="description" />
-            <q-tab :count="groups.length" slot="title" name="tab-2" icon="people" />
-            <q-tab :count="comments.length" slot="title" name="tab-3" icon="comment" />
-            <q-tab :count="likes.length" slot="title" name="tab-4" icon="favorite" />
-            <q-tab :count="reposts.length" slot="title" name="tab-5" icon="share" />
-            <q-tab :count="views.length" slot="title" name="tab-6" icon="views" />
+            <!--<q-tab :count="groups.length" slot="title" name="tab-2" icon="people" />-->
+            <!--<q-tab :count="comments.length" slot="title" name="tab-3" icon="comment" />-->
+            <!--<q-tab :count="likes.length" slot="title" name="tab-4" icon="favorite" />-->
+            <!--<q-tab :count="reposts.length" slot="title" name="tab-5" icon="share" />-->
+            <q-tab :alert="views.on" slot="title" name="tab-6" icon="remove_red_eye" />
 
             <q-tab-pane name="tab-1">
-              <q-field helper="Only for your account.">
+              <p>Number of posts to skip.</p>
+              <q-field label="Skip posts" :label-width="2" helper="Only for your account." style="margin-bottom: 2rem">
                 <q-input :disabled="processDelete" v-model="fNoDeletePost" placeholder="Id or link to post"
                          @keyup.enter="addNoDeletePostId()" />
               </q-field>
-              <q-collapsible icon="remove_red_eye" label="See" style="margin-top: 1rem;">
-                <q-chip v-for="(item, index) in posts" :key="index" small color="primary"
-                        title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
-                        closable @close="closePostChip(index)" @click="goPost(item)">
-                  {{ item }}
-                </q-chip>
-              </q-collapsible>
+              <q-chip v-for="(item, index) in posts" :key="index" small color="primary"
+                      title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
+                      closable @close="closePostChip(index)" @click="goPost(item)">
+                {{ item }}
+              </q-chip>
             </q-tab-pane>
 
-            <q-tab-pane name="tab-2">
-              <p>Nested group entries for deletion.</p>
-              <q-field icon="attachment">
-                <q-input :disabled="processDelete" v-model="fNoDeletePost" placeholder="Id or link to group"
-                         @keyup.enter="addNoDeletePostId()" />
-              </q-field>
-              <q-checkbox v-model="checkDeleteGroup" label="Delete" style="margin: 1.5rem 0;" />
-              <q-collapsible icon="remove_red_eye" label="See">
-                <!-- TODO: Object with color -->
-                <q-chip v-for="(item, index) in groups" :key="index" small :color="true ? 'primary' : 'red'"
-                        title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
-                        closable @close="" @click="goGroup(item)">
-                  {{ item }}
-                </q-chip>
-              </q-collapsible>
+            <!--<q-tab-pane name="tab-2">-->
+              <!--<p>Nested group entries for deletion.</p>-->
+              <!--<q-field icon="attachment">-->
+                <!--<q-input :disabled="processDelete" v-model="fNoDeletePost" placeholder="Id or link to group"-->
+                         <!--@keyup.enter="addNoDeletePostId()" />-->
+              <!--</q-field>-->
+              <!--<q-checkbox v-model="checkDeleteGroup" label="Delete" style="margin: 1.5rem 0;" />-->
+              <!--<q-collapsible icon="remove_red_eye" label="See">-->
+                <!--&lt;!&ndash; TODO: Object with color &ndash;&gt;-->
+                <!--<q-chip v-for="(item, index) in groups" :key="index" small :color="true ? 'primary' : 'red'"-->
+                        <!--title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"-->
+                        <!--closable @close="" @click="goGroup(item)">-->
+                  <!--{{ item }}-->
+                <!--</q-chip>-->
+              <!--</q-collapsible>-->
+            <!--</q-tab-pane>-->
+
+            <!--<q-tab-pane name="tab-3"></q-tab-pane>-->
+
+            <!--<q-tab-pane name="tab-4"></q-tab-pane>-->
+
+            <!--<q-tab-pane name="tab-5"></q-tab-pane>-->
+
+            <q-tab-pane name="tab-6">
+              <p>Number of post views to skip.</p>
+              <q-toggle
+                      v-model="views.on"
+                      checked-icon="sentiment very satisfied"
+                      unchecked-icon="sentiment very dissatisfied"
+                      label="Enable"
+              />
+
+              <q-input v-model="views.count" :disabled="!views.on" type="number" float-label="Count views" style="margin: 1.5rem 0;" />
+
+              <q-radio v-model="views.equal" :disabled="!views.on" :val="-1" color="red" label="Less" />
+              <q-radio v-model="views.equal" :disabled="!views.on" :val="0" color="black" label="Equal" style="margin-left: 10px" />
+              <q-radio v-model="views.equal" :disabled="!views.on" :val="1" color="primary" label="More" style="margin-left: 10px" />
             </q-tab-pane>
-
-            <q-tab-pane name="tab-3"></q-tab-pane>
-
-            <q-tab-pane name="tab-4"></q-tab-pane>
-
-            <q-tab-pane name="tab-5"></q-tab-pane>
-
-            <q-tab-pane name="tab-6"></q-tab-pane>
           </q-tabs>
         </q-card-main>
       </q-card>
@@ -133,7 +146,9 @@
     QTabs,
     QTab,
     QTabPane,
-    QCheckbox
+    QCheckbox,
+    QRadio,
+    QToggle
   } from 'quasar'
 
   export default {
@@ -160,7 +175,9 @@
       QTabs,
       QTab,
       QTabPane,
-      QCheckbox
+      QCheckbox,
+      QRadio,
+      QToggle
     },
     data () {
       return {
@@ -169,7 +186,11 @@
         comments: [],
         likes: [],
         reposts: [],
-        views: [],
+        views: {
+          on: false,
+          count: 0,
+          equal: 0
+        },
 
         fNoDeletePost: '',
         fNoDeleteGroup: '',
@@ -213,7 +234,7 @@
       },
       countPostsConfig () {
         return this.posts.length + this.groups.length + this.comments.length + this.likes.length +
-                this.reposts.length + this.views.length
+                this.reposts.length
       }
     },
     methods: {
@@ -274,8 +295,7 @@
         let item = items[index]
         delete items[index]
 
-        if (this.posts.indexOf(item.id) > -1) {
-          this.$store.dispatch('vkAddLog', { message: 'Keep id: ' + item.id, icon: 'dashboard', type: 'positive' })
+        if (this.filterSkipGeneral(item)) {
           this.range.min++
           return this.fetchDeletePost(items, ++index, count)
         }
@@ -302,6 +322,49 @@
               this.stopDelete(false)
             })
         })
+      },
+      /**
+       * @param item
+       *
+       * @see https://vk.com/dev/wall.get
+       *
+       * @returns {boolean}
+       */
+      filterSkipGeneral (item) {
+        console.log(item)
+
+        if (this.filterSkipByPostsIds(item)) {
+          this.$store.dispatch('vkAddLog', { message: 'Skipped by post id: ' + item.id, icon: 'dashboard', type: 'positive' })
+          return true
+        }
+
+        if (this.filterSkipByViews(item)) {
+          this.$store.dispatch('vkAddLog', { message: 'Skipped by views: ' + item.id, icon: 'dashboard', type: 'positive' })
+          return true
+        }
+
+        return false
+      },
+      filterSkipByPostsIds (item) {
+        return this.posts.indexOf(item.id) > -1
+      },
+      filterSkipByViews (item) {
+        if (typeof item.views === 'undefined' && !this.views.on) {
+          return false
+        }
+
+        let views = item.views.count
+
+        switch (this.views.equal) {
+          case -1:
+            return views < this.views.count
+          case 0:
+            return views === this.views.count
+          case 1:
+            return views > this.views.count
+          default:
+            return false
+        }
       },
       openDialogDelete () {
         this.processDelete = false
