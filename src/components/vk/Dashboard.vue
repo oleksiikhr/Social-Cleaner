@@ -3,7 +3,9 @@
     <div class="info" style="padding: 20px" v-if="$route.name === 'vk-dashboard'">
       Info VK
     </div>
-    <router-view />
+    <keep-alive>
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 
