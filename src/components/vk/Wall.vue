@@ -120,6 +120,7 @@
 </template>
 
 <script>
+  import { addLogs, COLOR_INFO, COLOR_NEGATIVE, COLOR_POSITIVE, ICON_WALL, SOCIAL_VK } from '../../helpers/logs'
   import { jsonp } from '../../helpers/vk'
   import {
     Toast,
@@ -279,12 +280,7 @@
         })
           .then(res => {
             if (res.body.response && res.body.response.items.length) {
-              this.$store.dispatch('vkAddLog', {
-                message: 'Receiving posts..',
-                subMessage: 'Request to VK',
-                icon: 'dashboard',
-                type: 'info'
-              })
+              addLogs(SOCIAL_VK, 'Receiving posts..', 'Request to VK', ICON_WALL, COLOR_INFO)
               return this.fetchDeletePost(res.body.response.items, 0, count)
             }
             this.stopDelete(false, res.body.error ? res.body.error.error_msg : 'Stop deleting')
@@ -308,12 +304,7 @@
         let skippedSubMessage = this.filterSkipGeneral(item)
 
         if (skippedSubMessage) {
-          this.$store.dispatch('vkAddLog', {
-            message: 'Skipped' + ': ' + item.id,
-            subMessage: skippedSubMessage,
-            icon: 'dashboard',
-            type: 'positive'
-          })
+          addLogs(SOCIAL_VK, 'Skipped: ' + item.id, skippedSubMessage, ICON_WALL, COLOR_POSITIVE)
           this.range.min++
           return this.fetchDeletePost(items, ++index, count)
         }
@@ -323,16 +314,14 @@
             post_id: item.id
           })
             .then(res => {
-              this.$store.dispatch('vkAddLog', {
-                message: res.body.response ? 'Deleted id: ' + item.id : 'Skipped: ' + item.id,
-                icon: 'dashboard',
-                type: res.body.response ? 'positive' : 'negative'
-              })
-
               if (res.body.response) {
+                addLogs(SOCIAL_VK, 'Deleted id: ' + item.id, null, ICON_WALL, COLOR_POSITIVE)
                 this.$store.dispatch('vkCounterUserDecrement', 'wall')
                 this.maxCount--
                 this.range.max--
+              }
+              else {
+                addLogs(SOCIAL_VK, 'Skipped: ' + item.id, null, ICON_WALL, COLOR_NEGATIVE)
               }
 
               return this.fetchDeletePost(items, ++index, count)
@@ -402,17 +391,11 @@
       },
       actionStopDeleting () {
         this.stopDeleting = true
-        this.$store.dispatch('vkAddLog', { message: 'Stopping..', icon: 'dashboard', type: 'info' })
+        addLogs(SOCIAL_VK, 'Stopping..', null, ICON_WALL, COLOR_INFO)
       },
       stopDelete (isPositive = true, text = 'Stop deleting') {
         this.processDelete = false
-
-        this.$store.dispatch('vkAddLog', {
-          message: text,
-          icon: 'dashboard',
-          type: isPositive ? 'positive' : 'negative'
-        })
-
+        addLogs(SOCIAL_VK, text, null, ICON_WALL, isPositive ? COLOR_POSITIVE : COLOR_NEGATIVE)
         isPositive ? Toast.create.positive({ html: text }) : Toast.create.negative({ html: text })
       },
       addNoDeletePostId () {
@@ -425,12 +408,12 @@
           let findIndex = text.indexOf('wall' + userId + '_')
           id = parseInt(text.substring(findIndex + userId.toString().length + 5))
           if (!id) {
-            return this.$store.dispatch('vkAddLog', { message: 'Error getting id', icon: 'dashboard', type: 'negative' })
+            return addLogs(SOCIAL_VK, 'Post: ' + id, 'Not found', ICON_WALL, COLOR_NEGATIVE)
           }
         }
 
         if (this.posts.indexOf(id) > -1) {
-          return this.$store.dispatch('vkAddLog', { message: 'Post #' + id + ' exist', icon: 'dashboard', type: 'info' })
+          return addLogs(SOCIAL_VK, 'Post: ' + id, 'Already added', ICON_WALL, COLOR_INFO)
         }
 
         jsonp('wall.getById', {
@@ -441,7 +424,7 @@
               this.posts.push(id)
             }
             else {
-              this.$store.dispatch('vkAddLog', { message: 'Post #' + id + ' does not exist', icon: 'dashboard', type: 'negative' })
+              addLogs(SOCIAL_VK, 'Post: ' + id, 'Not found', ICON_WALL, COLOR_NEGATIVE)
             }
           })
       },

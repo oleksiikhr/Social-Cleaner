@@ -43,6 +43,7 @@
 </template>
 
 <script>
+  import { addLogs, ICON_TOKEN, SOCIAL_VK, COLOR_POSITIVE } from '../../helpers/logs'
   import { clientId, urlOauth, version, redirectUri, jsonp } from '../../helpers/vk'
   import { QOptionGroup, QBtn, Toast, QInput, QAlert } from 'quasar'
 
@@ -71,7 +72,7 @@
             if (res.body.response) {
               this.$store.dispatch('vkSetPermissions', res.body.response)
               this.$store.dispatch('vkSetToken', this.token)
-              this.$store.dispatch('vkAddLog', { message: 'Token installed', icon: 'vpn_key', type: 'positive' })
+              addLogs(SOCIAL_VK, 'Token installed', 'Sections are open', ICON_TOKEN, COLOR_POSITIVE)
               this.fetchGetUser()
               Toast.create.positive({ html: 'Token installed' })
               this.token = ''

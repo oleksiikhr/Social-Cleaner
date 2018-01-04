@@ -15,8 +15,7 @@ const state = {
     wall: false,
     docs: false,
     groups: false
-  },
-  log: []
+  }
 }
 
 const mutations = {
@@ -53,16 +52,6 @@ const mutations = {
   VK_CLEAR_USER (state) {
     state.user = {}
   },
-  VK_ADD_LOG (state, obj) {
-    // TODO: if items > 100 => delete last*
-    if (obj.type && ['positive', 'negative', 'warning', 'info'].indexOf(obj.type) === -1) {
-      console.log('Log: error the type', obj)
-    }
-    state.log.unshift(obj)
-  },
-  VK_CLEAR_LOG (state) {
-    state.log = []
-  },
   VK_COUNTER_USER_DECREMENT (state, key) {
     let val = state.user.counters[key]
     Vue.set(state.user.counters, key, val && val > 0 ? --val : 0)
@@ -89,14 +78,10 @@ const actions = {
   vkSetUserCounter: ({commit}, obj) => {
     commit('VK_SET_USER_COUNTER', obj)
   },
-  vkAddLog: ({commit}, obj) => {
-    commit('VK_ADD_LOG', obj)
-  },
   vkExit: ({commit}) => {
     commit('VK_CLEAR_TOKEN')
     commit('VK_CLEAR_USER')
     commit('VK_CLEAR_PERMISSIONS')
-    commit('VK_CLEAR_LOG')
   }
 }
 
