@@ -35,7 +35,7 @@
 
       <q-card style="margin-bottom: 2rem;" flat>
         <q-card-title>
-          Filter
+          Filter (Do not delete posts by these parameters)
           <div slot="right" class="row items-center">
             {{ countPostsConfig }}
           </div>
@@ -47,11 +47,10 @@
             <!--<q-tab :count="groups.length" slot="title" name="tab-2" icon="people" />-->
             <!--<q-tab :count="comments.length" slot="title" name="tab-3" icon="comment" />-->
             <!--<q-tab :count="likes.length" slot="title" name="tab-4" icon="favorite" />-->
-            <!--<q-tab :count="reposts.length" slot="title" name="tab-5" icon="share" />-->
+            <q-tab :count="reposts.length" slot="title" name="tab-5" icon="fa-bullhorn" />
             <q-tab :alert="views.on" slot="title" name="tab-6" icon="remove_red_eye" />
 
             <q-tab-pane name="tab-1">
-              <p>Number of posts to skip.</p>
               <q-field label="Skip posts" :label-width="2" helper="Only for your account." style="margin-bottom: 2rem">
                 <q-input :disabled="processDelete" v-model="fNoDeletePost" placeholder="Id or link to post"
                          @keyup.enter="addNoDeletePostId()" />
@@ -84,19 +83,19 @@
 
             <!--<q-tab-pane name="tab-4"></q-tab-pane>-->
 
-            <!--<q-tab-pane name="tab-5"></q-tab-pane>-->
+            <!-- Reposts -->
+            <q-tab-pane name="tab-5">
+              <q-toggle v-model="reposts.on" label="Enable" />
+              <q-input v-model="reposts.count" :disabled="!reposts.on" type="number" float-label="Count reposts" style="margin: 1.5rem 0;" />
+              <q-radio v-model="reposts.equal" :disabled="!reposts.on" :val="-1" color="red" label="Less" />
+              <q-radio v-model="reposts.equal" :disabled="!reposts.on" :val="0" color="black" label="Equal" style="margin-left: 10px" />
+              <q-radio v-model="reposts.equal" :disabled="!reposts.on" :val="1" color="primary" label="More" style="margin-left: 10px" />
+            </q-tab-pane>
 
+            <!-- Views -->
             <q-tab-pane name="tab-6">
-              <p>Number of post views to skip.</p>
-              <q-toggle
-                      v-model="views.on"
-                      checked-icon="sentiment very satisfied"
-                      unchecked-icon="sentiment very dissatisfied"
-                      label="Enable"
-              />
-
+              <q-toggle v-model="views.on" label="Enable" />
               <q-input v-model="views.count" :disabled="!views.on" type="number" float-label="Count views" style="margin: 1.5rem 0;" />
-
               <q-radio v-model="views.equal" :disabled="!views.on" :val="-1" color="red" label="Less" />
               <q-radio v-model="views.equal" :disabled="!views.on" :val="0" color="black" label="Equal" style="margin-left: 10px" />
               <q-radio v-model="views.equal" :disabled="!views.on" :val="1" color="primary" label="More" style="margin-left: 10px" />
@@ -188,7 +187,11 @@
         groups: [],
         comments: [],
         likes: [],
-        reposts: [],
+        reposts: {
+          on: false,
+          count: 0,
+          equal: 0
+        },
         views: {
           on: false,
           count: 0,
@@ -244,6 +247,11 @@
       }
     },
     methods: {
+      /* | ------------------------------------------------------------------------------------
+       * | Fetch Methods. (Main)
+       * | ------------------------------------------------------------------------------------
+       * |
+       */
       fetchGetCountPosts () {
         this.processRefresh = true
 
@@ -294,6 +302,7 @@
           return this.fetchGetPostsForDelete(0)
         }
 
+        // if the posts in the array are over. We get new
         if (typeof items[index] === 'undefined') {
           return this.fetchGetPostsForDelete(count - this.pass)
         }
@@ -305,7 +314,7 @@
 
         if (skippedSubMessage) {
           addLogs(SOCIAL_VK, 'Skipped: ' + item.id, skippedSubMessage, ICON_WALL, COLOR_POSITIVE)
-          this.range.min++
+          this.range.min < this.range.max && this.range.min++
           return this.fetchDeletePost(items, ++index, count)
         }
 
@@ -330,45 +339,12 @@
             })
         })
       },
-      /**
-       * Check the conditions for filters.
-       *
-       * @param item
-       *
-       * @returns {String} SubMessage
+
+      /* | ------------------------------------------------------------------------------------
+       * | Start / stop delete posts.
+       * | ------------------------------------------------------------------------------------
+       * |
        */
-      filterSkipGeneral (item) {
-        if (this.filterSkipByPostsIds(item)) {
-          return 'Post id'
-        }
-
-        if (this.filterSkipByViews(item)) {
-          return 'Views'
-        }
-
-        return ''
-      },
-      filterSkipByPostsIds (item) {
-        return this.posts.indexOf(item.id) > -1
-      },
-      filterSkipByViews (item) {
-        if (typeof item.views === 'undefined' && !this.views.on) {
-          return false
-        }
-
-        let views = item.views.count
-
-        switch (this.views.equal) {
-          case -1:
-            return views < this.views.count
-          case 0:
-            return views === this.views.count
-          case 1:
-            return views > this.views.count
-          default:
-            return false
-        }
-      },
       openDialogDelete () {
         this.processDelete = false
 
@@ -398,6 +374,72 @@
         addLogs(SOCIAL_VK, text, null, ICON_WALL, isPositive ? COLOR_POSITIVE : COLOR_NEGATIVE)
         isPositive ? Toast.create.positive({ html: text }) : Toast.create.negative({ html: text })
       },
+
+      /* | ------------------------------------------------------------------------------------
+       * | Filters
+       * | ------------------------------------------------------------------------------------
+       * |
+       */
+      filterSkipGeneral (item) {
+        if (this.filterSkipByPostsIds(item)) {
+          return 'Post id'
+        }
+
+        if (this.filterSkipByReposts(item)) {
+          return 'Reposts'
+        }
+
+        if (this.filterSkipByViews(item)) {
+          return 'Views'
+        }
+
+        return ''
+      },
+      filterSkipByPostsIds (item) {
+        return this.posts.indexOf(item.id) > -1
+      },
+      filterSkipByReposts (item) {
+        if (!this.reposts.on) {
+          return false
+        }
+
+        let reposts = item.reposts.count
+
+        switch (this.reposts.equal) {
+          case -1:
+            return reposts < this.reposts.count
+          case 0:
+            return reposts === this.reposts.count
+          case 1:
+            return reposts > this.reposts.count
+          default:
+            return false
+        }
+      },
+      filterSkipByViews (item) {
+        if (typeof item.views === 'undefined' && !this.views.on) {
+          return false
+        }
+
+        let views = item.views.count
+
+        switch (this.views.equal) {
+          case -1:
+            return views < this.views.count
+          case 0:
+            return views === this.views.count
+          case 1:
+            return views > this.views.count
+          default:
+            return false
+        }
+      },
+
+      /* | ------------------------------------------------------------------------------------
+       * | Other
+       * | ------------------------------------------------------------------------------------
+       * |
+       */
       addNoDeletePostId () {
         let text = this.fNoDeletePost
         this.fNoDeletePost = ''
@@ -428,14 +470,20 @@
             }
           })
       },
+      closePostChip (index) {
+        this.posts.splice(index, 1)
+      },
+
+      /* | ------------------------------------------------------------------------------------
+       * | Links
+       * | ------------------------------------------------------------------------------------
+       * |
+       */
       goPost (id) {
         window.open('https://vk.com/wall' + this.$store.state.vk.user.id + '_' + id)
       },
       goGroup (id) {
         window.open('https://vk.com/public' + id)
-      },
-      closePostChip (index) {
-        this.posts.splice(index, 1)
       }
     },
     watch: {
