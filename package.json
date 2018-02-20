@@ -1,9 +1,9 @@
 {
-  "name": "",
+  "name": "Social-Cleaner",
   "productName": "VK Clean",
   "version": "0.0.1",
   "private": true,
-  "description": "Cleaning data from VK",
+  "description": "Cleaning data from Social Networks",
   "author": "Alexey Khrusch <alexeykhr@outlook.com>",
   "scripts": {
     "clean": "node build/script.clean.js",

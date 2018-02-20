@@ -14,9 +14,6 @@
       <q-btn flat @click.native="linkBasic">
         <q-icon name="home" />
       </q-btn>
-      <q-btn flat @click.native="linkVk">
-        <q-icon name="fa-vk" />
-      </q-btn>
       <q-btn flat @click="$refs.layout.toggleRight()" :disabled="!$store.state.templates.rightSide">
         <q-icon name="menu" />
       </q-btn>
@@ -25,19 +22,21 @@
     <!-- Left Side Panel -->
     <div slot="left" v-if="$store.state.templates.leftSide">
       <keep-alive>
-        <component :is="$store.state.templates.leftSide"></component>
+        <component :is="$store.state.templates.leftSide" />
       </keep-alive>
     </div>
 
     <!-- Right Side Panel -->
     <div slot="right" v-if="$store.state.templates.rightSide">
       <keep-alive>
-        <component :is="$store.state.templates.rightSide"></component>
+        <component :is="$store.state.templates.rightSide" />
       </keep-alive>
     </div>
 
     <!-- Router view -->
-    <router-view />
+    <keep-alive>
+      <router-view />
+    </keep-alive>
 
     <!-- Footer -->
     <q-toolbar slot="footer">
@@ -94,9 +93,6 @@
     methods: {
       linkGithub () {
         return window.open('https://github.com/Alexeykhr/Social-Cleaner', '_blank')
-      },
-      linkVk () {
-        return this.$router.push({ name: 'vk-dashboard' })
       },
       linkBasic () {
         return this.$router.push({ name: 'dashboard' })
