@@ -1,13 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import vk from './vk'
 import templates from './templates'
+import logs from './logs'
+import vk from './vk'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    vk, templates
+    templates, logs, vk
   }
 })

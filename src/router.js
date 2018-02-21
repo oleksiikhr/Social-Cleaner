@@ -32,7 +32,7 @@ const router = new VueRouter({
     },
     {
       path: '/vk',
-      name: 'vk-dashboard',
+      name: 'vk',
       component: load('vk/Dashboard'),
       children: [
         { path: 'token', name: 'vk-token', component: load('vk/Token') },
