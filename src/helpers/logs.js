@@ -11,6 +11,7 @@ export const COLOR_INFO = 'info'
 
 export const ICON_TOKEN = 'vpn_key'
 export const ICON_WALL = 'dashboard'
+export const ICON_STATUS = 'done'
 
 /**
  * Adding a log item in the right menu.

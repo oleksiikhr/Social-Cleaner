@@ -38,7 +38,8 @@ const router = new VueRouter({
         { path: 'token', name: 'vk-token', component: load('vk/Token') },
         { path: 'friends', name: 'vk-friends', component: load('vk/Friends') },
         { path: 'wall', name: 'vk-wall', component: load('vk/Wall') },
-        { path: 'docs', name: 'vk-docs', component: load('vk/Docs') }
+        { path: 'docs', name: 'vk-docs', component: load('vk/Docs') },
+        { path: 'status', name: 'vk-status', component: load('vk/Status') }
       ]
     },
     {
