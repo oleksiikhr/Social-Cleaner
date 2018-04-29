@@ -1,21 +1,27 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import VkDashboard from '@/components/vk/Dashboard'
 
 Vue.use(Router)
 
+function load (component) {
+  return () => import(`@/components/${component}.vue`)
+}
+
 export default new Router({
+  scrollBehavior: () => ({ y: 0 }),
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      path: '/home',
+      name: 'home',
+      component: load('Home')
     },
     {
       path: '/vk',
-      name: 'VK',
-      component: VkDashboard
+      name: 'vk',
+      component: load('vk/Home'),
+      children: [
+        { path: 'token', name: 'vk-token', component: load('vk/Token') }
+      ]
     }
   ]
 })
