@@ -5,6 +5,10 @@
         Social Cleaner
         <span>{{ version }}</span>
       </router-link>
+      <div class="current">
+        {{ socialNetwork.name }}
+        <!--FIXME icon (position center)-->
+      </div>
       <router-link to="/logs" class="logs">
         <!--TODO Last log (text + icon social)-->
       </router-link>
@@ -35,6 +39,11 @@ export default {
       menuItems: [
         { name: 'Home', to: '' }
       ]
+    }
+  },
+  computed: {
+    socialNetwork () {
+      return this.$store.state.template.socialNetwork
     }
   }
 }

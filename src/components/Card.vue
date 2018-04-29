@@ -19,7 +19,8 @@ export default {
 <style lang="scss" scoped>
 .item {
   display: inline-block;
-  margin: 10px 20px;
+  margin: 10px;
+  padding: 5px 10px;
   color: #333;
   opacity: .6;
   transition: .3s;
@@ -28,7 +29,7 @@ export default {
   }
   > .name {
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
   > .domain {
     vertical-align: top;

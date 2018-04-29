@@ -6,8 +6,12 @@
 </template>
 
 <script>
-export default {
+import { vk } from '../../config'
 
+export default {
+  mounted () {
+    this.$store.commit('SET_SOCIAL_NETWORK', vk)
+  }
 }
 </script>
 

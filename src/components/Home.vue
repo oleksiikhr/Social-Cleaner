@@ -23,6 +23,9 @@ export default {
       search: ''
     }
   },
+  mounted () {
+    this.$store.commit('CLEAR_SOCIAL_NETWORK')
+  },
   computed: {
     filteredNetworks () {
       let search = this.search
@@ -46,6 +49,6 @@ export default {
 <style lang="scss" scoped>
 .header {
   max-width: 500px;
-  margin: 0 auto 25px;
+  margin: 0 auto 30px;
 }
 </style>
