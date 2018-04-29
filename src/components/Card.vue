@@ -1,5 +1,8 @@
 <template>
-  <router-link style="display: block" :to="item.to">{{ item }}</router-link>
+  <router-link style="display: block" :to="item.to">
+    {{ item }}
+    <img :src="item.image" :alt="item.name" />
+  </router-link>
 </template>
 
 <script>
