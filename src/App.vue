@@ -9,6 +9,10 @@
         <i :class="'fa ' + socialNetwork.icon" aria-hidden="true"></i>
       </div>
       <router-link to="/logs" class="logs">
+        <!--FIXME Has logs-->
+        <i :class="'fa ' + firstLog.social_icon" aria-hidden="true"></i>
+        <span>{{ firstLog.header }}</span>
+        <i :class="'fa ' + firstLog.icon + ' ' + firstLog.color" aria-hidden="true"></i>
         <!--TODO Last log (text + icon social)-->
       </router-link>
     </header>
@@ -29,7 +33,8 @@
 </template>
 
 <script>
-import { version } from './config'
+import { addLog, COLOR_SUCCESS, ICON_TOKEN } from './heplers/logs'
+import { vk, version } from './config'
 
 export default {
   data () {
@@ -40,9 +45,15 @@ export default {
       ]
     }
   },
+  beforeCreate () {
+    addLog(vk, 'Get token', 'Message', ICON_TOKEN, COLOR_SUCCESS)
+  },
   computed: {
     socialNetwork () {
       return this.$store.state.template.socialNetwork
+    },
+    firstLog () {
+      return this.$store.state.logs.storage[0]
     }
   }
 }
@@ -60,6 +71,7 @@ header {
   height: 40px;
   overflow: hidden;
   .brand {
+    width: 300px;
     padding: 5px 20px;
     font-weight: bold;
     font-size: 1.2rem;
@@ -84,6 +96,11 @@ header {
   }
   .logs {
     padding: 5px 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+    width: 100%;
   }
 }
 

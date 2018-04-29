@@ -16,6 +16,11 @@ export default new Router({
       component: load('Home')
     },
     {
+      path: '/logs',
+      name: 'logs',
+      component: load('Logs')
+    },
+    {
       path: '/vk',
       name: 'vk',
       component: load('vk/Home'),
