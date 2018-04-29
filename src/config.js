@@ -27,7 +27,7 @@ export const vk = {
   to: '/vk',
   domain: 'vk.com',
   wallpaper: require('@/assets/vk/wallpaper.jpg'),
-  icon: ''
+  icon: 'fa-vk'
 }
 
 export const networks = [

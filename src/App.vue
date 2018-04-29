@@ -6,8 +6,7 @@
         <span>{{ version }}</span>
       </router-link>
       <div class="current">
-        {{ socialNetwork.domain }}
-        <!--FIXME icon (position center)-->
+        <i :class="'fa ' + socialNetwork.icon" aria-hidden="true"></i>
       </div>
       <router-link to="/logs" class="logs">
         <!--TODO Last log (text + icon social)-->
@@ -75,6 +74,12 @@ header {
       font-size: 0.7rem;
       vertical-align: top;
       opacity: 0.5;
+    }
+  }
+  .current {
+    i {
+      font-size: 1.5rem;
+      line-height: 0;
     }
   }
   .logs {
