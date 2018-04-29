@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <header>
-      <router-link to="/" class="brand">Social Cleaner</router-link>
+      <router-link to="/" class="brand">
+        Social Cleaner
+        <span>{{ version }}</span>
+      </router-link>
       <router-link to="/logs" class="logs">
         <!--TODO Last log (text + icon social)-->
       </router-link>
@@ -23,9 +26,12 @@
 </template>
 
 <script>
+import { version } from './config'
+
 export default {
   data () {
     return {
+      version,
       menuItems: [
         { name: 'Home', to: '' }
       ]
@@ -55,6 +61,11 @@ header {
     transition: .2s;
     &:hover {
       opacity: 1;
+    }
+    > span {
+      font-size: 0.7rem;
+      vertical-align: top;
+      opacity: 0.5;
     }
   }
   .logs {
@@ -93,5 +104,6 @@ footer {
 
 .content {
   flex-grow: 1;
+  padding: 20px;
 }
 </style>

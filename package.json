@@ -1,6 +1,6 @@
 {
   "name": "social-cleaner",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Cleaning data from Social Networks",
   "author": "Alexey Khrushch <alexeykhr@outlook.com>",
   "private": true,
