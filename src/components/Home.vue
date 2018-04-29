@@ -1,7 +1,7 @@
 <template>
   <div id="dashboard">
     <div class="header">
-      <at-input v-model="search" placeholder="Find social network" icon="search" />
+      <at-input v-model="search" placeholder="Find name" icon="search" />
     </div>
     <div class="result">
       <card v-for="(item, index) in filteredNetworks" :key="index" :item="item" />

@@ -6,7 +6,7 @@
         <span>{{ version }}</span>
       </router-link>
       <div class="current">
-        {{ socialNetwork.name }}
+        {{ socialNetwork.domain }}
         <!--FIXME icon (position center)-->
       </div>
       <router-link to="/logs" class="logs">

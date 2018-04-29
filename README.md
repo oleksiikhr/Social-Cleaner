@@ -1,6 +1,6 @@
-# social-cleaner
+# Social Cleaner
 
-> A Vue.js project
+> In developing..
 
 ## Build Setup
 

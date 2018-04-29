@@ -1,6 +1,8 @@
 <template>
-  <div>
-    VK Dashboard
+  <div class="home">
+    <div class="info">
+      sd
+    </div>
     <router-view />
   </div>
 </template>
