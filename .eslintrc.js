@@ -1,39 +1,29 @@
+// https://eslint.org/docs/user-guide/configuring
+
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
   parserOptions: {
-    sourceType: 'module'
+    parser: 'babel-eslint'
   },
   env: {
-    browser: true
+    browser: true,
   },
-  // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
   extends: [
+    // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
+    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
+    'plugin:vue/essential', 
+    // https://github.com/standard/standard/blob/master/docs/RULES-en.md
     'standard'
   ],
   // required to lint *.vue files
   plugins: [
-    'html',
-    'import'
+    'vue'
   ],
-  globals: {
-    'cordova': true,
-    'DEV': true,
-    'PROD': true,
-    '__THEME': true
-  },
   // add your custom rules here
-  'rules': {
-    // allow paren-less arrow functions
-    'arrow-parens': 0,
-    'one-var': 0,
-    'import/first': 0,
-    'import/named': 2,
-    'import/namespace': 2,
-    'import/default': 2,
-    'import/export': 2,
+  rules: {
+    // allow async-await
+    'generator-star-spacing': 'off',
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
-    'brace-style': [2, 'stroustrup', { 'allowSingleLine': true }]
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
 }

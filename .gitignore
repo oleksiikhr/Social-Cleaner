@@ -1,8 +1,17 @@
 .DS_Store
-.thumbs.db
 node_modules/
-dist/
+/dist/
 npm-debug.log*
-cordova/platforms
-cordova/plugins
-.idea/
+yarn-debug.log*
+yarn-error.log*
+/test/unit/coverage/
+/test/e2e/reports/
+selenium-debug.log
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
