@@ -46,6 +46,6 @@ export default {
 <style lang="scss" scoped>
 .header {
   max-width: 500px;
-  margin: 0 auto 30px;
+  margin: 0 auto 25px;
 }
 </style>
