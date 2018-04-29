@@ -5,15 +5,12 @@
         Social Cleaner
         <span>{{ version }}</span>
       </router-link>
-      <div class="current">
-        <i :class="'fa ' + socialNetwork.icon" aria-hidden="true"></i>
-      </div>
+      <i :class="'current fa ' + socialNetwork.icon" aria-hidden="true"></i>
       <router-link to="/logs" class="logs">
-        <!--FIXME Has logs-->
-        <i :class="'fa ' + firstLog.social_icon" aria-hidden="true"></i>
-        <span>{{ firstLog.header }}</span>
-        <i :class="'fa ' + firstLog.icon + ' ' + firstLog.color" aria-hidden="true"></i>
-        <!--TODO Last log (text + icon social)-->
+        <template v-if="firstLog">
+          <span>{{ firstLog.message }}</span>
+        </template>
+        <span v-else>No logs</span>
       </router-link>
     </header>
     <div class="content">
@@ -33,8 +30,7 @@
 </template>
 
 <script>
-import { addLog, COLOR_SUCCESS, ICON_TOKEN } from './heplers/logs'
-import { vk, version } from './config'
+import { version } from './config'
 
 export default {
   data () {
@@ -44,9 +40,6 @@ export default {
         { name: 'Home', to: '' }
       ]
     }
-  },
-  beforeCreate () {
-    addLog(vk, 'Get token', 'Message', ICON_TOKEN, COLOR_SUCCESS)
   },
   computed: {
     socialNetwork () {
@@ -71,7 +64,7 @@ header {
   height: 40px;
   overflow: hidden;
   .brand {
-    width: 300px;
+    width: 250px;
     padding: 5px 20px;
     font-weight: bold;
     font-size: 1.2rem;
@@ -89,18 +82,23 @@ header {
     }
   }
   .current {
-    i {
-      font-size: 1.5rem;
-      line-height: 0;
-    }
+    font-size: 1.5rem;
+    line-height: 0;
+    color: #444;
   }
   .logs {
     padding: 5px 20px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 300px;
-    width: 100%;
+    width: 250px;
+    color: #333;
+    opacity: 0.7;
+    font-size: .8rem;
+    transition: .3s;
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 
