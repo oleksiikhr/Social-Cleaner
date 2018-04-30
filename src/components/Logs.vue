@@ -1,6 +1,9 @@
 <template>
   <div id="logs">
-    {{ logs }}
+    <!--TODO Temporary-->
+    <div v-for="(log, index) in logs" :key="index">
+      {{ log }}
+    </div>
   </div>
 </template>
 

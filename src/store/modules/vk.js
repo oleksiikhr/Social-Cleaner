@@ -63,11 +63,17 @@ const actions = {
                 addLog(vk, 'User not received', ICON_TOKEN, COLOR_ERROR)
               }
             })
+            .catch(() => {
+              addLog(vk, 'Server error', ICON_TOKEN, COLOR_ERROR)
+            })
         } else {
           const msg = res.body.error ? res.body.error.error_msg : 'Token is not installed'
           addLog(vk, msg, ICON_TOKEN, COLOR_ERROR)
           $Message.error(msg)
         }
+      })
+      .catch(() => {
+        addLog(vk, 'Server error', ICON_TOKEN, COLOR_ERROR)
       })
   }
 }
