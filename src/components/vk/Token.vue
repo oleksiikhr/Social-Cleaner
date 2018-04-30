@@ -9,6 +9,7 @@
       </div>
       <hr>
       <div class="generate">
+        <p>Select permissions</p>
         <at-checkbox-group v-model="scope">
           <at-checkbox label="friends">Friends</at-checkbox>
           <at-checkbox label="Photos">Photos</at-checkbox>
@@ -22,6 +23,10 @@
         <at-button v-if="scope.length" @click="goGetToken()" type="primary">
           Generate a temporary token
         </at-button>
+        <div class="info" v-if="displayInfo">
+          Show info
+          <!--TODO Image-->
+        </div>
       </div>
       <hr>
       <div class="exists">
@@ -41,7 +46,8 @@ export default {
   data () {
     return {
       token: '',
-      scope: []
+      scope: [],
+      displayInfo: false
     }
   },
   computed: {
@@ -54,6 +60,7 @@ export default {
       this.$store.dispatch('vkInit', this.token)
     },
     goGetToken () {
+      this.displayInfo = true
       window.open(urlOauth + '?client_id=' + clientId + '&display=page&redirect_uri=' + redirectUri +
         '&scope=' + this.scope.join(',') + '&response_type=token&v=' + version, '_blank')
     }
@@ -63,7 +70,7 @@ export default {
 
 <style lang="scss" scoped>
 button {
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 #token {
@@ -80,6 +87,15 @@ button {
 .generate {
   margin-bottom: 30px;
   text-align: center;
+  > p {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+}
+
+.info {
+  margin-top: 30px;
 }
 
 .exists {
