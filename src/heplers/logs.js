@@ -6,7 +6,7 @@ export const ICON_WALL = 'fa-tasks'
 export const COLOR_SUCCESS = 'success'
 export const COLOR_ERROR = 'error'
 export const COLOR_WARNING = 'warning'
-export const COLOR_INFO = 'info0'
+export const COLOR_INFO = 'info'
 
 /**
  * Adding a log item.

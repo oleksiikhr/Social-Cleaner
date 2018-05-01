@@ -1,7 +1,8 @@
 import { addLog, COLOR_ERROR, COLOR_INFO, COLOR_SUCCESS, ICON_TOKEN } from '../../heplers/logs'
 import { jsonp } from '../../heplers/vk'
+import store from '../../store/index'
 import { vk } from '../../config'
-import { $Message } from 'at-ui'
+import Vue from 'vue'
 
 const state = {
   token: '',
@@ -46,10 +47,10 @@ const actions = {
     })
       .then(res => {
         if (res.body.response) {
-          this.$store.commit('VK_SET_PERMISSIONS', res.body.response)
-          this.$store.commit('VK_SET_TOKEN', token)
+          store.commit('VK_SET_PERMISSIONS', res.body.response)
+          store.commit('VK_SET_TOKEN', token)
           addLog(vk, 'Token installed', ICON_TOKEN, COLOR_SUCCESS)
-          $Message.success('Token installed')
+          Vue.prototype.$Message.success('Token installed')
 
           addLog(vk, 'users.get', ICON_TOKEN, COLOR_INFO)
           jsonp('users.get', {
@@ -57,10 +58,11 @@ const actions = {
           })
             .then(res => {
               if (res.body.response) {
-                this.$store.commit('VK_SET_USER', res.body.response[0])
+                store.commit('VK_SET_USER', res.body.response[0])
                 addLog(vk, 'User installed', ICON_TOKEN, COLOR_SUCCESS)
+                Vue.prototype.$Message.success('User installed')
               } else {
-                addLog(vk, 'User not received', ICON_TOKEN, COLOR_ERROR)
+                addLog(vk, 'User not installed', ICON_TOKEN, COLOR_ERROR)
               }
             })
             .catch(() => {
@@ -69,7 +71,7 @@ const actions = {
         } else {
           const msg = res.body.error ? res.body.error.error_msg : 'Token is not installed'
           addLog(vk, msg, ICON_TOKEN, COLOR_ERROR)
-          $Message.error(msg)
+          Vue.prototype.$Message.error(msg)
         }
       })
       .catch(() => {

@@ -20,17 +20,22 @@
           <at-checkbox label="docs">Docs</at-checkbox>
           <at-checkbox label="groups">Groups</at-checkbox>
         </at-checkbox-group>
-        <at-button v-if="scope.length" @click="goGetToken()" type="primary">
-          Generate a temporary token
-        </at-button>
+        <div class="flex flex-middle flex-center" v-if="scope.length">
+          <at-popover trigger="click" content="Application ID" placement="bottom">
+            <at-input placeholder="Application ID" v-model="appId" />
+          </at-popover>
+          <at-button @click="goGetToken()" type="primary">
+            Generate a temporary token
+          </at-button>
+        </div>
         <div class="info" v-if="displayInfo">
-          Show info
-          <!--TODO Image-->
+          <p class="i1">You need to copy the value of access_token from the URL of the field:</p>
+          <p>https://oauth.vk.com/blank.html#access_token=<strong>COPY_HERE</strong>&expires_in=86400&user_id=1</p>
         </div>
       </div>
       <hr>
       <div class="exists">
-        <at-input type="password" v-model="token" clearable placeholder="Enter a token" />
+        <at-input type="password" v-model="token" clearable placeholder="Enter a access token" />
         <at-button v-if="token" @click="installToken()" type="primary">
           Gain access
         </at-button>
@@ -47,7 +52,8 @@ export default {
     return {
       token: '',
       scope: [],
-      displayInfo: false
+      displayInfo: false,
+      appId: clientId
     }
   },
   computed: {
@@ -61,7 +67,7 @@ export default {
     },
     goGetToken () {
       this.displayInfo = true
-      window.open(urlOauth + '?client_id=' + clientId + '&display=page&redirect_uri=' + redirectUri +
+      window.open(urlOauth + '?client_id=' + this.appId + '&display=page&redirect_uri=' + redirectUri +
         '&scope=' + this.scope.join(',') + '&response_type=token&v=' + version, '_blank')
     }
   }
@@ -94,8 +100,22 @@ button {
   }
 }
 
+.flex {
+  margin-top: 25px;
+  .at-input {
+    margin-right: 10px;
+  }
+  > button {
+    margin: 0;
+  }
+}
+
 .info {
-  margin-top: 30px;
+  margin-top: 25px;
+  > .i1 {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
 }
 
 .exists {
