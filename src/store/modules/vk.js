@@ -23,10 +23,17 @@ const mutations = {
   VK_SET_TOKEN (state, str) {
     state.token = str
   },
+  VK_CLEAR_TOKEN (state) {
+    state.token = ''
+  },
   VK_SET_USER (state, obj) {
     state.user = obj
   },
+  VK_CLEAR_USER (state) {
+    state.user = {}
+  },
   VK_SET_PERMISSIONS (state, num) {
+    /** @see https://vk.com/dev/permissions Bitmask */
     state.access.friends = !!(num & 2)
     state.access.photos = !!(num & 4)
     state.access.video = !!(num & 16)
@@ -35,6 +42,11 @@ const mutations = {
     state.access.wall = !!(num & 8192)
     state.access.docs = !!(num & 1311072)
     state.access.groups = !!(num & 262144)
+  },
+  VK_CLEAR_PERMISSIONS (state) {
+    Object.keys(state.access).forEach(key => {
+      state.access[key] = false
+    })
   }
 }
 
@@ -77,6 +89,11 @@ const actions = {
       .catch(() => {
         addLog(vk, 'Server error', ICON_TOKEN, COLOR_ERROR)
       })
+  },
+  vkExit ({commit}) {
+    commit('VK_CLEAR_TOKEN')
+    commit('VK_CLEAR_USER')
+    commit('VK_CLEAR_PERMISSIONS')
   }
 }
 

@@ -1,8 +1,11 @@
 <template>
   <div id="token">
     <template v-if="user">
-      <!--TODO Delete current token-->
+      <at-button @click="deleteToken()" type="danger">
+        Delete token
+      </at-button>
     </template>
+
     <template v-else>
       <div class="header">
         <p>To gain access to your account, you must receive a special token.</p>
@@ -21,7 +24,7 @@
           <at-checkbox label="groups">Groups</at-checkbox>
         </at-checkbox-group>
         <div class="flex flex-middle flex-center" v-if="scope.length">
-          <at-popover trigger="click" content="Application ID" placement="bottom">
+          <at-popover trigger="hover" content="Application ID" placement="bottom">
             <at-input placeholder="Application ID" v-model="appId" />
           </at-popover>
           <at-button @click="goGetToken()" type="primary">
@@ -64,6 +67,9 @@ export default {
   methods: {
     installToken () {
       this.$store.dispatch('vkInit', this.token)
+    },
+    deleteToken () {
+      this.$store.dispatch('vkExit')
     },
     goGetToken () {
       this.displayInfo = true
