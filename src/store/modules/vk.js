@@ -53,7 +53,7 @@ const actions = {
   vkInit ({commit}, token) {
     send('account.getAppPermissions', {
       access_token: token
-    }, { icon: ICON_TOKEN, msg: 'Получены данные о токене' })
+    }, { icon: ICON_TOKEN, msg: 'Received token data' })
       .then(res => {
         if (res.body.response) {
           store.commit('VK_SET_PERMISSIONS', res.body.response)
@@ -62,7 +62,7 @@ const actions = {
 
           send('users.get', {
             fields: 'has_photo,photo_100,counters'
-          }, { icon: ICON_TOKEN, msg: 'Получены данные о пользователе' })
+          }, { icon: ICON_TOKEN, msg: 'Received user information' })
             .then(res => {
               if (res.body.response) {
                 store.commit('VK_SET_USER', res.body.response[0])
@@ -76,6 +76,7 @@ const actions = {
       })
   },
   vkExit ({commit}) {
+    Vue.prototype.$Message.info('Deleted user')
     commit('VK_CLEAR_TOKEN')
     commit('VK_CLEAR_USER')
     commit('VK_CLEAR_PERMISSIONS')

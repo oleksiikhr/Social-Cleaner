@@ -1,7 +1,8 @@
 import store from '../store/index'
 
-export const ICON_TOKEN = 'fa-key'
-export const ICON_WALL = 'fa-tasks'
+// Fontawesome
+export const ICON_TOKEN = 'key'
+export const ICON_WALL = 'bars' // Temporary
 
 export const COLOR_SUCCESS = 'success'
 export const COLOR_ERROR = 'error'
