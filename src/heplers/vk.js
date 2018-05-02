@@ -7,7 +7,16 @@ export const redirectUri = 'https://oauth.vk.com/blank.html'
 export const clientId = 6244330
 export const version = '5.74'
 
-export function jsonp (method, params) {
+/**
+ * Send request to VK.
+ *
+ * @param method
+ * @param params
+ * @param logs - { icon, msg }
+ *
+ * @returns {*}
+ */
+export function send (method, params, logs) {
   params.v = version
 
   if (!params.access_token) {
@@ -15,7 +24,7 @@ export function jsonp (method, params) {
   }
 
   return Vue.http.jsonp(urlApi + method, {
-    method: 'GET',
-    params: params
+    params: params,
+    logs: logs
   })
 }

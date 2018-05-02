@@ -1,7 +1,7 @@
 <template>
   <div id="logs">
     <!--TODO Temporary-->
-    <div v-for="(log, index) in logs" :key="index">
+    <div v-for="(log, index) in logs" :key="index" style="margin-bottom: 30px">
       {{ log }}
     </div>
   </div>

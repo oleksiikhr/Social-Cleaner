@@ -8,7 +8,7 @@
       <i :class="'current fa ' + socialNetwork.icon" aria-hidden="true"></i>
       <router-link to="/logs" class="logs">
         <template v-if="firstLog">
-          <span>{{ firstLog.message }}</span>
+          <span>{{ firstLog.title }}</span>
         </template>
         <span v-else>No logs</span>
       </router-link>
