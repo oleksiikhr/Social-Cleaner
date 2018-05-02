@@ -6,7 +6,7 @@
       </at-button>
     </template>
 
-    <template v-else>
+    <div class="no-user" v-else>
       <div class="header">
         <p>To gain access to your account, you must receive a special token.</p>
       </div>
@@ -43,7 +43,7 @@
           Gain access
         </at-button>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -81,13 +81,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-button {
-  margin-top: 25px;
+#token {
+  margin: 0 auto;
 }
 
-#token {
-  max-width: 800px;
-  margin: 0 auto;
+.no-user {
+  button {
+    margin-top: 25px;
+  }
 }
 
 .header {
