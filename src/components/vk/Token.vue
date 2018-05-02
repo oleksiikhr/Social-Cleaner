@@ -1,12 +1,23 @@
 <template>
   <div id="token">
-    <template v-if="user">
-      <at-button @click="deleteToken()" type="danger">
-        Delete token
-      </at-button>
-    </template>
+    <div class="logged-in" v-if="user">
+      <at-alert message="After rebooting the page - you need to re-enter the token." type="warning" show-icon />
+      <div class="btn-out">
+        <at-button @click="deleteToken()" type="error">
+          Delete the token now
+        </at-button>
+      </div>
+      <hr>
+      <div class="sections">
+        <p>Sections</p>
+        <!--<div class="item" v-for="section in sections" :key="section.name">-->
+          <!--{{ section }}-->
+          <!--<span>{{ section.name }}</span>-->
+        <!--</div>-->
+      </div>
+    </div>
 
-    <div class="no-user" v-else>
+    <template v-else>
       <div class="header">
         <p>To gain access to your account, you must receive a special token.</p>
       </div>
@@ -23,18 +34,20 @@
           <at-checkbox label="docs">Docs</at-checkbox>
           <at-checkbox label="groups">Groups</at-checkbox>
         </at-checkbox-group>
-        <div class="flex flex-middle flex-center" v-if="scope.length">
-          <at-popover trigger="hover" content="Application ID" placement="bottom">
-            <at-input placeholder="Application ID" v-model="appId" />
-          </at-popover>
-          <at-button @click="goGetToken()" type="primary">
-            Generate a temporary token
-          </at-button>
-        </div>
-        <div class="info" v-if="displayInfo">
-          <p class="i1">You need to copy the value of access_token from the URL of the field:</p>
-          <p>https://oauth.vk.com/blank.html#access_token=<strong>COPY_HERE</strong>&expires_in=86400&user_id=1</p>
-        </div>
+        <template v-if="scope.length">
+          <div class="flex flex-middle flex-center">
+            <at-popover trigger="hover" content="Application ID" placement="bottom">
+              <at-input placeholder="Application ID" v-model="appId" />
+            </at-popover>
+            <at-button @click="goGetToken()" type="primary">
+              Generate a temporary token
+            </at-button>
+          </div>
+          <div class="info">
+            <p class="i1">You need to copy the value of access_token from the URL of the field:</p>
+            <p>https://oauth.vk.com/blank.html#access_token=<strong>COPY_HERE</strong>&expires_in=86400&user_id=1</p>
+          </div>
+        </template>
       </div>
       <hr>
       <div class="exists">
@@ -43,7 +56,7 @@
           Gain access
         </at-button>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -55,8 +68,10 @@ export default {
     return {
       token: '',
       scope: [],
-      displayInfo: false,
-      appId: clientId
+      appId: clientId,
+      sections: [
+        { name: 'Wall', icon: 'wall..' }
+      ]
     }
   },
   computed: {
@@ -72,7 +87,6 @@ export default {
       this.$store.dispatch('vkExit')
     },
     goGetToken () {
-      this.displayInfo = true
       window.open(urlOauth + '?client_id=' + this.appId + '&display=page&redirect_uri=' + redirectUri +
         '&scope=' + this.scope.join(',') + '&response_type=token&v=' + version, '_blank')
     }
@@ -81,14 +95,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#token {
-  margin: 0 auto;
+button {
+  margin-top: 25px;
 }
 
-.no-user {
-  button {
-    margin-top: 25px;
-  }
+#token {
+  margin: 0 auto;
 }
 
 .header {
@@ -129,5 +141,24 @@ export default {
   max-width: 500px;
   margin: 0 auto;
   text-align: center;
+}
+
+.logged-in {
+  > .btn-out {
+    text-align: center;
+    > button {
+      margin-top: 20px;
+    }
+  }
+}
+
+.sections {
+  margin-top: 20px;
+  text-align: center;
+  > p {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
 }
 </style>
