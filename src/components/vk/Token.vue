@@ -10,10 +10,14 @@
       <hr>
       <div class="sections">
         <p>Sections</p>
-        <!--<div class="item" v-for="section in sections" :key="section.name">-->
-          <!--{{ section }}-->
-          <!--<span>{{ section.name }}</span>-->
-        <!--</div>-->
+        <div class="inner">
+          <!--FIXME Delete section by access-->
+          <router-link class="section" v-for="section in vk.sections" :key="section.name" :to="{ name: section.to }"
+                       v-if="section.to !== 'vk-token'">
+            <i :class="`fa fa-${section.icon}`" aria-hidden="true"></i>
+            <span>{{ section.name }}</span>
+          </router-link>
+        </div>
       </div>
     </div>
 
@@ -61,17 +65,16 @@
 </template>
 
 <script>
+import { vk } from '../../config'
 import { urlOauth, clientId, redirectUri, version } from '../../heplers/vk'
 
 export default {
   data () {
     return {
+      vk,
       token: '',
       scope: [],
-      appId: clientId,
-      sections: [
-        { name: 'Wall', icon: 'wall..' }
-      ]
+      appId: clientId
     }
   },
   computed: {
@@ -97,6 +100,10 @@ export default {
 <style lang="scss" scoped>
 button {
   margin-top: 25px;
+}
+
+hr {
+  margin: 30px;
 }
 
 #token {
@@ -159,6 +166,31 @@ button {
     font-weight: bold;
     font-size: 1rem;
     margin-bottom: 20px;
+  }
+  > .inner {
+    display: flex;
+  }
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid #e7e7e7;
+  color: #333;
+  opacity: 0.7;
+  flex-wrap: wrap;
+  width: 150px;
+  margin: 10px;
+  font-size: 1rem;
+  transition: .2s;
+  &:hover {
+    background: #f7f7f7;
+  }
+  > span {
+    margin-top: 10px;
   }
 }
 </style>

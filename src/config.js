@@ -1,3 +1,5 @@
+import { ICON_TOKEN, ICON_WALL } from './heplers/logs'
+
 export const version = '2.0.0'
 
 /* | ---------------------------------------------------------
@@ -27,7 +29,11 @@ export const vk = {
   to: '/vk',
   domain: 'vk.com',
   wallpaper: require('@/assets/vk/wallpaper.jpg'),
-  icon: 'fa-vk'
+  icon: 'fa-vk',
+  sections: [
+    { name: 'Token', to: 'vk-token', icon: ICON_TOKEN },
+    { name: 'Wall', to: 'vk-wall', icon: ICON_WALL }
+  ]
 }
 
 export const networks = [
