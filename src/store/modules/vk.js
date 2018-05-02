@@ -1,5 +1,6 @@
 import { ICON_TOKEN } from '../../heplers/logs'
 import { send } from '../../heplers/vk'
+import router from '../../router/index'
 import store from '../../store/index'
 import Vue from 'vue'
 
@@ -76,10 +77,11 @@ const actions = {
       })
   },
   vkExit ({commit}) {
-    Vue.prototype.$Message.info('Deleted user')
     commit('VK_CLEAR_TOKEN')
     commit('VK_CLEAR_USER')
     commit('VK_CLEAR_PERMISSIONS')
+    Vue.prototype.$Message.info('Deleted user')
+    router.push({ name: 'vk-token' })
   }
 }
 

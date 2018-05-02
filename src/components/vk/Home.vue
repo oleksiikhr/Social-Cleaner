@@ -33,7 +33,6 @@ export default {
       return this.$store.state.vk.user.id
     },
     routeName () {
-      console.log(this.$route)
       return this.$route.name
     }
   }
