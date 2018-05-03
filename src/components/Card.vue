@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="item.to" :style="'background: ' + item.image" class="item">
+  <router-link :to="item.to" :style="'background: ' + item.image" :class="'item' + classDisabled">
     <span class="name">{{ item.name }}</span>
     <span class="domain">{{ item.domain }}</span>
   </router-link>
@@ -11,6 +11,11 @@ export default {
     item: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    classDisabled () {
+      return this.item.disabled ? ' disabled' : ''
     }
   }
 }
@@ -26,6 +31,10 @@ export default {
   transition: .3s;
   &:hover {
     opacity: 1;
+  }
+  &.disabled {
+    opacity: .2;
+    pointer-events: none;
   }
   > .name {
     font-weight: bold;

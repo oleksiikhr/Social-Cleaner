@@ -13,7 +13,8 @@ export const facebook = {
   to: '/facebook',
   domain: 'facebook.com',
   wallpaper: require('@/assets/twitter/wallpaper.jpg'),
-  icon: 'fa-facebook'
+  icon: 'fa-facebook',
+  disabled: true
 }
 
 export const twitter = {
@@ -21,7 +22,8 @@ export const twitter = {
   to: '/twitter',
   domain: 'twitter.com',
   wallpaper: require('@/assets/facebook/wallpaper.jpg'),
-  icon: 'fa-twitter'
+  icon: 'fa-twitter',
+  disabled: true
 }
 
 export const vk = {
