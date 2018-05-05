@@ -17,8 +17,22 @@ Vue.config.productionTip = false
 Vue.http.interceptors.push((req, next) => {
   // VK
   if (req.url.indexOf(vk.urlApi) !== -1) {
-    const split = req.url.split('/')
-    addLog(config.vk, 'Receiving data..', split[split.length - 1], req.logs.icon, COLOR_INFO)
+    const urlSplit = req.url.split('/')
+
+    // Hide params from logs
+    let params = []
+    Object.keys(req.params).forEach(key => {
+      const param = req.params[key]
+      switch (key) {
+        case 'access_token':
+          params.push({ key: key, value: param.substr(0, 3) + '***' + param.substr(-3) })
+          break
+        default:
+          params.push({ key: key, value: param })
+      }
+    })
+
+    addLog(config.vk, 'Receiving data..', { method: urlSplit[urlSplit.length - 1], params: params }, req.logs.icon, COLOR_INFO)
 
     next(res => {
       if (res.status >= 200 && res.status < 300) {
