@@ -22,8 +22,7 @@ export const COLOR_INFO = 'info'
  */
 export function addLog (socialNetwork, title, message, icon, color) {
   store.commit('ADD_LOG', {
-    social_name: socialNetwork.name,
-    social_icon: socialNetwork.icon,
+    socialNetwork: socialNetwork,
     title: title,
     message: message,
     icon: icon,
