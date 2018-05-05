@@ -87,11 +87,12 @@ export default {
       this.$store.dispatch('vkInit', this.token)
     },
     deleteToken () {
+      this.token = ''
       this.$store.dispatch('vkExit')
     },
     goGetToken () {
-      window.open(urlOauth + '?client_id=' + this.appId + '&display=page&redirect_uri=' + redirectUri +
-        '&scope=' + this.scope.join(',') + '&response_type=token&v=' + version, '_blank')
+      window.open(`${urlOauth}?client_id=${this.appId}&display=page&redirect_uri=${redirectUri}
+        &scope=${this.scope.join(',')}&response_type=token&v=${version}`, '_blank')
     }
   }
 }

@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  mounted () {
+  activated () {
     this.$store.commit('CLEAR_SOCIAL_NETWORK')
   },
   computed: {

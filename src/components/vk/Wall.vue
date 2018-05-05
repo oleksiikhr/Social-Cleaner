@@ -1,15 +1,20 @@
 <template>
   <div id="wall">
-    {{ res }}
+    <p>Wall</p>
+    {{ res.wall }}
+    <p>Page</p>
+    {{ res.page }}
+
+    <!--TODO Button for refresh-->
 
     <hr>
     <h2>Основные настройки</h2>
 
-    <p>ID или ссылка на страницу [группу]</p>
-    <at-input v-model="owner" />
+    <p>ID или ссылка на страницу/группу</p>
+    <at-input v-model="owner" @blur="blurOwner" />
 
     <p>Фильтр записей</p>
-    <at-select v-model="filter" clearable size="large">
+    <at-select v-model="filter" clearable>
       <at-option value="suggests">Предложенные записи на стене сообщества</at-option>
       <at-option value="postponed">Отложенные записи</at-option>
       <at-option value="owner">Записи владельца стены</at-option>
@@ -38,12 +43,16 @@ export default {
     return {
       owner: '',
       filter: 'all',
-      res: ''
+      res: {
+        wall: {},
+        page: {}
+      }
     }
   },
   mounted () {
     this.owner = this.user.id
-    this.fetchGet(0)
+    // this.fetchGet(0)
+    // this.fetchGetUsersById(this.user.id)
   },
   computed: {
     user () {
@@ -60,8 +69,36 @@ export default {
         offset: offset
       }, { icon: ICON_WALL, msg: 'Received Wall data' })
         .then(res => {
-          this.res = res.data
+          this.res.wall = res.data
         })
+    },
+    fetchGetGroupsById (id) {
+      send('groups.getById', {
+        group_ids: id
+      }, { icon: ICON_WALL, msg: 'Received Group data' })
+        .then(res => {
+          this.res.page = res.data
+        })
+    },
+    fetchGetUsersById (id, fields = 'photo_50') {
+      send('users.get', {
+        user_ids: id,
+        fields: fields
+      }, { icon: ICON_WALL, msg: 'Received User data' })
+        .then(res => {
+          this.res.page = res.data
+        })
+    },
+    blurOwner () {
+      // TODO Parse owner
+      console.log(this.owner)
+      // this.fetchGetUsersById(this.owner, 'photo_50')
+      // this.fetchGetGroupsById(this.owner)
+    }
+  },
+  watch: {
+    filter () {
+      // this.fetchGet(0)
     }
   }
 }

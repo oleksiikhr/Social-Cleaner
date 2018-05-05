@@ -23,8 +23,11 @@ export default {
       search: ''
     }
   },
-  mounted () {
+  activated () {
     this.$store.commit('CLEAR_SOCIAL_NETWORK')
+  },
+  deactivated () {
+    this.search = ''
   },
   computed: {
     filteredNetworks () {
