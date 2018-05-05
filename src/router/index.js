@@ -26,7 +26,7 @@ export default new Router({
       component: load('vk/Home'),
       children: [
         { path: 'token', name: 'vk-token', component: load('vk/Token') },
-        { path: 'wall', name: 'vk-wall', component: load('vk/Wall') }
+        { path: 'wall', name: 'vk-wall', component: load('vk/Wall'), meta: { vk: true } }
       ]
     }
   ]

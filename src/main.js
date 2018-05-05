@@ -1,9 +1,9 @@
 import 'at-ui-style'
 import Vue from 'vue'
 import App from './App'
+import store from './store'
 import router from './router'
 import AtComponents from 'at-ui'
-import store from './store/index'
 import * as vk from './heplers/vk'
 import * as config from './config'
 import VueResource from 'vue-resource'
@@ -41,6 +41,14 @@ Vue.http.interceptors.push((req, next) => {
         addLog(config.vk, 'Server error', '', req.logs.icon, COLOR_ERROR)
       }
     })
+  }
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.vk && !store.state.vk.user.id) {
+    next({ name: 'vk-token' })
+  } else {
+    next()
   }
 })
 
