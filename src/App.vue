@@ -5,10 +5,10 @@
         Social Cleaner
         <span>{{ version }}</span>
       </router-link>
-      <i :class="'current fa ' + socialNetwork.icon" aria-hidden="true"></i>
+      <i v-if="socialNetwork.icon" :class="'current fa ' + socialNetwork.icon" aria-hidden="true"></i>
       <router-link to="/logs" class="logs">
         <template v-if="firstLog">
-          <span>{{ firstLog.title }}</span>
+          <span :class="firstLog.color">{{ firstLog.title }}</span>
         </template>
         <span v-else>No logs</span>
       </router-link>
@@ -63,18 +63,20 @@ header {
   justify-content: space-between;
   height: 40px;
   overflow: hidden;
-  .brand {
-    width: 250px;
-    padding: 5px 20px;
-    font-weight: bold;
-    font-size: 1.2rem;
+  .brand, .logs {
+    width: 280px;
     color: #333;
-    opacity: .7;
-    text-transform: uppercase;
     transition: .2s;
+    opacity: .7;
+    text-align: center;
     &:hover {
       opacity: 1;
     }
+  }
+  .brand {
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
     > span {
       font-size: 0.7rem;
       vertical-align: top;
@@ -87,17 +89,26 @@ header {
     color: #444;
   }
   .logs {
-    padding: 5px 20px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 250px;
-    color: #333;
-    opacity: 0.7;
     font-size: .8rem;
-    transition: .3s;
-    &:hover {
-      opacity: 1;
+    > span {
+      display: block;
+      padding: 2px 10px;
+      font-weight: bold;
+      &.success {
+        color: #0dad54;
+      }
+      &.error {
+        color: #ff5b5b;
+      }
+      &.warning {
+        color: #efb30d;
+      }
+      &.info {
+        color: #6c94e1;
+      }
     }
   }
 }

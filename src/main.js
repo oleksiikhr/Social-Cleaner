@@ -18,7 +18,7 @@ Vue.http.interceptors.push((req, next) => {
   // VK
   if (req.url.indexOf(vk.urlApi) !== -1) {
     const split = req.url.split('/')
-    addLog(config.vk, 'Получение данных..', split[split.length - 1], req.logs.icon, COLOR_INFO)
+    addLog(config.vk, 'Receiving data..', split[split.length - 1], req.logs.icon, COLOR_INFO)
 
     next(res => {
       if (res.status >= 200 && res.status < 300) {
