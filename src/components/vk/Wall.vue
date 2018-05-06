@@ -1,11 +1,5 @@
 <template>
   <div id="wall">
-    <p>Wall</p>
-    {{ res.wall }}
-    <p>Page</p>
-    {{ res.page }}
-
-    <hr>
     <div class="main-config block">
       <h2>Основные настройки</h2>
       <div class="block__attr">
@@ -24,6 +18,7 @@
       </div>
       <div class="block__attr">
         <p>Количество записей (от и до), включительно</p>
+        <!--FIXME Is Number-->
         <div class="flex">
           <at-input v-model="main.count.min" placeholder="От" /> -
           <at-input v-model="main.count.max" placeholder="До" />
@@ -36,13 +31,20 @@
           <at-radio-button :label="1" disabled>Комментарии</at-radio-button>
         </at-radio-group>
       </div>
-      <div class="block__btn">
+      <div class="block__btn" v-if="!res.page.response">
         <at-button type="primary" @click="checkMainConfig()" hollow>Проверить настройки</at-button>
       </div>
-      <div class="block__result" v-if="res.page.id">
-        <at-button type="warning" @click="res.page = {}" hollow>Close</at-button>
-        <!--TODO Button Close - clean res.page-->
-        Result
+      <div class="block__result" v-else>
+        <div class="right">
+          <at-button type="info" @click="res.page = {}" hollow>Close</at-button>
+        </div>
+        <div class="wall">
+          {{ res.wall }}
+        </div>
+        <div class="page">
+          <img :src="res.page.response.photo_100" alt="Image" />
+          {{ res.page }}
+        </div>
       </div>
     </div>
 
@@ -54,7 +56,7 @@
 
     <hr>
     <!--TODO Dialog confirmed-->
-    <at-button type="error">Удалить записи</at-button>
+    <at-button type="error" disabled>Удалить записи</at-button>
   </div>
 </template>
 
@@ -111,11 +113,11 @@ export default {
     fetchGetUsersById () {
       send('users.get', {
         user_ids: this.main.owner_id,
-        fields: 'photo_50'
+        fields: 'photo_100'
       }, { icon: ICON_WALL, msg: 'Received User data' })
         .then(res => {
           if (res.data.response) {
-            this.res.page = { isUser: true, response: res.data.response }
+            this.res.page = { isUser: true, response: res.data.response[0] }
           }
         })
     },
@@ -125,7 +127,7 @@ export default {
       }, { icon: ICON_WALL, msg: 'Received Group data' })
         .then(res => {
           if (res.data.response) {
-            this.res.page = { isUser: false, response: res.data.response }
+            this.res.page = { isUser: false, response: res.data.response[0] }
           }
         })
     },
@@ -136,7 +138,7 @@ export default {
      * |
      */
     checkMainConfig () {
-      this.fetchGetWall(1)
+      this.fetchGetWall(1, this.main.count.min - 1)
 
       if (this.main.owner_id[0] !== '-') {
         this.fetchGetUsersById()
@@ -184,6 +186,16 @@ export default {
     margin: 20px auto;
     > button {
       width: 100%;
+    }
+  }
+  .block__result {
+    border: 1px solid #e7e7e7;
+    padding: 20px;
+    > * {
+      margin-bottom: 20px;
+    }
+    > .right {
+      text-align: right;
     }
   }
 }
