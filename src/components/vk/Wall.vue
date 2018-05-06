@@ -31,20 +31,11 @@
           <at-radio-button :label="1" disabled>Комментарии</at-radio-button>
         </at-radio-group>
       </div>
-      <div class="block__btn" v-if="!res.page.response">
+      <div class="block__btn">
         <at-button type="primary" @click="checkMainConfig()" hollow>Проверить настройки</at-button>
       </div>
-      <div class="block__result" v-else>
-        <div class="right">
-          <at-button type="info" @click="res.page = {}" hollow>Close</at-button>
-        </div>
-        <div class="wall">
-          {{ res.wall }}
-        </div>
-        <div class="page">
-          <img :src="res.page.response.photo_100" alt="Image" />
-          {{ res.page }}
-        </div>
+      <div class="block__result" v-if="res.page.response || res.wall.response">
+        <config-result :wall="res.wall" :page="res.page" @close="handleResultClose" />
       </div>
     </div>
 
@@ -61,10 +52,14 @@
 </template>
 
 <script>
+import ConfigResult from './parts/WallConfigResult'
 import { ICON_WALL } from '../../heplers/logs'
 import { send } from '../../heplers/vk'
 
 export default {
+  components: {
+    ConfigResult
+  },
   data () {
     return {
       main: {
@@ -138,12 +133,18 @@ export default {
      * |
      */
     checkMainConfig () {
-      this.fetchGetWall(1, this.main.count.min - 1)
+      this.fetchGetWall(1, this.main.count.min)
 
       if (this.main.owner_id[0] !== '-') {
         this.fetchGetUsersById()
       } else {
         this.fetchGetGroupsById()
+      }
+    },
+    handleResultClose () {
+      this.res = {
+        wall: {},
+        page: {}
       }
     }
   },
@@ -157,13 +158,14 @@ export default {
 
 <style lang="scss" scoped>
 .block {
+  max-width: 500px;
+  margin: 0 auto;
   h2 {
     text-align: center;
     margin-bottom: 20px;
   }
   .block__attr {
-    max-width: 500px;
-    margin: 0 auto 15px;
+    margin-bottom: 15px;
     > p {
       font-weight: bold;
       margin-bottom: 15px;
@@ -182,20 +184,10 @@ export default {
     }
   }
   .block__btn {
-    max-width: 500px;
-    margin: 20px auto;
+    margin-top: 20px;
+    margin-bottom: 15px;
     > button {
       width: 100%;
-    }
-  }
-  .block__result {
-    border: 1px solid #e7e7e7;
-    padding: 20px;
-    > * {
-      margin-bottom: 20px;
-    }
-    > .right {
-      text-align: right;
     }
   }
 }
