@@ -54,7 +54,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 body, #app {
   min-height: 100%;
 }
@@ -135,6 +135,12 @@ footer {
     text-indent: 15px;
     font-size: smaller;
   }
+}
+
+hr {
+  margin: 30px;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 #app {

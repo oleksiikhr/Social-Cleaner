@@ -103,10 +103,6 @@ button {
   margin-top: 25px;
 }
 
-hr {
-  margin: 30px;
-}
-
 #token {
   margin: 0 auto;
 }

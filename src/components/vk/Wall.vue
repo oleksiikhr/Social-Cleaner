@@ -31,6 +31,7 @@
           <at-radio-button :label="1" disabled>Комментарии</at-radio-button>
         </at-radio-group>
       </div>
+      <!-- TODO 2 div in another component -->
       <div class="block__btn">
         <at-button type="primary" @click="checkMainConfig()" hollow>Проверить настройки</at-button>
       </div>
@@ -40,7 +41,6 @@
     </div>
 
     <hr>
-
     <div class="wall-config block">
       <h2>Параметры стены</h2>
       <div class="block__attr">
@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="block__attr">
-        <p>ID автора записи (идентификатор сообщества необходимо указывать со знаком "-")</p>
+        <p>ID авторов записей (идентификатор сообщества необходимо указывать со знаком "-")</p>
         <at-input v-model="wall.fromId" @keyup.enter.native="addConfigWallArrayId('fromId', 'fromIds')" />
         <div class="block__attr-inner">
           <at-tag v-for="(id, index) in wall.fromIds" :key="index" :name="id" closable
@@ -63,13 +63,42 @@
           </at-tag>
         </div>
       </div>
+      <!-- TODO Date -->
+      <!-- TODO Text -->
+      <!-- TODO Attachments https://vk.com/dev/objects/attachments_w -->
+      <!-- TODO Count [comments, likes, reposts, views] -->
     </div>
 
-    <!--<hr>-->
-    <!--<h2>Параметры комментарий</h2>-->
+    <template v-if="main.isDeletePosts">
+      <hr>
+      <div class="comments-config block">
+        <h2>Параметры комментарий</h2>
+        <!--TODO From_id-->
+        <!--TODO Date-->
+        <!--TODO Text-->
+        <!--TODO Attachments-->
+        <!--TODO Count [likes]-->
+      </div>
+    </template>
 
     <!--TODO Dialog confirmed-->
-    <at-button type="error" disabled>Удалить записи</at-button>
+    <hr>
+    <div class="footer block">
+      <at-button type="error" @click="dialogDelete = true">Удалить записи</at-button>
+      <at-modal v-model="dialogDelete">
+        <div slot="header">
+          <span>The confirmation</span>
+        </div>
+        <div style="text-align:center;">
+          <p>Are you sure you want to start deleting posts / clearing comments?</p>
+        </div>
+        <div slot="footer">
+          <at-button @click="dialogDelete = false">Cancel</at-button>
+          <!--TODO Start delete method-->
+          <at-button type="error" @click="dialogDelete = false">Run cleanup</at-button>
+        </div>
+      </at-modal>
+    </div>
   </div>
 </template>
 
@@ -103,7 +132,8 @@ export default {
       res: {
         wall: {},
         page: {}
-      }
+      },
+      dialogDelete: false
     }
   },
   mounted () {
@@ -252,6 +282,12 @@ export default {
     > button {
       width: 100%;
     }
+  }
+}
+
+.footer {
+  > button {
+    width: 100%;
   }
 }
 </style>
