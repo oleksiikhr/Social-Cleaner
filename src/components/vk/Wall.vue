@@ -10,6 +10,7 @@
       <div class="block__attr">
         <p>Фильтр записей</p>
         <at-select v-model="main.filter" :disabled="del.process" size="large">
+          <!--TODO v-for-->
           <at-option value="suggests">Предложенные записи на стене сообщества</at-option>
           <at-option value="postponed">Отложенные записи</at-option>
           <at-option value="owner">Записи владельца стены</at-option>
@@ -61,7 +62,6 @@
         </div>
         <small>After filling, press enter to add to the list. Use a negative value to designate a community ID.</small>
       </div>
-      <!-- TODO Date -->
       <div class="block__attr">
         <p>Фразы в тексты</p>
         <at-input v-model="wall.text" :disabled="del.process"
@@ -77,6 +77,7 @@
       <div class="block__attr">
         <p>Added media attachments</p>
         <at-checkbox-group v-model="wall.attachments">
+          <!--TODO v-for-->
           <at-checkbox label="photo">Photo</at-checkbox>
           <at-checkbox label="video">Video</at-checkbox>
           <at-checkbox label="audio">Audio</at-checkbox>
@@ -93,6 +94,7 @@
       <div class="block__attr">
         <p>Значения</p>
         <div class="counts">
+          <!--TODO v-for-->
           <div class="count-comments count">
             <div class="flex">
               <i class="fa fa-comment-o" aria-hidden="true"></i>
@@ -150,7 +152,6 @@
       <div class="comments-config block">
         <h2>Параметры комментарий</h2>
         <!--TODO From_id-->
-        <!--TODO Date-->
         <!--TODO Text-->
         <!--TODO Attachments-->
         <!--TODO Count [likes]-->
@@ -165,7 +166,6 @@
       </at-button>
       <!--TODO Preview posts-->
 
-      <!--TODO Stop delete posts - del.continueDelete = false-->
       <at-modal v-model="del.dialog">
         <div slot="header">
           <span>The confirmation</span>
@@ -242,7 +242,6 @@ export default {
   },
   mounted () {
     this.main.owner_id = this.user.id
-    // this.main.owner_id = '-132378855' // FIXME Temporary
   },
   computed: {
     user () {
@@ -358,6 +357,10 @@ export default {
         return true
       }
 
+      if (this.checkWallCounts(post)) {
+        return true
+      }
+
       // TODO
 
       return false
@@ -387,6 +390,46 @@ export default {
           return true
         }
       })
+    },
+    checkWallCounts (post) {
+      if (this.checkWallCountObj(post, 'comments')) {
+        return true
+      }
+
+      if (this.checkWallCountObj(post, 'likes')) {
+        return true
+      }
+
+      if (this.checkWallCountObj(post, 'reposts')) {
+        return true
+      }
+
+      if (this.checkWallCountObj(post, 'views')) {
+        return true
+      }
+
+      return false
+    },
+    checkWallCountObj (post, localObj) {
+      if (post[localObj] === 'undefined') {
+        return false
+      }
+
+      const postCount = post[localObj].count
+      const state = this.wall.count[localObj].state
+
+      if (state !== 0) {
+        const count = parseInt(this.wall.count[localObj].count)
+
+        switch (state) {
+          case -1:
+            return postCount < count
+          case 1:
+            return postCount > count
+        }
+      }
+
+      return false
     },
 
     /* | -----------------------------------------------------------------------------
