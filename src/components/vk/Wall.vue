@@ -39,13 +39,24 @@
       </div>
     </div>
 
-    <!--<hr>-->
-    <!--<h2>Параметры стены</h2>-->
+    <hr>
+
+    <div class="wall-config block">
+      <h2>Параметры стены</h2>
+      <div class="block__attr">
+        <p>ID записей, которые нужно сохранить</p>
+        <at-input v-model="wall.id" @keyup.enter.native="addConfigWallId" />
+        <div class="block__attr-inner">
+          <at-tag v-for="(id, index) in wall.ids" :key="index" :name="id" closable @on-close="handleCloseConfigWallId(index)">
+            {{ id }}
+          </at-tag>
+        </div>
+      </div>
+    </div>
 
     <!--<hr>-->
     <!--<h2>Параметры комментарий</h2>-->
 
-    <hr>
     <!--TODO Dialog confirmed-->
     <at-button type="error" disabled>Удалить записи</at-button>
   </div>
@@ -70,6 +81,10 @@ export default {
           max: null
         },
         isDeletePosts: 0
+      },
+      wall: {
+        id: '',
+        ids: [] // FIXME Sets()*
       },
       res: {
         wall: {},
@@ -146,6 +161,25 @@ export default {
         wall: {},
         page: {}
       }
+    },
+
+    /* | -----------------------------------------------------------------------------
+     * | Wall Config
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    addConfigWallId (event) {
+      const id = parseInt(this.wall.id)
+
+      if (id) {
+        this.wall.ids.push(id)
+        this.wall.ids = Array.from(new Set(this.wall.ids.sort((a, b) => a - b)))
+      }
+
+      this.wall.id = ''
+    },
+    handleCloseConfigWallId (index) {
+      this.wall.ids.splice(index, 1)
     }
   },
   watch: {

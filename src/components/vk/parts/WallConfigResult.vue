@@ -24,7 +24,7 @@
       <span>Wall</span>
       <div class="info">
         <p><strong>Count:</strong> {{ wall.response.count }}</p>
-        <p><strong>First post to delete:</strong> <a :href="linkWall" target="_blank" rel="noreferrer">Follow the link</a></p>
+        <p><strong>Start from the first post:</strong> <a :href="linkWall" target="_blank" rel="noreferrer">Follow the link</a></p>
       </div>
     </div>
     <div class="button-out">
