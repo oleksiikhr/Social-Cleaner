@@ -44,11 +44,22 @@
     <div class="wall-config block">
       <h2>Параметры стены</h2>
       <div class="block__attr">
-        <p>ID записей, которые нужно сохранить</p>
-        <at-input v-model="wall.id" @keyup.enter.native="addConfigWallId" />
+        <p>ID записей</p>
+        <at-input v-model="wall.id" @keyup.enter.native="addConfigWallArrayId('id', 'ids')" />
         <div class="block__attr-inner">
-          <at-tag v-for="(id, index) in wall.ids" :key="index" :name="id" closable @on-close="handleCloseConfigWallId(index)">
-            {{ id }}
+          <at-tag v-for="(id, index) in wall.ids" :key="index" :name="id" closable
+                  @on-close="wall.ids.splice(index, 1)">
+            <a href="#">{{ id }}</a>
+          </at-tag>
+        </div>
+      </div>
+      <div class="block__attr">
+        <p>ID автора записи (идентификатор сообщества необходимо указывать со знаком "-")</p>
+        <at-input v-model="wall.fromId" @keyup.enter.native="addConfigWallArrayId('fromId', 'fromIds')" />
+        <div class="block__attr-inner">
+          <at-tag v-for="(id, index) in wall.fromIds" :key="index" :name="id" closable
+                  @on-close="wall.fromIds.splice(index, 1)">
+            <a href="#">{{ id }}</a>
           </at-tag>
         </div>
       </div>
@@ -84,7 +95,9 @@ export default {
       },
       wall: {
         id: '',
-        ids: [] // FIXME Sets()*
+        ids: [], // FIXME Sets()*
+        fromId: '',
+        fromIds: [] // FIXME Sets()*
       },
       res: {
         wall: {},
@@ -168,18 +181,16 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    addConfigWallId (event) {
-      const id = parseInt(this.wall.id)
+    addConfigWallArrayId (str, arr) {
+      const id = parseInt(this.wall[str])
 
       if (id) {
-        this.wall.ids.push(id)
-        this.wall.ids = Array.from(new Set(this.wall.ids.sort((a, b) => a - b)))
+        this.wall[arr].push(id)
+        const sortedSet = new Set(this.wall[arr].sort((a, b) => a - b))
+        this.wall[arr] = Array.from(sortedSet)
       }
 
-      this.wall.id = ''
-    },
-    handleCloseConfigWallId (index) {
-      this.wall.ids.splice(index, 1)
+      this.wall[str] = ''
     }
   },
   watch: {
