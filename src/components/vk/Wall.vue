@@ -70,7 +70,22 @@
           </at-tag>
         </div>
       </div>
-      <!-- TODO Attachments https://vk.com/dev/objects/attachments_w -->
+      <div class="block__attr">
+        <p>Медиавложения</p>
+        <at-checkbox-group v-model="wall.attachments">
+          <at-checkbox label="photo">Photo</at-checkbox>
+          <at-checkbox label="video">Video</at-checkbox>
+          <at-checkbox label="audio">Audio</at-checkbox>
+          <at-checkbox label="doc">Document</at-checkbox>
+          <at-checkbox label="link">Link</at-checkbox>
+          <at-checkbox label="note">Note</at-checkbox>
+          <at-checkbox label="poll">Poll</at-checkbox>
+          <at-checkbox label="page">Wiki Page</at-checkbox>
+          <at-checkbox label="photos_list">Photos List</at-checkbox>
+          <at-checkbox label="market">Market Item</at-checkbox>
+          <at-checkbox label="market_album">Market Collection</at-checkbox>
+        </at-checkbox-group>
+      </div>
       <!-- TODO Count [comments, likes, reposts, views] -->
     </div>
 
@@ -126,7 +141,7 @@ export default {
         filter: 'all',
         count: {
           min: 1,
-          max: null
+          max: 1
         },
         isDeletePosts: 0
       },
@@ -136,7 +151,8 @@ export default {
         fromId: '',
         fromIds: [], // FIXME Sets()*
         text: '',
-        texts: []
+        texts: [],
+        attachments: []
       },
       del: {
         dialog: false,
@@ -147,6 +163,7 @@ export default {
   },
   mounted () {
     this.main.owner_id = this.user.id
+    this.main.owner_id = '-132378855' // FIXME Temporary
   },
   computed: {
     user () {
@@ -227,6 +244,13 @@ export default {
       this.del.process = false
       this.del.continueDelete = true
     },
+
+    /* | -----------------------------------------------------------------------------
+     * | Check posts
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    // TODO checkCommentsConfiguration
     checkWallConfiguration (post) {
       if (this.checkWallIds(post.id)) {
         return true
@@ -240,11 +264,14 @@ export default {
         return true
       }
 
+      if (this.checkWallAttachments(post.attachments)) {
+        return true
+      }
+
       // TODO
 
       return false
     },
-    // TODO checkCommentsConfiguration
     checkWallIds (postId) {
       return this.wall.ids.includes(postId)
     },
@@ -256,6 +283,17 @@ export default {
 
       return this.wall.texts.some(text => {
         if (postText.indexOf(text) > -1) {
+          return true
+        }
+      })
+    },
+    checkWallAttachments (postAttachments) {
+      if (typeof postAttachments === 'undefined') {
+        return false
+      }
+
+      return postAttachments.some(attachment => {
+        if (this.wall.attachments.includes(attachment.type)) {
           return true
         }
       })
@@ -333,6 +371,9 @@ export default {
           margin-right: 0;
         }
       }
+    }
+    .at-checkbox {
+      margin: 0 5px;
     }
   }
 }
