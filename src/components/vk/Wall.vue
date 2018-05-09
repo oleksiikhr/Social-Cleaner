@@ -123,6 +123,7 @@
 </template>
 
 <script>
+import { sleep, randomInteger } from '../../heplers/methods'
 import ConfigResult from './parts/WallConfigResult'
 import { ICON_WALL } from '../../heplers/logs'
 import { send } from '../../heplers/vk'
@@ -163,7 +164,7 @@ export default {
   },
   mounted () {
     this.main.owner_id = this.user.id
-    this.main.owner_id = '-132378855' // FIXME Temporary
+    // this.main.owner_id = '-132378855' // FIXME Temporary
   },
   computed: {
     user () {
@@ -214,14 +215,25 @@ export default {
       }
 
       if (this.checkWallConfiguration(post)) {
-        console.log('No delete')
         this.main.count.min++
         return this.fetchDeletePosts(items, ++index)
       }
 
-      // TODO Check post attributes
+      sleep(randomInteger(1500, 2500)).then(() => {
+        send('wall.delete', {
+          post_id: post.id
+        }, { icon: ICON_WALL, msg: `Attempt to remove the ${post.id}st post` })
+          .then(res => {
+            if (res.body.response) {
+              this.main.count.max--
+            }
 
-      console.log('Need delete', items[index])
+            return this.fetchDeletePosts(items, ++index)
+          })
+          .catch(() => {
+            this.stopDelete(false)
+          })
+      })
     },
 
     /* | -----------------------------------------------------------------------------
