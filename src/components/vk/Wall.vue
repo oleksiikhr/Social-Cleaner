@@ -31,13 +31,7 @@
           <at-radio-button :label="1" disabled>Комментарии</at-radio-button>
         </at-radio-group>
       </div>
-      <!-- TODO 2 div in another component -->
-      <div class="block__btn">
-        <at-button type="primary" @click="checkMainConfig()" hollow>Проверить настройки</at-button>
-      </div>
-      <div class="block__result" v-if="res.page.response || res.wall.response">
-        <config-result :wall="res.wall" :page="res.page" @close="handleResultClose" />
-      </div>
+      <config-result :main-config="main" />
     </div>
 
     <hr>
@@ -90,7 +84,7 @@
           <span>The confirmation</span>
         </div>
         <div style="text-align:center;">
-          <p>Are you sure you want to start deleting posts / clearing comments?</p>
+          <p>Are you sure you want to start {{ main.isDeletePosts ? 'deleting posts' : 'clearing comments' }}?</p>
         </div>
         <div slot="footer">
           <at-button @click="dialogDelete = false">Cancel</at-button>
@@ -129,10 +123,6 @@ export default {
         fromId: '',
         fromIds: [] // FIXME Sets()*
       },
-      res: {
-        wall: {},
-        page: {}
-      },
       dialogDelete: false
     }
   },
@@ -164,48 +154,6 @@ export default {
           this.res.wall = res.data
         })
     },
-    fetchGetUsersById () {
-      send('users.get', {
-        user_ids: this.main.owner_id,
-        fields: 'photo_100'
-      }, { icon: ICON_WALL, msg: 'Received User data' })
-        .then(res => {
-          if (res.data.response) {
-            this.res.page = { isUser: true, response: res.data.response[0] }
-          }
-        })
-    },
-    fetchGetGroupsById () {
-      send('groups.getById', {
-        group_ids: this.main.owner_id.substr(1)
-      }, { icon: ICON_WALL, msg: 'Received Group data' })
-        .then(res => {
-          if (res.data.response) {
-            this.res.page = { isUser: false, response: res.data.response[0] }
-          }
-        })
-    },
-
-    /* | -----------------------------------------------------------------------------
-     * | Main Config
-     * | -----------------------------------------------------------------------------
-     * |
-     */
-    checkMainConfig () {
-      this.fetchGetWall(1, this.main.count.min)
-
-      if (this.main.owner_id[0] !== '-') {
-        this.fetchGetUsersById()
-      } else {
-        this.fetchGetGroupsById()
-      }
-    },
-    handleResultClose () {
-      this.res = {
-        wall: {},
-        page: {}
-      }
-    },
 
     /* | -----------------------------------------------------------------------------
      * | Wall Config
@@ -224,7 +172,7 @@ export default {
     },
 
     /* | -----------------------------------------------------------------------------
-     * | Other
+     * | Links
      * | -----------------------------------------------------------------------------
      * |
      */
@@ -274,13 +222,6 @@ export default {
           margin-right: 0;
         }
       }
-    }
-  }
-  .block__btn {
-    margin-top: 20px;
-    margin-bottom: 15px;
-    > button {
-      width: 100%;
     }
   }
 }
