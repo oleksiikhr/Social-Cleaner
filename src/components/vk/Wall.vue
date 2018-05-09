@@ -4,11 +4,11 @@
       <h2>Основные настройки</h2>
       <div class="block__attr">
         <p>ID на страницу или группу (идентификатор сообщества необходимо указывать со знаком "-")</p>
-        <at-input v-model="main.owner_id" />
+        <at-input v-model="main.owner_id" :disabled="del.process" />
       </div>
       <div class="block__attr">
         <p>Фильтр записей</p>
-        <at-select v-model="main.filter" size="large">
+        <at-select v-model="main.filter" :disabled="del.process" size="large">
           <at-option value="suggests">Предложенные записи на стене сообщества</at-option>
           <at-option value="postponed">Отложенные записи</at-option>
           <at-option value="owner">Записи владельца стены</at-option>
@@ -20,18 +20,18 @@
         <p>Количество записей (от и до), включительно</p>
         <!--FIXME Is Number-->
         <div class="flex">
-          <at-input v-model="main.count.min" placeholder="От" /> -
-          <at-input v-model="main.count.max" placeholder="До" />
+          <at-input v-model="main.count.min" :disabled="del.process" placeholder="От" /> -
+          <at-input v-model="main.count.max" :disabled="del.process" placeholder="До" />
         </div>
       </div>
       <div class="block__attr">
         <p>Удалить записи или очистить комментарии</p>
         <at-radio-group v-model="main.isDeletePosts">
-          <at-radio-button :label="0">Записи</at-radio-button>
+          <at-radio-button :label="0" :disabled="del.process">Записи</at-radio-button>
           <at-radio-button :label="1" disabled>Комментарии</at-radio-button>
         </at-radio-group>
       </div>
-      <config-result :main-config="main" />
+      <config-result v-if="!del.process" :main-config="main" />
     </div>
 
     <hr>
@@ -39,7 +39,7 @@
       <h2>Параметры стены</h2>
       <div class="block__attr">
         <p>ID записей</p>
-        <at-input v-model="wall.id" @keyup.enter.native="addConfigWallArrayId('id', 'ids')" />
+        <at-input v-model="wall.id" :disabled="del.process" @keyup.enter.native="addConfigWallArrayId('id', 'ids')" />
         <div class="block__attr-inner">
           <at-tag v-for="(id, index) in wall.ids" :key="index" :name="id" closable
                   @on-close="wall.ids.splice(index, 1)">
@@ -49,7 +49,8 @@
       </div>
       <div class="block__attr">
         <p>ID авторов записей (идентификатор сообщества необходимо указывать со знаком "-")</p>
-        <at-input v-model="wall.fromId" @keyup.enter.native="addConfigWallArrayId('fromId', 'fromIds')" />
+        <at-input v-model="wall.fromId" :disabled="del.process"
+                  @keyup.enter.native="addConfigWallArrayId('fromId', 'fromIds')" />
         <div class="block__attr-inner">
           <at-tag v-for="(id, index) in wall.fromIds" :key="index" :name="id" closable
                   @on-close="wall.fromIds.splice(index, 1)">
@@ -78,8 +79,9 @@
     <!--TODO Dialog confirmed-->
     <hr>
     <div class="footer block">
-      <at-button type="error" @click="dialogDelete = true">Удалить записи</at-button>
-      <at-modal v-model="dialogDelete">
+      <at-button type="error" @click="del.dialog = true" v-if="!del.process">Удалить записи</at-button>
+      <!--TODO Stop delete posts - del.continueDelete = false-->
+      <at-modal v-model="del.dialog">
         <div slot="header">
           <span>The confirmation</span>
         </div>
@@ -87,9 +89,9 @@
           <p>Are you sure you want to start {{ main.isDeletePosts ? 'deleting posts' : 'clearing comments' }}?</p>
         </div>
         <div slot="footer">
-          <at-button @click="dialogDelete = false">Cancel</at-button>
+          <at-button @click="del.dialog = false">Cancel</at-button>
           <!--TODO Start delete method-->
-          <at-button type="error" @click="dialogDelete = false">Run cleanup</at-button>
+          <at-button type="error" @click="fetchGetWall()">Run cleanup</at-button>
         </div>
       </at-modal>
     </div>
@@ -101,6 +103,8 @@ import ConfigResult from './parts/WallConfigResult'
 import { ICON_WALL } from '../../heplers/logs'
 import { send } from '../../heplers/vk'
 import { vk } from '../../config'
+
+const MAX_GET_POSTS = 25
 
 export default {
   components: {
@@ -123,7 +127,11 @@ export default {
         fromId: '',
         fromIds: [] // FIXME Sets()*
       },
-      dialogDelete: false
+      del: {
+        dialog: false,
+        process: false,
+        continue: true
+      }
     }
   },
   mounted () {
@@ -132,9 +140,6 @@ export default {
   computed: {
     user () {
       return this.$store.state.vk.user
-    },
-    mainFilter () {
-      return this.main.filter
     }
   },
   methods: {
@@ -143,16 +148,55 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    fetchGetWall (count = 50, offset = 0) {
+    fetchGetWall () {
+      // TODO Global process for block
+      this.del.dialog = false
+      this.del.process = true
+
       send('wall.get', {
         owner_id: this.main.owner_id,
         filter: this.main.filter,
-        count: count,
-        offset: offset
+        count: MAX_GET_POSTS,
+        offset: this.main.count.min - 1
       }, { icon: ICON_WALL, msg: 'Received Wall data' })
         .then(res => {
-          this.res.wall = res.data
+          if (res.body.response && res.body.response.items.length) {
+            return this.fetchDeletePost(res.body.response.items, 0)
+          }
+          this.stopDeletePosts()
         })
+        .catch(() => {
+          this.stopDeletePosts(false)
+        })
+    },
+    fetchDeletePost (items, index) {
+      if (!this.del.continue || typeof items[index] === 'undefined') {
+        return this.stopDeletePosts()
+      }
+
+      // If there are no more posts. We get new
+      if (index + 1 >= MAX_GET_POSTS) {
+        return this.fetchGetWall()
+      }
+
+      // TODO Check post attributes
+
+      console.log(items[index])
+    },
+
+    /* | -----------------------------------------------------------------------------
+     * | Start/Stop delete
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    stopDeletePosts (isSuccess = true) {
+      if (isSuccess) {
+        this.$Message.success('Action stopped')
+      } else {
+        this.$Message.error('Action stopped')
+      }
+      this.del.process = false
+      this.del.continueDelete = true
     },
 
     /* | -----------------------------------------------------------------------------
@@ -187,11 +231,6 @@ export default {
       }
 
       return vk.url + 'id' + id
-    }
-  },
-  watch: {
-    mainFilter () {
-      // this.fetchGetWall(0)
     }
   }
 }
