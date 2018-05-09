@@ -49,7 +49,7 @@
         <div class="block__attr-inner">
           <at-tag v-for="(id, index) in wall.ids" :key="index" :name="id" closable
                   @on-close="wall.ids.splice(index, 1)">
-            <a href="#">{{ id }}</a>
+            <a :href="getLinkPost(id)" target="_blank" rel="noreferrer">{{ id }}</a>
           </at-tag>
         </div>
       </div>
@@ -59,7 +59,7 @@
         <div class="block__attr-inner">
           <at-tag v-for="(id, index) in wall.fromIds" :key="index" :name="id" closable
                   @on-close="wall.fromIds.splice(index, 1)">
-            <a href="#">{{ id }}</a>
+            <a :href="getLinkPage(id)" target="_blank" rel="noreferrer">{{ id }}</a>
           </at-tag>
         </div>
       </div>
@@ -77,6 +77,7 @@
 import ConfigResult from './parts/WallConfigResult'
 import { ICON_WALL } from '../../heplers/logs'
 import { send } from '../../heplers/vk'
+import { vk } from '../../config'
 
 export default {
   components: {
@@ -186,11 +187,28 @@ export default {
 
       if (id) {
         this.wall[arr].push(id)
-        const sortedSet = new Set(this.wall[arr].sort((a, b) => a - b))
-        this.wall[arr] = Array.from(sortedSet)
+        this.wall[arr] = Array.from(new Set(this.wall[arr].sort((a, b) => a - b)))
       }
 
       this.wall[str] = ''
+    },
+
+    /* | -----------------------------------------------------------------------------
+     * | Other
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    getLinkPost (id) {
+      return `${vk.url}/wall${this.main.owner_id}_${id}`
+    },
+    getLinkPage (id) {
+      const strId = id.toString()
+
+      if (strId.charAt(0) === '-') {
+        return vk.url + 'public' + strId.slice(1)
+      }
+
+      return vk.url + 'id' + id
     }
   },
   watch: {
