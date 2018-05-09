@@ -3,8 +3,9 @@
     <div class="main-config block">
       <h2>Основные настройки</h2>
       <div class="block__attr">
-        <p>ID на страницу или группу (идентификатор сообщества необходимо указывать со знаком "-")</p>
+        <p>ID на страницу или группу</p>
         <at-input v-model="main.owner_id" :disabled="del.process" />
+        <small>Use a negative value to designate a community ID.</small>
       </div>
       <div class="block__attr">
         <p>Фильтр записей</p>
@@ -18,7 +19,6 @@
       </div>
       <div class="block__attr">
         <p>Количество записей (от и до), включительно</p>
-        <!--FIXME Is Number-->
         <div class="flex">
           <at-input v-model="main.count.min" :disabled="del.process" placeholder="От" /> -
           <at-input v-model="main.count.max" :disabled="del.process" placeholder="До" />
@@ -34,6 +34,7 @@
       <config-result v-if="!del.process" :main-config="main" />
     </div>
 
+    <!--TODO ___Удалить все записи, которые не совпадают с настройками или наоборот___ REVERT-->
     <hr>
     <div class="wall-config block">
       <h2>Параметры стены</h2>
@@ -46,9 +47,10 @@
             <a :href="getLinkPost(id)" target="_blank" rel="noreferrer">{{ id }}</a>
           </at-tag>
         </div>
+        <small>After filling, press enter to add to the list.</small>
       </div>
       <div class="block__attr">
-        <p>ID авторов записей (идентификатор сообщества необходимо указывать со знаком "-")</p>
+        <p>ID авторов записей</p>
         <at-input v-model="wall.fromId" :disabled="del.process"
                   @keyup.enter.native="addConfigWallArrayId('fromId', 'fromIds')" />
         <div class="block__attr-inner">
@@ -57,6 +59,7 @@
             <a :href="getLinkPage(id)" target="_blank" rel="noreferrer">{{ id }}</a>
           </at-tag>
         </div>
+        <small>After filling, press enter to add to the list. Use a negative value to designate a community ID.</small>
       </div>
       <!-- TODO Date -->
       <div class="block__attr">
@@ -69,9 +72,10 @@
             {{ text }}
           </at-tag>
         </div>
+        <small>After filling, press enter to add to the list.</small>
       </div>
       <div class="block__attr">
-        <p>Медиавложения</p>
+        <p>Added media attachments</p>
         <at-checkbox-group v-model="wall.attachments">
           <at-checkbox label="photo">Photo</at-checkbox>
           <at-checkbox label="video">Video</at-checkbox>
@@ -101,7 +105,6 @@
       </div>
     </template>
 
-    <!--TODO Dialog confirmed-->
     <hr>
     <div class="footer block">
       <at-button type="error" @click="del.dialog = true" v-if="!del.process">Удалить записи</at-button>
@@ -186,7 +189,7 @@ export default {
         filter: this.main.filter,
         count: MAX_GET_POSTS,
         offset: this.main.count.min - 1
-      }, { icon: ICON_WALL, msg: 'Received Wall data' })
+      }, { icon: ICON_WALL, msg: 'Get the data about the wall' })
         .then(res => {
           if (res.body.response && res.body.response.items.length) {
             return this.fetchDeletePosts(res.body.response.items, 0)
@@ -222,7 +225,7 @@ export default {
       sleep(randomInteger(1500, 2500)).then(() => {
         send('wall.delete', {
           post_id: post.id
-        }, { icon: ICON_WALL, msg: `Attempt to remove the ${post.id}st post` })
+        }, { icon: ICON_WALL, msg: `Remove the ${post.id}st post` })
           .then(res => {
             if (res.body.response) {
               this.main.count.max--
@@ -385,7 +388,7 @@ export default {
       }
     }
     .at-checkbox {
-      margin: 0 5px;
+      margin: 5px;
     }
   }
 }
