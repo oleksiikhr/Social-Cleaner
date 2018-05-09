@@ -90,7 +90,59 @@
           <at-checkbox label="market_album">Market Collection</at-checkbox>
         </at-checkbox-group>
       </div>
-      <!-- TODO Count [comments, likes, reposts, views] -->
+      <div class="block__attr">
+        <p>Значения</p>
+        <div class="counts">
+          <div class="count-comments count">
+            <div class="flex">
+              <i class="fa fa-comment-o" aria-hidden="true"></i>
+              <p>Comments</p>
+            </div>
+            <at-input v-model="wall.count.comments.count" :disabled="del.process || wall.count.comments.state === 0" />
+            <at-radio-group v-model="wall.count.comments.state" :disabled="del.process">
+              <at-radio-button :label="-1">Меньше</at-radio-button>
+              <at-radio-button :label="0">Выкл.</at-radio-button>
+              <at-radio-button :label="1">Больше</at-radio-button>
+            </at-radio-group>
+          </div>
+          <div class="count-likes count">
+            <div class="flex">
+              <i class="fa fa-heart-o" aria-hidden="true"></i>
+              <p>Likes</p>
+            </div>
+            <at-input v-model="wall.count.likes.count" :disabled="del.process || wall.count.likes.state === 0" />
+            <at-radio-group v-model="wall.count.likes.state" :disabled="del.process">
+              <at-radio-button :label="-1">Меньше</at-radio-button>
+              <at-radio-button :label="0">Выкл.</at-radio-button>
+              <at-radio-button :label="1">Больше</at-radio-button>
+            </at-radio-group>
+          </div>
+          <div class="count-reposts count">
+            <div class="flex">
+              <i class="fa fa-bullhorn" aria-hidden="true"></i>
+              <p>Reposts</p>
+            </div>
+            <at-input v-model="wall.count.reposts.count" :disabled="del.process || wall.count.reposts.state === 0" />
+            <at-radio-group v-model="wall.count.reposts.state" :disabled="del.process">
+              <at-radio-button :label="-1">Меньше</at-radio-button>
+              <at-radio-button :label="0">Выкл.</at-radio-button>
+              <at-radio-button :label="1">Больше</at-radio-button>
+            </at-radio-group>
+          </div>
+          <div class="count-views count">
+            <div class="flex">
+              <i class="fa fa-eye" aria-hidden="true"></i>
+              <p>Views</p>
+            </div>
+            <at-input v-model="wall.count.views.count" :disabled="del.process || wall.count.views.state === 0" />
+            <at-radio-group v-model="wall.count.views.state" :disabled="del.process">
+              <at-radio-button :label="-1">Меньше</at-radio-button>
+              <at-radio-button :label="0">Выкл.</at-radio-button>
+              <at-radio-button :label="1">Больше</at-radio-button>
+            </at-radio-group>
+          </div>
+        </div>
+      </div>
     </div>
 
     <template v-if="main.isDeletePosts">
@@ -106,8 +158,13 @@
     </template>
 
     <hr>
-    <div class="footer block">
+    <div class="block-buttons block">
       <at-button type="error" @click="del.dialog = true" v-if="!del.process">Удалить записи</at-button>
+      <at-button type="primary" @click="del.continue = false" v-if="del.continue && del.process">
+        Остановить
+      </at-button>
+      <!--TODO Preview posts-->
+
       <!--TODO Stop delete posts - del.continueDelete = false-->
       <at-modal v-model="del.dialog">
         <div slot="header">
@@ -151,12 +208,30 @@ export default {
       },
       wall: {
         id: '',
-        ids: [], // FIXME Sets()*
+        ids: [],
         fromId: '',
-        fromIds: [], // FIXME Sets()*
+        fromIds: [],
         text: '',
         texts: [],
-        attachments: []
+        attachments: [],
+        count: {
+          comments: {
+            state: 0,
+            count: 0
+          },
+          likes: {
+            state: 0,
+            count: 0
+          },
+          reposts: {
+            state: 0,
+            count: 0
+          },
+          views: {
+            state: 0,
+            count: 0
+          }
+        }
       },
       del: {
         dialog: false,
@@ -393,7 +468,38 @@ export default {
   }
 }
 
-.footer {
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  .count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e7e7e7;
+    margin: 5px;
+    padding: 10px 5px;
+    p {
+      font-weight: bold;
+    }
+    i {
+      font-size: 1.1rem;
+      margin-right: 10px;
+    }
+    .flex {
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .at-input {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.block-buttons {
   > button {
     width: 100%;
   }
