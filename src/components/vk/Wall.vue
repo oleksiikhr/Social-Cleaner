@@ -90,8 +90,7 @@
         </div>
         <div slot="footer">
           <at-button @click="del.dialog = false">Cancel</at-button>
-          <!--TODO Start delete method-->
-          <at-button type="error" @click="fetchGetWall()">Run cleanup</at-button>
+          <at-button type="error" @click="startDelete()">Run cleanup</at-button>
         </div>
       </at-modal>
     </div>
@@ -150,7 +149,6 @@ export default {
      */
     fetchGetWall () {
       // TODO Global process for block
-      this.del.dialog = false
       this.del.process = true
 
       send('wall.get', {
@@ -161,27 +159,40 @@ export default {
       }, { icon: ICON_WALL, msg: 'Received Wall data' })
         .then(res => {
           if (res.body.response && res.body.response.items.length) {
-            return this.fetchDeletePost(res.body.response.items, 0)
+            return this.fetchDeletePosts(res.body.response.items, 0)
           }
-          this.stopDeletePosts()
+          this.stopDelete()
         })
         .catch(() => {
-          this.stopDeletePosts(false)
+          this.stopDelete(false)
         })
     },
-    fetchDeletePost (items, index) {
-      if (!this.del.continue || typeof items[index] === 'undefined') {
-        return this.stopDeletePosts()
+    fetchDeletePosts (items, index) {
+      if (!this.del.continue || this.main.count.min > this.main.count.max) {
+        return this.stopDelete()
       }
 
-      // If there are no more posts. We get new
+      // If all posts (MAX_GET_POSTS) are deleted, we receive new
       if (index + 1 >= MAX_GET_POSTS) {
         return this.fetchGetWall()
       }
 
+      const post = items[index]
+
+      // Of the record is empty, but the size should be still - stop
+      if (typeof post === 'undefined') {
+        return this.stopDelete()
+      }
+
+      if (this.checkWallConfiguration(post)) {
+        console.log('No delete')
+        this.main.count.min++
+        return this.fetchDeletePosts(items, ++index)
+      }
+
       // TODO Check post attributes
 
-      console.log(items[index])
+      console.log('Need delete', items[index])
     },
 
     /* | -----------------------------------------------------------------------------
@@ -189,7 +200,13 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    stopDeletePosts (isSuccess = true) {
+    startDelete () {
+      // TODO Check input (min, max, etc)
+
+      this.del.dialog = false
+      this.fetchGetWall()
+    },
+    stopDelete (isSuccess = true) {
       if (isSuccess) {
         this.$Message.success('Action stopped')
       } else {
@@ -197,6 +214,19 @@ export default {
       }
       this.del.process = false
       this.del.continueDelete = true
+    },
+    checkWallConfiguration (post) {
+      if (this.wall.ids.includes(post.id)) {
+        return true
+      }
+
+      if (this.wall.fromIds.includes(post.from_id)) {
+        return true
+      }
+
+      // TODO
+
+      return false
     },
 
     /* | -----------------------------------------------------------------------------
