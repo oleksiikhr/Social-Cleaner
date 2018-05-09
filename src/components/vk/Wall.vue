@@ -41,7 +41,7 @@
         <p>ID записей</p>
         <at-input v-model="wall.id" :disabled="del.process" @keyup.enter.native="addConfigWallArrayId('id', 'ids')" />
         <div class="block__attr-inner">
-          <at-tag v-for="(id, index) in wall.ids" :key="index" :name="id" closable
+          <at-tag v-for="(id, index) in wall.ids" :key="index" :name="id" :closable="!del.process"
                   @on-close="wall.ids.splice(index, 1)">
             <a :href="getLinkPost(id)" target="_blank" rel="noreferrer">{{ id }}</a>
           </at-tag>
@@ -52,14 +52,24 @@
         <at-input v-model="wall.fromId" :disabled="del.process"
                   @keyup.enter.native="addConfigWallArrayId('fromId', 'fromIds')" />
         <div class="block__attr-inner">
-          <at-tag v-for="(id, index) in wall.fromIds" :key="index" :name="id" closable
+          <at-tag v-for="(id, index) in wall.fromIds" :key="index" :name="id" :closable="!del.process"
                   @on-close="wall.fromIds.splice(index, 1)">
             <a :href="getLinkPage(id)" target="_blank" rel="noreferrer">{{ id }}</a>
           </at-tag>
         </div>
       </div>
       <!-- TODO Date -->
-      <!-- TODO Text -->
+      <div class="block__attr">
+        <p>Фразы в тексты</p>
+        <at-input v-model="wall.text" :disabled="del.process"
+                  @keyup.enter.native="addConfigWallArrayValue('text', 'texts')" />
+        <div class="block__attr-inner">
+          <at-tag v-for="(text, index) in wall.texts" :key="index" :name="index" :closable="!del.process"
+                  @on-close="wall.texts.splice(index, 1)">
+            {{ text }}
+          </at-tag>
+        </div>
+      </div>
       <!-- TODO Attachments https://vk.com/dev/objects/attachments_w -->
       <!-- TODO Count [comments, likes, reposts, views] -->
     </div>
@@ -124,7 +134,9 @@ export default {
         id: '',
         ids: [], // FIXME Sets()*
         fromId: '',
-        fromIds: [] // FIXME Sets()*
+        fromIds: [], // FIXME Sets()*
+        text: '',
+        texts: []
       },
       del: {
         dialog: false,
@@ -216,17 +228,37 @@ export default {
       this.del.continueDelete = true
     },
     checkWallConfiguration (post) {
-      if (this.wall.ids.includes(post.id)) {
+      if (this.checkWallIds(post.id)) {
         return true
       }
 
-      if (this.wall.fromIds.includes(post.from_id)) {
+      if (this.checkWallFromIds(post.from_id)) {
+        return true
+      }
+
+      if (this.checkWallTexts(post.text)) {
         return true
       }
 
       // TODO
 
       return false
+    },
+    // TODO checkCommentsConfiguration
+    checkWallIds (postId) {
+      return this.wall.ids.includes(postId)
+    },
+    checkWallFromIds (postFromId) {
+      return this.wall.fromIds.includes(postFromId)
+    },
+    checkWallTexts (postText) {
+      postText = postText.toLowerCase().trim()
+
+      return this.wall.texts.some(text => {
+        if (postText.indexOf(text) > -1) {
+          return true
+        }
+      })
     },
 
     /* | -----------------------------------------------------------------------------
@@ -240,6 +272,16 @@ export default {
       if (id) {
         this.wall[arr].push(id)
         this.wall[arr] = Array.from(new Set(this.wall[arr].sort((a, b) => a - b)))
+      }
+
+      this.wall[str] = ''
+    },
+    addConfigWallArrayValue (str, arr) {
+      const value = this.wall[str].toLowerCase().trim()
+
+      if (value) {
+        this.wall[arr].push(value)
+        this.wall[arr] = Array.from(new Set(this.wall[arr].sort()))
       }
 
       this.wall[str] = ''
