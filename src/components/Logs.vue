@@ -1,7 +1,7 @@
 <template>
   <div id="logs">
-    <!--TODO Temporary-->
-    <div v-for="(log, index) in logs" :key="index" style="margin-bottom: 30px">
+    <!--TODO Search method. Select name, color, icon. Open - dialog with response-->
+    <div :class="'log ' + log.color" v-for="(log, index) in logs" :key="index">
       {{ log }}
     </div>
   </div>
@@ -21,5 +21,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.logs {
+  display: flex;
+}
 
+.log {
+  display: flex;
+  margin-bottom: 30px;
+}
 </style>
