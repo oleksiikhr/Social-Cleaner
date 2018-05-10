@@ -36,8 +36,8 @@ export const vk = {
   wallpaper: require('@/assets/vk/wallpaper.jpg'),
   icon: 'fa-vk',
   sections: [
-    { name: 'Token', to: 'vk-token', icon: ICON_TOKEN },
-    { name: 'Wall', to: 'vk-wall', icon: ICON_WALL }
+    { name: 'vk.sections.token', to: 'vk-token', icon: ICON_TOKEN },
+    { name: 'vk.sections.wall', to: 'vk-wall', icon: ICON_WALL }
   ]
 }
 

@@ -14,6 +14,12 @@
       </router-link>
     </header>
     <div class="content">
+      <!--TODO Temporary-->
+      <select v-model="locale">
+        <option>en-US</option>
+        <option>ru-RU</option>
+      </select>
+
       <keep-alive>
         <router-view />
       </keep-alive>
@@ -25,6 +31,10 @@
           @alexeykhr
         </a>
       </div>
+      <a href="#" class="lang" @click.prevent="openDialogChooseLanguage">
+        <i class="fa fa-language" aria-hidden="true"></i> Translate
+      </a>
+      <!--TODO Change-->
       <iframe src="https://ghbtns.com/github-btn.html?user=Alexeykhr&repo=Social-Cleaner&type=star&count=true"
               frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
     </footer>
@@ -32,15 +42,14 @@
 </template>
 
 <script>
-import { version } from './config'
+import { vk, version } from './config'
 
 export default {
   data () {
     return {
+      vk,
       version,
-      menuItems: [
-        { name: 'Home', to: '' }
-      ]
+      locale: 'en-US'
     }
   },
   computed: {
@@ -49,6 +58,18 @@ export default {
     },
     firstLog () {
       return this.$store.state.logs.storage[0]
+    }
+  },
+  methods: {
+    openDialogChooseLanguage () {
+      console.log(this.$i18n)
+      console.log('Open dialog')
+    }
+  },
+  watch: {
+    locale (val) {
+      this.$i18n.locale = val
+      console.log(this.$i18n.locale)
     }
   }
 }
@@ -122,18 +143,24 @@ footer {
   height: 30px;
   justify-content: space-between;
   color: #a0a0a0;
-  a {
-    color: #868686;
-    font-weight: bold;
-    text-indent: 5px;
-    transition: .2s;
-    &:hover {
-      color: #333;
-    }
+  .copyright, iframe {
+    width: 180px;
+  }
+  .lang {
+    text-indent: 0;
   }
   .copyright {
     text-indent: 15px;
     font-size: smaller;
+    a {
+      color: #868686;
+      font-weight: bold;
+      text-indent: 5px;
+      transition: .2s;
+      &:hover {
+        color: #333;
+      }
+    }
   }
 }
 

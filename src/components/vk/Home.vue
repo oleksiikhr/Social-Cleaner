@@ -2,7 +2,7 @@
   <div id="vk">
     <at-menu v-if="user" mode="horizontal" :activeName="routeName">
       <at-menu-item v-for="item in vk.sections" :key="item.to" :to="{ name: item.to }">
-        <i :class="`fa fa-${item.icon}`" aria-hidden="true"></i> {{ item.name }}
+        <i :class="`fa fa-${item.icon}`" aria-hidden="true"></i> {{ $t(item.name) }}
       </at-menu-item>
     </at-menu>
     <keep-alive>

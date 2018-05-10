@@ -3,6 +3,10 @@ export default {
     no_logs: 'No logs'
   },
   vk: {
+    sections: {
+      token: 'Token',
+      wall: 'Wall'
+    },
     token: {
       user: {
         alert: 'After rebooting the page - you need to re-enter the token.',

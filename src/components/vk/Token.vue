@@ -14,7 +14,7 @@
           <router-link class="section" v-for="section in vk.sections" :key="section.name" :to="{ name: section.to }"
                        v-if="section.to !== 'vk-token'">
             <i :class="`fa fa-${section.icon}`" aria-hidden="true"></i>
-            <span>{{ section.name }}</span>
+            <span>{{ $t(section.name) }}</span>
           </router-link>
         </div>
       </div>
