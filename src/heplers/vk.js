@@ -1,5 +1,5 @@
-import Vue from 'vue'
 import store from '../store/index'
+import Vue from 'vue'
 
 export const urlOauth = 'https://oauth.vk.com/authorize/'
 export const urlApi = 'https://api.vk.com/method/'
@@ -12,11 +12,11 @@ export const version = '5.74'
  *
  * @param method
  * @param params
- * @param logs - { icon, msg }
+ * @param icon
  *
  * @returns {*}
  */
-export function send (method, params, logs) {
+export function send (method, params, icon) {
   params.v = version
 
   if (!params.access_token) {
@@ -25,6 +25,6 @@ export function send (method, params, logs) {
 
   return Vue.http.jsonp(urlApi + method, {
     params: params,
-    logs: logs
+    icon: icon
   })
 }

@@ -1,21 +1,20 @@
 <template>
   <div id="token">
     <div class="logged-in" v-if="user">
-      <at-alert message="After rebooting the page - you need to re-enter the token." type="warning" show-icon />
+      <at-alert :message="$t('vk.token.user.alert')" type="warning" show-icon />
       <div class="btn-out">
         <at-button @click="deleteToken()" type="error">
-          Delete the token now
+          {{ $t('vk.token.user.button') }}
         </at-button>
       </div>
       <hr>
       <div class="sections">
-        <p>Sections</p>
+        <p>{{ $t('vk.token.user.sections') }}</p>
         <div class="inner">
-          <!--FIXME Delete section by access-->
           <router-link class="section" v-for="section in vk.sections" :key="section.name" :to="{ name: section.to }"
                        v-if="section.to !== 'vk-token'">
             <i :class="`fa fa-${section.icon}`" aria-hidden="true"></i>
-            <span>{{ section.name }}</span>
+            <span>{{ $t(section.name) }}</span>
           </router-link>
         </div>
       </div>
@@ -23,41 +22,41 @@
 
     <template v-else>
       <div class="header">
-        <p>To gain access to your account, you must receive a special token.</p>
+        <p>{{ $t('vk.token.guest.header') }}</p>
       </div>
       <hr>
       <div class="generate">
-        <p>Select permissions</p>
+        <p>{{ $t('vk.token.guest.p') }}</p>
         <at-checkbox-group v-model="scope">
-          <at-checkbox label="friends">Friends</at-checkbox>
-          <at-checkbox label="Photos">Photos</at-checkbox>
-          <at-checkbox label="video">Video</at-checkbox>
-          <at-checkbox label="status">Status</at-checkbox>
-          <at-checkbox label="messages">Messages</at-checkbox>
-          <at-checkbox label="wall">Wall</at-checkbox>
-          <at-checkbox label="docs">Docs</at-checkbox>
-          <at-checkbox label="groups">Groups</at-checkbox>
+          <at-checkbox label="friends">{{ $t('vk.token.guest.scope.friends') }}</at-checkbox>
+          <at-checkbox label="photos">{{ $t('vk.token.guest.scope.photos') }}</at-checkbox>
+          <at-checkbox label="video">{{ $t('vk.token.guest.scope.video') }}</at-checkbox>
+          <at-checkbox label="status">{{ $t('vk.token.guest.scope.status') }}</at-checkbox>
+          <at-checkbox label="messages">{{ $t('vk.token.guest.scope.messages') }}</at-checkbox>
+          <at-checkbox label="wall">{{ $t('vk.token.guest.scope.wall') }}</at-checkbox>
+          <at-checkbox label="docs">{{ $t('vk.token.guest.scope.docs') }}</at-checkbox>
+          <at-checkbox label="groups">{{ $t('vk.token.guest.scope.groups') }}</at-checkbox>
         </at-checkbox-group>
         <template v-if="scope.length">
           <div class="flex flex-middle flex-center">
-            <at-popover trigger="hover" content="Application ID" placement="bottom">
-              <at-input placeholder="Application ID" v-model="appId" />
+            <at-popover trigger="hover" :content="$t('vk.token.guest.application_id')" placement="bottom">
+              <at-input :placeholder="$t('vk.token.guest.application_id')" v-model="appId" />
             </at-popover>
             <at-button @click="goGetToken()" type="primary">
-              Generate a temporary token
+              {{ $t('vk.token.guest.generate') }}
             </at-button>
           </div>
           <div class="info">
-            <p class="i1">You need to copy the value of access_token from the URL of the field:</p>
-            <p>https://oauth.vk.com/blank.html#access_token=<strong>COPY_HERE</strong>&expires_in=86400&user_id=1</p>
+            <p class="i1">{{ $t('vk.token.guest.info') }}</p>
+            <p>https://oauth.vk.com/blank.html#access_token=<strong>{{ $t('vk.token.guest.copy_here') }}</strong>&expires_in=86400&user_id=1</p>
           </div>
         </template>
       </div>
       <hr>
       <div class="exists">
-        <at-input type="password" v-model="token" clearable placeholder="Enter a access token" />
+        <at-input type="password" v-model="token" clearable :placeholder="$t('vk.token.guest.placeholder_password')" />
         <at-button v-if="token" @click="installToken()" type="primary">
-          Gain access
+          {{ $t('vk.token.guest.get') }}
         </at-button>
       </div>
     </template>
@@ -65,8 +64,8 @@
 </template>
 
 <script>
-import { vk } from '../../config'
 import { urlOauth, clientId, redirectUri, version } from '../../heplers/vk'
+import { vk } from '../../config'
 
 export default {
   data () {
@@ -174,12 +173,12 @@ button {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 20px;
+  padding: 30px;
   border: 1px solid #e7e7e7;
   color: #333;
   opacity: 0.7;
   flex-wrap: wrap;
-  width: 150px;
+  width: 180px;
   margin: 10px;
   font-size: 1rem;
   transition: .2s;

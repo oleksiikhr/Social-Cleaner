@@ -80,8 +80,8 @@ export default {
         owner_id: this.mainConfig.owner_id,
         filter: this.mainConfig.filter,
         count: 1,
-        offset: this.mainConfig.count.min
-      }, { icon: ICON_WALL, msg: 'Get the data about the wall' })
+        offset: this.mainConfig.count.min - 1
+      }, ICON_WALL)
         .then(res => {
           this.wall = res.data
         })
@@ -90,7 +90,7 @@ export default {
       send('users.get', {
         user_ids: this.mainConfig.owner_id,
         fields: 'photo_100'
-      }, { icon: ICON_WALL, msg: 'Get the data about the user' })
+      }, ICON_WALL)
         .then(res => {
           if (res.data.response) {
             this.page = { isUser: true, response: res.data.response[0] }
@@ -100,7 +100,7 @@ export default {
     fetchGetGroupsById () {
       send('groups.getById', {
         group_ids: this.mainConfig.owner_id.substr(1)
-      }, { icon: ICON_WALL, msg: 'Get the data about the group' })
+      }, ICON_WALL)
         .then(res => {
           if (res.data.response) {
             this.page = { isUser: false, response: res.data.response[0] }

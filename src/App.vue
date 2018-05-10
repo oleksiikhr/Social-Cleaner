@@ -8,9 +8,9 @@
       <i v-if="socialNetwork.icon" :class="'current fa ' + socialNetwork.icon" aria-hidden="true"></i>
       <router-link to="/logs" class="logs">
         <template v-if="firstLog">
-          <span :class="firstLog.color">{{ firstLog.title }}</span>
+          <span :class="firstLog.color">{{ firstLog.method }}</span>
         </template>
-        <span v-else>No logs</span>
+        <span v-else>{{ $t('app.no_logs') }}</span>
       </router-link>
     </header>
     <div class="content">
@@ -25,22 +25,44 @@
           @alexeykhr
         </a>
       </div>
+      <a class="lang" @click.prevent="locale.modal = true">
+        <i class="fa fa-language" aria-hidden="true"></i> Translate
+      </a>
+      <!--TODO Change-->
       <iframe src="https://ghbtns.com/github-btn.html?user=Alexeykhr&repo=Social-Cleaner&type=star&count=true"
               frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
     </footer>
+
+    <at-modal v-model="locale.modal" title="Choose language" :showFooter="false">
+      <a class="lang-item" v-for="lang in languages" :key="lang.value" @click="setLocale(lang.value)">
+        {{ lang.name }}
+      </a>
+    </at-modal>
   </div>
 </template>
 
 <script>
-import { version } from './config'
+import { vk, version, languages } from './config'
 
 export default {
   data () {
     return {
+      vk,
       version,
-      menuItems: [
-        { name: 'Home', to: '' }
-      ]
+      languages,
+      locale: {
+        modal: false,
+        value: 'en-US'
+      }
+    }
+  },
+  created () {
+    const lang = localStorage.getItem('lang')
+
+    if (lang) {
+      this.locale.value = lang
+    } else {
+      this.locale.modal = true
     }
   },
   computed: {
@@ -49,6 +71,13 @@ export default {
     },
     firstLog () {
       return this.$store.state.logs.storage[0]
+    }
+  },
+  methods: {
+    setLocale (val) {
+      this.locale.modal = false
+      localStorage.setItem('lang', val)
+      this.$i18n.locale = val
     }
   }
 }
@@ -131,6 +160,13 @@ footer {
       color: #333;
     }
   }
+  .copyright, iframe {
+    width: 180px;
+  }
+  .lang {
+    text-indent: 0;
+    font-size: .8rem;
+  }
   .copyright {
     text-indent: 15px;
     font-size: smaller;
@@ -152,11 +188,18 @@ hr {
 
 .content {
   flex-grow: 1;
-  padding: 20px;
+  padding: 30px 20px;
   #vk {
     max-width: 800px;
     width: 100%;
     margin: 0 auto;
   }
+}
+
+.lang-item {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 1rem;
+  margin: 5px;
 }
 </style>
