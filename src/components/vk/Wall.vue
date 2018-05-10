@@ -294,8 +294,18 @@ export default {
           post_id: post.id
         }, { icon: ICON_WALL, msg: `Remove the ${post.id}st post` })
           .then(res => {
+            if (res.body.error && res.body.error.error_code === 210) {
+              this.$Modal.error({
+                title: 'Access to wall\'s post denied',
+                content: 'Error code: 210'
+              })
+              return this.stopDelete(false)
+            }
+
             if (res.body.response) {
               this.main.count.max--
+            } else {
+              this.main.count.min++
             }
 
             return this.deletePosts(items, ++index)
