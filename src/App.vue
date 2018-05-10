@@ -10,7 +10,7 @@
         <template v-if="firstLog">
           <span :class="firstLog.color">{{ firstLog.title }}</span>
         </template>
-        <span v-else>No logs</span>
+        <span v-else>{{ $t('app.no_logs') }}</span>
       </router-link>
     </header>
     <div class="content">
