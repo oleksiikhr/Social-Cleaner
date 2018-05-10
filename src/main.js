@@ -1,73 +1,62 @@
-// === DEFAULT / CUSTOM STYLE ===
-// WARNING! always comment out ONE of the two require() calls below.
-// 1. use next line to activate CUSTOM STYLE (./src/themes)
-// require(`./themes/app.${__THEME}.styl`)
-// 2. or, use next line to activate DEFAULT QUASAR STYLE
-require(`quasar/dist/quasar.${__THEME}.css`)
-// ==============================
-
-// Uncomment the following lines if you need IE11/Edge support
-require(`quasar/dist/quasar.ie`)
-require(`quasar/dist/quasar.ie.${__THEME}.css`)
-
+import 'at-ui-style'
 import Vue from 'vue'
-import Vuex from 'vuex'
-import VueResource from 'vue-resource'
-import Quasar, { Toast } from 'quasar'
+import App from './App'
+import store from './store'
 import router from './router'
-import store from 'store/index'
+import AtComponents from 'at-ui'
+import * as vk from './heplers/vk'
+import * as config from './config'
+import VueResource from 'vue-resource'
+import { addLog, COLOR_ERROR, COLOR_INFO, COLOR_SUCCESS } from './heplers/logs'
 
-Vue.config.productionTip = false
-Vue.use(Quasar)
-Vue.use(Vuex)
+Vue.use(AtComponents)
 Vue.use(VueResource)
 
-if (__THEME === 'mat') {
-  require('quasar-extras/roboto-font')
-}
-import 'quasar-extras/material-icons'
-// import 'quasar-extras/ionicons'
-import 'quasar-extras/fontawesome'
-// import 'quasar-extras/animate'
+Vue.config.productionTip = false
 
-Vue.http.interceptor.before = (request, next) => {
-  request.emulateJSON = true
-  request.emulateHTTP = true
+Vue.http.interceptors.push((req, next) => {
+  // VK
+  if (req.url.indexOf(vk.urlApi) !== -1) {
+    const urlSplit = req.url.split('/')
 
-  next(res => {
-    if (res.status === 500) {
-      return Toast.create.negative({ html: 'Response: 500: Check the site' })
-    }
-
-    let body = res.body
-
-    if (typeof res.body === 'string') {
-      try {
-        body = JSON.parse(res.body)
+    // Hide params from logs
+    let params = []
+    Object.keys(req.params).forEach(key => {
+      const param = req.params[key]
+      switch (key) {
+        case 'access_token':
+          params.push({ key: key, value: param.substr(0, 3) + '***' + param.substr(-3) })
+          break
+        default:
+          params.push({ key: key, value: param })
       }
-      catch (e) {
-        return console.log('Error: Response is not JSON format')
-      }
-    }
-    else if (typeof res.body !== 'object') {
-      return console.log('Error: Response format')
-    }
+    })
 
-    if (res.url.indexOf('api.vk.com') > -1) {
-      if (body.error && body.error.error_code === 5 && store.state.vk.user) {
-        store.dispatch('vkExit')
-        return router.push({ name: 'vk-token' })
-      }
-    }
-  })
-}
+    addLog(config.vk, 'Receiving data..', { method: urlSplit[urlSplit.length - 1], params: params }, req.logs.icon, COLOR_INFO)
 
-Quasar.start(() => {
-  /* eslint-disable no-new */
-  new Vue({
-    el: '#q-app',
-    router,
-    store,
-    render: h => h(require('./App').default)
-  })
+    next(res => {
+      if (res.status >= 200 && res.status < 300) {
+        addLog(config.vk, req.logs.msg, res.body, req.logs.icon, res.body.error ? COLOR_ERROR : COLOR_SUCCESS)
+      } else {
+        addLog(config.vk, 'Server error', '', req.logs.icon, COLOR_ERROR)
+      }
+    })
+  }
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.vk && !store.state.vk.user.id) {
+    next({ name: 'vk-token' })
+  } else {
+    next()
+  }
+})
+
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  store,
+  components: { App },
+  template: '<App/>'
 })

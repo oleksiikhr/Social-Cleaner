@@ -1,503 +1,597 @@
 <template>
-  <q-card style="margin: 0;" flat>
-    <q-card-title>
-      <q-icon name="dashboard" /> Wall
-      <q-btn flat round small color="primary" slot="right" loader v-model="processRefresh" @click="fetchGetCountPosts()">
-        <q-icon name="refresh" />
-        <q-tooltip anchor="bottom middle" self="top middle">Refresh</q-tooltip>
-      </q-btn>
-    </q-card-title>
-    <q-card-main>
-      <q-card style="margin-bottom: 2rem">
-        <q-card-title>
-          Config
-          <div slot="right" class="row items-center">
-            <template v-if="maxCount < 1">No posts</template>
-            <template v-else-if="range.min === range.max">Delete the post #{{ range.min }}</template>
-            <template v-else>Delete the post from {{ range.min }} to {{ range.max }}</template>
-          </div>
-        </q-card-title>
-        <q-card-separator />
-        <q-card-main>
-          <q-select v-model="globalFilter" :options="selectGlobalFilters" style="margin-bottom: 1.5rem;"/>
-          <template v-if="maxCount > 1">
-            <q-list>
-              <q-item>
-                <q-item-side>Range</q-item-side>
-                <q-item-main>
-                  <q-range v-model="range" :min="1" :disabled="processDelete" :max="maxCount" :step="1" label />
-                </q-item-main>
-              </q-item>
-            </q-list>
-          </template>
-        </q-card-main>
-      </q-card>
-
-      <q-card style="margin-bottom: 2rem;" flat>
-        <q-card-title>
-          Filter (Do not delete posts by these parameters)
-          <div slot="right" class="row items-center">
-            {{ countPostsConfig }}
-          </div>
-        </q-card-title>
-        <q-card-separator />
-        <q-card-main>
-          <q-tabs inverted>
-            <q-tab default :count="posts.length" slot="title" name="tab-1" icon="description" />
-            <!--<q-tab :count="groups.length" slot="title" name="tab-2" icon="people" />-->
-            <!--<q-tab :count="comments.length" slot="title" name="tab-3" icon="comment" />-->
-            <!--<q-tab :count="likes.length" slot="title" name="tab-4" icon="favorite" />-->
-            <q-tab :count="reposts.length" slot="title" name="tab-5" icon="fa-bullhorn" />
-            <q-tab :alert="views.on" slot="title" name="tab-6" icon="remove_red_eye" />
-
-            <q-tab-pane name="tab-1">
-              <q-field label="Skip posts" :label-width="2" helper="Only for your account." style="margin-bottom: 2rem">
-                <q-input :disabled="processDelete" v-model="fNoDeletePost" placeholder="Id or link to post"
-                         @keyup.enter="addNoDeletePostId()" />
-              </q-field>
-              <q-chip v-for="(item, index) in posts" :key="index" small color="primary"
-                      title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"
-                      closable @close="closePostChip(index)" @click="goPost(item)">
-                {{ item }}
-              </q-chip>
-            </q-tab-pane>
-
-            <!--<q-tab-pane name="tab-2">-->
-              <!--<p>Nested group entries for deletion.</p>-->
-              <!--<q-field icon="attachment">-->
-                <!--<q-input :disabled="processDelete" v-model="fNoDeletePost" placeholder="Id or link to group"-->
-                         <!--@keyup.enter="addNoDeletePostId()" />-->
-              <!--</q-field>-->
-              <!--<q-checkbox v-model="checkDeleteGroup" label="Delete" style="margin: 1.5rem 0;" />-->
-              <!--<q-collapsible icon="remove_red_eye" label="See">-->
-                <!--&lt;!&ndash; TODO: Object with color &ndash;&gt;-->
-                <!--<q-chip v-for="(item, index) in groups" :key="index" small :color="true ? 'primary' : 'red'"-->
-                        <!--title="Follow the link" style="margin: 0 5px 5px 0; cursor: pointer;"-->
-                        <!--closable @close="" @click="goGroup(item)">-->
-                  <!--{{ item }}-->
-                <!--</q-chip>-->
-              <!--</q-collapsible>-->
-            <!--</q-tab-pane>-->
-
-            <!--<q-tab-pane name="tab-3"></q-tab-pane>-->
-
-            <!--<q-tab-pane name="tab-4"></q-tab-pane>-->
-
-            <!-- Reposts -->
-            <q-tab-pane name="tab-5">
-              <q-toggle v-model="reposts.on" label="Enable" />
-              <q-input v-model="reposts.count" :disabled="!reposts.on" type="number" float-label="Count reposts" style="margin: 1.5rem 0;" />
-              <q-radio v-model="reposts.equal" :disabled="!reposts.on" :val="-1" color="red" label="Less" />
-              <q-radio v-model="reposts.equal" :disabled="!reposts.on" :val="0" color="black" label="Equal" style="margin-left: 10px" />
-              <q-radio v-model="reposts.equal" :disabled="!reposts.on" :val="1" color="primary" label="More" style="margin-left: 10px" />
-            </q-tab-pane>
-
-            <!-- Views -->
-            <q-tab-pane name="tab-6">
-              <q-toggle v-model="views.on" label="Enable" />
-              <q-input v-model="views.count" :disabled="!views.on" type="number" float-label="Count views" style="margin: 1.5rem 0;" />
-              <q-radio v-model="views.equal" :disabled="!views.on" :val="-1" color="red" label="Less" />
-              <q-radio v-model="views.equal" :disabled="!views.on" :val="0" color="black" label="Equal" style="margin-left: 10px" />
-              <q-radio v-model="views.equal" :disabled="!views.on" :val="1" color="primary" label="More" style="margin-left: 10px" />
-            </q-tab-pane>
-          </q-tabs>
-        </q-card-main>
-      </q-card>
-
-      <div style="margin-bottom: 1.5rem;">
-        <q-btn v-if="!processDelete" icon="delete" color="red" outline v-model="processDelete"
-               class="full-width" :disabled="countPosts < 1" @click.native="openDialogDelete()">
-          Delete
-        </q-btn>
-        <q-btn v-else icon="stop" class="full-width" outline :disabled="!processDelete || stopDeleting"
-               @click="actionStopDeleting()">
-          Stop
-        </q-btn>
+  <div id="wall">
+    <div class="main-config block">
+      <h2>Основные настройки</h2>
+      <div class="block__attr">
+        <p>ID на страницу или группу</p>
+        <at-input v-model="main.owner_id" :disabled="del.process" />
+        <small>Use a negative value to designate a community ID.</small>
       </div>
-    </q-card-main>
-  </q-card>
+      <div class="block__attr">
+        <p>Фильтр записей</p>
+        <at-select v-model="main.filter" :disabled="del.process" size="large">
+          <!--TODO v-for-->
+          <at-option value="suggests">Предложенные записи на стене сообщества</at-option>
+          <at-option value="postponed">Отложенные записи</at-option>
+          <at-option value="owner">Записи владельца стены</at-option>
+          <at-option value="others">Записи не от владельца стены</at-option>
+          <at-option value="all">Все</at-option>
+        </at-select>
+      </div>
+      <div class="block__attr">
+        <p>Количество записей (от и до), включительно</p>
+        <div class="flex">
+          <at-input v-model="main.count.min" :disabled="del.process" placeholder="От" /> -
+          <at-input v-model="main.count.max" :disabled="del.process" placeholder="До" />
+        </div>
+      </div>
+      <div class="block__attr">
+        <p>Удалить записи или очистить комментарии</p>
+        <at-radio-group v-model="main.isDeletePosts">
+          <at-radio-button :label="0" :disabled="del.process">Записи</at-radio-button>
+          <at-radio-button :label="1" disabled>Комментарии</at-radio-button>
+        </at-radio-group>
+      </div>
+      <config-result v-if="!del.process" :main-config="main" />
+    </div>
+
+    <hr>
+    <div class="revert block">
+      <!--TODO Revert v-if*-->
+      <at-button>
+        Удалить все записи с {{ main.count.min }} по {{ main.count.max }}, которые не попадают под параметры ниже
+      </at-button>
+    </div>
+
+    <!--TODO ___Удалить все записи, которые не совпадают с настройками или наоборот___ REVERT-->
+    <hr>
+    <div class="wall-config block">
+      <h2>Параметры стены</h2>
+      <div class="block__attr">
+        <p>ID записей</p>
+        <at-input v-model="wall.id" :disabled="del.process" @keyup.enter.native="addConfigWallArrayId('id', 'ids')" />
+        <div class="block__attr-inner">
+          <at-tag v-for="(id, index) in wall.ids" :key="index" :name="id" :closable="!del.process"
+                  @on-close="wall.ids.splice(index, 1)">
+            <a :href="getLinkPost(id)" target="_blank" rel="noreferrer">{{ id }}</a>
+          </at-tag>
+        </div>
+        <small>After filling, press enter to add to the list.</small>
+      </div>
+      <div class="block__attr">
+        <p>ID авторов записей</p>
+        <at-input v-model="wall.fromId" :disabled="del.process"
+                  @keyup.enter.native="addConfigWallArrayId('fromId', 'fromIds')" />
+        <div class="block__attr-inner">
+          <at-tag v-for="(id, index) in wall.fromIds" :key="index" :name="id" :closable="!del.process"
+                  @on-close="wall.fromIds.splice(index, 1)">
+            <a :href="getLinkPage(id)" target="_blank" rel="noreferrer">{{ id }}</a>
+          </at-tag>
+        </div>
+        <small>After filling, press enter to add to the list. Use a negative value to designate a community ID.</small>
+      </div>
+      <div class="block__attr">
+        <p>Фразы в тексты</p>
+        <at-input v-model="wall.text" :disabled="del.process"
+                  @keyup.enter.native="addConfigWallArrayValue('text', 'texts')" />
+        <div class="block__attr-inner">
+          <at-tag v-for="(text, index) in wall.texts" :key="index" :name="index" :closable="!del.process"
+                  @on-close="wall.texts.splice(index, 1)">
+            {{ text }}
+          </at-tag>
+        </div>
+        <small>After filling, press enter to add to the list.</small>
+      </div>
+      <div class="block__attr">
+        <p>Added media attachments</p>
+        <at-checkbox-group v-model="wall.attachments">
+          <!--TODO v-for-->
+          <at-checkbox label="photo">Photo</at-checkbox>
+          <at-checkbox label="video">Video</at-checkbox>
+          <at-checkbox label="audio">Audio</at-checkbox>
+          <at-checkbox label="doc">Document</at-checkbox>
+          <at-checkbox label="link">Link</at-checkbox>
+          <at-checkbox label="note">Note</at-checkbox>
+          <at-checkbox label="poll">Poll</at-checkbox>
+          <at-checkbox label="page">Wiki Page</at-checkbox>
+          <at-checkbox label="photos_list">Photos List</at-checkbox>
+          <at-checkbox label="market">Market Item</at-checkbox>
+          <at-checkbox label="market_album">Market Collection</at-checkbox>
+        </at-checkbox-group>
+      </div>
+      <div class="block__attr">
+        <p>Значения</p>
+        <div class="counts">
+          <!--TODO v-for-->
+          <div class="count-comments count">
+            <div class="flex">
+              <i class="fa fa-comment-o" aria-hidden="true"></i>
+              <p>Comments</p>
+            </div>
+            <at-input v-model="wall.count.comments.count" :disabled="del.process || wall.count.comments.state === 0" />
+            <at-radio-group v-model="wall.count.comments.state" :disabled="del.process">
+              <at-radio-button :label="-1">Меньше</at-radio-button>
+              <at-radio-button :label="0">Выкл.</at-radio-button>
+              <at-radio-button :label="1">Больше</at-radio-button>
+            </at-radio-group>
+          </div>
+          <div class="count-likes count">
+            <div class="flex">
+              <i class="fa fa-heart-o" aria-hidden="true"></i>
+              <p>Likes</p>
+            </div>
+            <at-input v-model="wall.count.likes.count" :disabled="del.process || wall.count.likes.state === 0" />
+            <at-radio-group v-model="wall.count.likes.state" :disabled="del.process">
+              <at-radio-button :label="-1">Меньше</at-radio-button>
+              <at-radio-button :label="0">Выкл.</at-radio-button>
+              <at-radio-button :label="1">Больше</at-radio-button>
+            </at-radio-group>
+          </div>
+          <div class="count-reposts count">
+            <div class="flex">
+              <i class="fa fa-bullhorn" aria-hidden="true"></i>
+              <p>Reposts</p>
+            </div>
+            <at-input v-model="wall.count.reposts.count" :disabled="del.process || wall.count.reposts.state === 0" />
+            <at-radio-group v-model="wall.count.reposts.state" :disabled="del.process">
+              <at-radio-button :label="-1">Меньше</at-radio-button>
+              <at-radio-button :label="0">Выкл.</at-radio-button>
+              <at-radio-button :label="1">Больше</at-radio-button>
+            </at-radio-group>
+          </div>
+          <div class="count-views count">
+            <div class="flex">
+              <i class="fa fa-eye" aria-hidden="true"></i>
+              <p>Views</p>
+            </div>
+            <at-input v-model="wall.count.views.count" :disabled="del.process || wall.count.views.state === 0" />
+            <at-radio-group v-model="wall.count.views.state" :disabled="del.process">
+              <at-radio-button :label="-1">Меньше</at-radio-button>
+              <at-radio-button :label="0">Выкл.</at-radio-button>
+              <at-radio-button :label="1">Больше</at-radio-button>
+            </at-radio-group>
+          </div>
+          <!--TODO Date-->
+        </div>
+      </div>
+    </div>
+
+    <template v-if="main.isDeletePosts">
+      <hr>
+      <div class="comments-config block">
+        <h2>Параметры комментарий</h2>
+        <!--TODO From_id-->
+        <!--TODO Text-->
+        <!--TODO Attachments-->
+        <!--TODO Date-->
+        <!--TODO Count [likes]-->
+      </div>
+    </template>
+
+    <hr>
+    <div class="block-buttons block">
+      <at-button type="error" @click="del.dialog = true" v-if="!del.process">Удалить записи</at-button>
+      <at-button type="primary" @click="del.continue = false" v-if="del.continue && del.process">
+        Остановить
+      </at-button>
+      <!--TODO Preview posts-->
+
+      <at-modal v-model="del.dialog">
+        <div slot="header">
+          <span>The confirmation</span>
+        </div>
+        <div style="text-align:center;">
+          <p>Are you sure you want to start {{ main.isDeletePosts ? 'deleting posts' : 'clearing comments' }}?</p>
+        </div>
+        <div slot="footer">
+          <at-button @click="del.dialog = false">Cancel</at-button>
+          <at-button type="error" @click="startDelete()">Run cleanup</at-button>
+        </div>
+      </at-modal>
+    </div>
+  </div>
 </template>
 
 <script>
-  import { addLogs, COLOR_INFO, COLOR_NEGATIVE, COLOR_POSITIVE, ICON_WALL, SOCIAL_VK } from '../../helpers/logs'
-  import { jsonp } from '../../helpers/vk'
-  import {
-    Toast,
-    QSpinnerCube,
-    QField,
-    QChipsInput,
-    QInput,
-    QBtn,
-    QRange,
-    QCard,
-    QCardTitle,
-    QCardSeparator,
-    QIcon,
-    QCardMain,
-    QTooltip,
-    QList,
-    QItem,
-    QItemSide,
-    QItemMain,
-    QSelect,
-    Dialog,
-    QCollapsible,
-    QChip,
-    QTabs,
-    QTab,
-    QTabPane,
-    QCheckbox,
-    QRadio,
-    QToggle
-  } from 'quasar'
+import { sleep, randomInteger } from '../../heplers/methods'
+import ConfigResult from './parts/WallConfigResult'
+import { ICON_WALL } from '../../heplers/logs'
+import { send } from '../../heplers/vk'
+import { vk } from '../../config'
 
-  export default {
-    components: {
-      QSpinnerCube,
-      QField,
-      QChipsInput,
-      QInput,
-      QBtn,
-      QRange,
-      QCard,
-      QCardTitle,
-      QCardSeparator,
-      QIcon,
-      QCardMain,
-      QTooltip,
-      QList,
-      QItem,
-      QItemSide,
-      QItemMain,
-      QSelect,
-      QCollapsible,
-      QChip,
-      QTabs,
-      QTab,
-      QTabPane,
-      QCheckbox,
-      QRadio,
-      QToggle
-    },
-    data () {
-      return {
-        init: false,
+const MAX_GET_POSTS = 25
 
-        posts: [],
-        groups: [],
-        comments: [],
-        likes: [],
-        reposts: {
-          on: false,
-          count: 0,
-          equal: 0
+export default {
+  components: {
+    ConfigResult
+  },
+  data () {
+    return {
+      main: {
+        owner_id: '',
+        filter: 'all',
+        count: {
+          min: 1,
+          max: null
         },
-        views: {
-          on: false,
-          count: 0,
-          equal: 0
-        },
-
-        fNoDeletePost: '',
-        fNoDeleteGroup: '',
-
-        checkDeleteGroup: true,
-
-        pass: 50,
-        maxCount: 0,
-        range: { min: 1, max: 0 },
-
-        globalFilter: 'all',
-        selectGlobalFilters: [
-          {
-            label: 'Posts by the wall owner and others',
-            value: 'all'
+        isDeletePosts: 0,
+        revert: false
+      },
+      wall: {
+        id: '',
+        ids: [],
+        fromId: '',
+        fromIds: [],
+        text: '',
+        texts: [],
+        attachments: [],
+        count: {
+          comments: {
+            state: 0,
+            count: 0
           },
-          {
-            label: 'Posts by the wall owner',
-            value: 'owner'
+          likes: {
+            state: 0,
+            count: 0
           },
-          {
-            label: 'Posts by someone else',
-            value: 'others'
-          }
-        ],
-
-        stopDeleting: false,
-
-        processDelete: false,
-        processRefresh: false,
-
-        dialogDelete: false
-      }
-    },
-    activated () {
-      if (!this.init) {
-        this.init = true
-        this.fetchGetCountPosts()
-      }
-    },
-    computed: {
-      countPosts () {
-        return this.maxCount === 1 ? 1 : this.range.max - this.range.min + 1
-      },
-      countPostsConfig () {
-        return this.posts.length + this.groups.length + this.comments.length + this.likes.length +
-                this.reposts.length
-      }
-    },
-    methods: {
-      /* | ------------------------------------------------------------------------------------
-       * | Fetch Methods. (Main)
-       * | ------------------------------------------------------------------------------------
-       * |
-       */
-      fetchGetCountPosts () {
-        this.processRefresh = true
-
-        jsonp('wall.get', {
-          count: 1,
-          filter: this.globalFilter
-        })
-          .then(res => {
-            if (res.body.response) {
-              this.maxCount = res.body.response.count
-              this.range.min = 1
-              this.range.max = this.maxCount
-              this.$store.dispatch('vkSetUserCounter', { key: 'wall', val: this.maxCount })
-            }
-            else {
-              Toast.create.negative({ html: res.body.error ? res.body.error.error_msg : 'Error: Get Wall' })
-            }
-            this.processRefresh = false
-          }, res => {
-            this.processRefresh = false
-          })
-      },
-      fetchGetPostsForDelete (count) {
-        this.processDelete = true
-
-        if (count < 1) {
-          return this.stopDelete(true, 'Delete complete')
-        }
-
-        jsonp('wall.get', {
-          offset: this.range.min > this.maxCount ? this.maxCount : this.range.min,
-          count: count > this.pass ? this.pass : count,
-          filter: this.globalFilter
-        })
-          .then(res => {
-            if (res.body.response && res.body.response.items.length) {
-              addLogs(SOCIAL_VK, 'Receiving posts..', 'Request to VK', ICON_WALL, COLOR_INFO)
-              return this.fetchDeletePost(res.body.response.items, 0, count)
-            }
-            this.stopDelete(false, res.body.error ? res.body.error.error_msg : 'Stop deleting')
-          }, res => {
-            this.stopDelete(false)
-          })
-      },
-      fetchDeletePost (items, index, count) {
-        if (this.stopDeleting) {
-          this.stopDeleting = false
-          return this.fetchGetPostsForDelete(0)
-        }
-
-        // if the posts in the array are over. We get new
-        if (typeof items[index] === 'undefined') {
-          return this.fetchGetPostsForDelete(count - this.pass)
-        }
-
-        let item = items[index]
-        delete items[index]
-
-        let skippedSubMessage = this.filterSkipGeneral(item)
-
-        if (skippedSubMessage) {
-          addLogs(SOCIAL_VK, 'Skipped: ' + item.id, skippedSubMessage, ICON_WALL, COLOR_POSITIVE)
-          this.range.min < this.range.max && this.range.min++
-          return this.fetchDeletePost(items, ++index, count)
-        }
-
-        sleep(randomInteger(500, 2500)).then(() => {
-          jsonp('wall.delete', {
-            post_id: item.id
-          })
-            .then(res => {
-              if (res.body.response) {
-                addLogs(SOCIAL_VK, 'Deleted id: ' + item.id, null, ICON_WALL, COLOR_POSITIVE)
-                this.$store.dispatch('vkCounterUserDecrement', 'wall')
-                this.maxCount--
-                this.range.max--
-              }
-              else {
-                addLogs(SOCIAL_VK, 'Skipped: ' + item.id, null, ICON_WALL, COLOR_NEGATIVE)
-              }
-
-              return this.fetchDeletePost(items, ++index, count)
-            }, res => {
-              this.stopDelete(false)
-            })
-        })
-      },
-
-      /* | ------------------------------------------------------------------------------------
-       * | Start / stop delete posts.
-       * | ------------------------------------------------------------------------------------
-       * |
-       */
-      openDialogDelete () {
-        this.processDelete = false
-
-        Dialog.create({
-          title: 'Delete posts',
-          message: 'Are you sure you want to delete posts?<br><b>It is impossible to restore!</b>',
-          buttons: [
-            {
-              label: 'Cancel',
-              color: 'negative'
-            },
-            {
-              label: 'Delete',
-              handler: () => {
-                this.fetchGetPostsForDelete(this.countPosts)
-              }
-            }
-          ]
-        })
-      },
-      actionStopDeleting () {
-        this.stopDeleting = true
-        addLogs(SOCIAL_VK, 'Stopping..', null, ICON_WALL, COLOR_INFO)
-      },
-      stopDelete (isPositive = true, text = 'Stop deleting') {
-        this.processDelete = false
-        addLogs(SOCIAL_VK, text, null, ICON_WALL, isPositive ? COLOR_POSITIVE : COLOR_NEGATIVE)
-        isPositive ? Toast.create.positive({ html: text }) : Toast.create.negative({ html: text })
-      },
-
-      /* | ------------------------------------------------------------------------------------
-       * | Filters
-       * | ------------------------------------------------------------------------------------
-       * |
-       */
-      filterSkipGeneral (item) {
-        if (this.filterSkipByPostsIds(item)) {
-          return 'Post id'
-        }
-
-        if (this.filterSkipByReposts(item)) {
-          return 'Reposts'
-        }
-
-        if (this.filterSkipByViews(item)) {
-          return 'Views'
-        }
-
-        return ''
-      },
-      filterSkipByPostsIds (item) {
-        return this.posts.indexOf(item.id) > -1
-      },
-      filterSkipByReposts (item) {
-        if (!this.reposts.on) {
-          return false
-        }
-
-        let reposts = item.reposts.count
-
-        switch (this.reposts.equal) {
-          case -1:
-            return reposts < this.reposts.count
-          case 0:
-            return reposts === this.reposts.count
-          case 1:
-            return reposts > this.reposts.count
-          default:
-            return false
-        }
-      },
-      filterSkipByViews (item) {
-        if (typeof item.views === 'undefined' && !this.views.on) {
-          return false
-        }
-
-        let views = item.views.count
-
-        switch (this.views.equal) {
-          case -1:
-            return views < this.views.count
-          case 0:
-            return views === this.views.count
-          case 1:
-            return views > this.views.count
-          default:
-            return false
-        }
-      },
-
-      /* | ------------------------------------------------------------------------------------
-       * | Other
-       * | ------------------------------------------------------------------------------------
-       * |
-       */
-      addNoDeletePostId () {
-        let text = this.fNoDeletePost
-        this.fNoDeletePost = ''
-        let id = parseInt(text)
-        let userId = this.$store.state.vk.user.id
-
-        if (!id) {
-          let findIndex = text.indexOf('wall' + userId + '_')
-          id = parseInt(text.substring(findIndex + userId.toString().length + 5))
-          if (!id) {
-            return addLogs(SOCIAL_VK, 'Post: ' + id, 'Not found', ICON_WALL, COLOR_NEGATIVE)
+          reposts: {
+            state: 0,
+            count: 0
+          },
+          views: {
+            state: 0,
+            count: 0
           }
         }
-
-        if (this.posts.indexOf(id) > -1) {
-          return addLogs(SOCIAL_VK, 'Post: ' + id, 'Already added', ICON_WALL, COLOR_INFO)
-        }
-
-        jsonp('wall.getById', {
-          posts: userId + '_' + id
-        })
-          .then(res => {
-            if (res.body.response[0]) {
-              this.posts.push(id)
-            }
-            else {
-              addLogs(SOCIAL_VK, 'Post: ' + id, 'Not found', ICON_WALL, COLOR_NEGATIVE)
-            }
-          })
       },
-      closePostChip (index) {
-        this.posts.splice(index, 1)
-      },
-
-      /* | ------------------------------------------------------------------------------------
-       * | Links
-       * | ------------------------------------------------------------------------------------
-       * |
-       */
-      goPost (id) {
-        window.open('https://vk.com/wall' + this.$store.state.vk.user.id + '_' + id)
-      },
-      goGroup (id) {
-        window.open('https://vk.com/public' + id)
-      }
-    },
-    watch: {
-      globalFilter () {
-        this.fetchGetCountPosts()
+      del: {
+        dialog: false,
+        process: false,
+        continue: true
       }
     }
-  }
+  },
+  mounted () {
+    this.main.owner_id = this.user.id
+  },
+  computed: {
+    user () {
+      return this.$store.state.vk.user
+    }
+  },
+  methods: {
+    /* | -----------------------------------------------------------------------------
+     * | API
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    fetchGetWall () {
+      // TODO Global process for block
+      this.del.process = true
 
-  function sleep (time) {
-    return new Promise((resolve) => setTimeout(resolve, time))
-  }
+      sleep(randomInteger(500, 1500)).then(() => {
+        send('wall.get', {
+          owner_id: this.main.owner_id,
+          filter: this.main.filter,
+          count: MAX_GET_POSTS,
+          offset: this.main.count.min - 1
+        }, { icon: ICON_WALL, msg: 'Get the data about the wall' })
+          .then(res => {
+            if (res.body.response && res.body.response.items.length) {
+              return this.deletePosts(res.body.response.items, 0)
+            }
+            this.stopDelete(typeof res.body.error === 'undefined')
+          })
+          .catch(() => {
+            this.stopDelete(false)
+          })
+      })
+    },
+    fetchDeletePost (post, items, index) {
+      sleep(randomInteger(1500, 2500)).then(() => {
+        send('wall.delete', {
+          owner_id: this.main.owner_id,
+          post_id: post.id
+        }, { icon: ICON_WALL, msg: `Remove the ${post.id}st post` })
+          .then(res => {
+            if (res.body.error && res.body.error.error_code === 210) {
+              this.$Modal.error({
+                title: 'Access to wall\'s post denied',
+                content: 'Error code: 210'
+              })
+              return this.stopDelete(false)
+            }
 
-  function randomInteger (min, max) {
-    return Math.round(min - 0.5 + Math.random() * (max - min + 1))
+            if (res.body.response) {
+              this.main.count.max--
+            } else {
+              this.main.count.min++
+            }
+
+            return this.deletePosts(items, ++index)
+          })
+          .catch(() => {
+            this.stopDelete(false)
+          })
+      })
+    },
+
+    /* | -----------------------------------------------------------------------------
+     * | Start/Stop delete
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    deletePosts (items, index) {
+      if (!this.del.continue || this.main.count.min > this.main.count.max) {
+        return this.stopDelete()
+      }
+
+      // If all posts (MAX_GET_POSTS) are deleted, we receive new
+      if (index >= MAX_GET_POSTS) {
+        return this.fetchGetWall()
+      }
+
+      const post = items[index]
+
+      // Of the record is empty, but the size should be still - stop
+      if (typeof post === 'undefined') {
+        return this.stopDelete()
+      }
+
+      if (this.checkWallConfiguration(post)) {
+        this.main.count.min++
+        return this.deletePosts(items, ++index)
+      }
+
+      this.fetchDeletePost(post, items, index)
+    },
+    startDelete () {
+      this.del.dialog = false
+
+      const min = parseInt(this.main.count.min)
+      const max = parseInt(this.main.count.max)
+
+      if (min > 0 && max > 0 && max >= min) {
+        return this.fetchGetWall()
+      }
+
+      this.$Modal.alert({
+        title: 'Ошибка',
+        content: 'Проверьте корректность данных в основных настроек'
+      })
+    },
+    stopDelete (isSuccess = true) {
+      if (isSuccess) {
+        this.$Message.success('Action stopped')
+      } else {
+        this.$Message.error('Action stopped')
+      }
+      this.del.process = false
+      this.del.continue = true
+    },
+
+    /* | -----------------------------------------------------------------------------
+     * | Check posts
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    // TODO checkCommentsConfiguration
+    checkWallConfiguration (post) {
+      if (this.checkWallIds(post.id)) {
+        return true
+      }
+
+      if (this.checkWallFromIds(post.from_id)) {
+        return true
+      }
+
+      if (this.checkWallTexts(post.text)) {
+        return true
+      }
+
+      if (this.checkWallAttachments(post.attachments)) {
+        return true
+      }
+
+      if (this.checkWallCounts(post)) {
+        return true
+      }
+
+      return false
+    },
+    checkWallIds (postId) {
+      return this.wall.ids.includes(postId)
+    },
+    checkWallFromIds (postFromId) {
+      return this.wall.fromIds.includes(postFromId)
+    },
+    checkWallTexts (postText) {
+      postText = postText.toLowerCase().trim()
+
+      return this.wall.texts.some(text => {
+        if (postText.indexOf(text) > -1) {
+          return true
+        }
+      })
+    },
+    checkWallAttachments (postAttachments) {
+      if (typeof postAttachments === 'undefined') {
+        return false
+      }
+
+      return postAttachments.some(attachment => {
+        if (this.wall.attachments.includes(attachment.type)) {
+          return true
+        }
+      })
+    },
+    checkWallCounts (post) {
+      if (this.checkWallCountObj(post, 'comments')) {
+        return true
+      }
+
+      if (this.checkWallCountObj(post, 'likes')) {
+        return true
+      }
+
+      if (this.checkWallCountObj(post, 'reposts')) {
+        return true
+      }
+
+      if (this.checkWallCountObj(post, 'views')) {
+        return true
+      }
+
+      return false
+    },
+    checkWallCountObj (post, localObj) {
+      if (typeof post[localObj] === 'undefined') {
+        return false
+      }
+
+      const postCount = post[localObj].count
+      const state = this.wall.count[localObj].state
+
+      if (state !== 0) {
+        const count = parseInt(this.wall.count[localObj].count)
+
+        switch (state) {
+          case -1:
+            return postCount < count
+          case 1:
+            return postCount > count
+        }
+      }
+
+      return false
+    },
+
+    /* | -----------------------------------------------------------------------------
+     * | Wall Config
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    addConfigWallArrayId (str, arr) {
+      const id = parseInt(this.wall[str])
+
+      if (id) {
+        this.wall[arr].push(id)
+        this.wall[arr] = Array.from(new Set(this.wall[arr].sort((a, b) => a - b)))
+      }
+
+      this.wall[str] = ''
+    },
+    addConfigWallArrayValue (str, arr) {
+      const value = this.wall[str].toLowerCase().trim()
+
+      if (value) {
+        this.wall[arr].push(value)
+        this.wall[arr] = Array.from(new Set(this.wall[arr].sort()))
+      }
+
+      this.wall[str] = ''
+    },
+
+    /* | -----------------------------------------------------------------------------
+     * | Links
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    getLinkPost (id) {
+      return `${vk.url}/wall${this.main.owner_id}_${id}`
+    },
+    getLinkPage (id) {
+      const strId = id.toString()
+
+      if (strId.charAt(0) === '-') {
+        return vk.url + 'public' + strId.slice(1)
+      }
+
+      return vk.url + 'id' + id
+    }
   }
+}
 </script>
+
+<style lang="scss" scoped>
+.block {
+  max-width: 500px;
+  margin: 0 auto;
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .block__attr {
+    margin-bottom: 15px;
+    > p {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .flex {
+      align-items: center;
+      > .at-input {
+        margin: 0 10px;
+        &:first-child {
+          margin-left: 0;
+        }
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+    .at-checkbox {
+      margin: 5px;
+    }
+  }
+}
+
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  .count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e7e7e7;
+    margin: 5px;
+    padding: 10px 5px;
+    p {
+      font-weight: bold;
+    }
+    i {
+      font-size: 1.1rem;
+      margin-right: 10px;
+    }
+    .flex {
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .at-input {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.block-buttons {
+  > button {
+    width: 100%;
+  }
+}
+
+.revert {
+  margin: 0 auto;
+  > button {
+    width: 100%;
+    max-width: 600px;
+    padding: 40px 20px;
+    border-radius: 20px;
+    white-space: normal;
+    font-weight: bold;
+    cursor: no-drop; // FIXME Temporary
+  }
+}
+</style>

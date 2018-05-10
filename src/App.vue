@@ -1,102 +1,162 @@
 <template>
-  <q-layout id="q-app" ref="layout" view="hHh LpR fff" :right-breakpoint="1100">
-    <!-- Header -->
-    <q-toolbar slot="header">
-      <q-btn flat @click="$refs.layout.toggleLeft()" :disabled="!$store.state.templates.leftSide">
-        <q-icon name="menu" />
-      </q-btn>
-      <q-toolbar-title>
+  <div id="app">
+    <header>
+      <router-link to="/" class="brand">
         Social Cleaner
-        <span slot="subtitle" v-if="$store.state.templates.subTitle">
-          {{ $store.state.templates.subTitle }}
-        </span>
-      </q-toolbar-title>
-      <q-btn flat @click.native="linkBasic">
-        <q-icon name="home" />
-      </q-btn>
-      <q-btn flat @click="$refs.layout.toggleRight()" :disabled="!$store.state.templates.rightSide">
-        <q-icon name="menu" />
-      </q-btn>
-    </q-toolbar>
-
-    <!-- Left Side Panel -->
-    <div slot="left" v-if="$store.state.templates.leftSide">
+        <span>{{ version }}</span>
+      </router-link>
+      <i v-if="socialNetwork.icon" :class="'current fa ' + socialNetwork.icon" aria-hidden="true"></i>
+      <router-link to="/logs" class="logs">
+        <template v-if="firstLog">
+          <span :class="firstLog.color">{{ firstLog.title }}</span>
+        </template>
+        <span v-else>No logs</span>
+      </router-link>
+    </header>
+    <div class="content">
       <keep-alive>
-        <component :is="$store.state.templates.leftSide" />
+        <router-view />
       </keep-alive>
     </div>
-
-    <!-- Right Side Panel -->
-    <div slot="right" v-if="$store.state.templates.rightSide">
-      <keep-alive>
-        <component :is="$store.state.templates.rightSide" />
-      </keep-alive>
-    </div>
-
-    <!-- Router view -->
-    <keep-alive>
-      <router-view />
-    </keep-alive>
-
-    <!-- Footer -->
-    <q-toolbar slot="footer">
-      <q-toolbar-title>
-        <q-btn flat @click.native="linkGithub">
-          <q-icon name="fa-github" />
-        </q-btn>
-      </q-toolbar-title>
-    </q-toolbar>
-  </q-layout>
+    <footer>
+      <div class="copyright">
+        <span>Made with 💖 by: </span>
+        <a href="https://github.com/alexeykhr" target="_blank" rel="noreferrer" title="Alexey Khrushch">
+          @alexeykhr
+        </a>
+      </div>
+      <iframe src="https://ghbtns.com/github-btn.html?user=Alexeykhr&repo=Social-Cleaner&type=star&count=true"
+              frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
+    </footer>
+  </div>
 </template>
 
 <script>
-  import {
-    QLayout,
-    QToolbar,
-    QToolbarTitle,
-    QSearch,
-    QTabs,
-    QRouteTab,
-    QBtn,
-    QIcon,
-    QItemSide,
-    QItemMain,
-    QSideLink,
-    QListHeader,
-    QScrollArea,
-    QList,
-    QChip,
-    QItem,
-    QItemTile
-  } from 'quasar'
+import { version } from './config'
 
-  export default {
-    components: {
-      QLayout,
-      QToolbar,
-      QToolbarTitle,
-      QSearch,
-      QTabs,
-      QRouteTab,
-      QBtn,
-      QIcon,
-      QItemSide,
-      QItemMain,
-      QSideLink,
-      QListHeader,
-      QScrollArea,
-      QList,
-      QChip,
-      QItem,
-      QItemTile
+export default {
+  data () {
+    return {
+      version,
+      menuItems: [
+        { name: 'Home', to: '' }
+      ]
+    }
+  },
+  computed: {
+    socialNetwork () {
+      return this.$store.state.template.socialNetwork
     },
-    methods: {
-      linkGithub () {
-        return window.open('https://github.com/Alexeykhr/Social-Cleaner', '_blank')
-      },
-      linkBasic () {
-        return this.$router.push({ name: 'dashboard' })
+    firstLog () {
+      return this.$store.state.logs.storage[0]
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+body, #app {
+  min-height: 100%;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  overflow: hidden;
+  .brand, .logs {
+    width: 280px;
+    color: #333;
+    transition: .2s;
+    opacity: .7;
+    text-align: center;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .brand {
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    > span {
+      font-size: 0.7rem;
+      vertical-align: top;
+      opacity: 0.5;
+    }
+  }
+  .current {
+    font-size: 1.5rem;
+    line-height: 0;
+    color: #444;
+  }
+  .logs {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: .8rem;
+    > span {
+      display: block;
+      padding: 2px 10px;
+      font-weight: bold;
+      &.success {
+        color: #0dad54;
+      }
+      &.error {
+        color: #ff5b5b;
+      }
+      &.warning {
+        color: #efb30d;
+      }
+      &.info {
+        color: #6c94e1;
       }
     }
   }
-</script>
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #e7e7e7;
+  height: 30px;
+  justify-content: space-between;
+  color: #a0a0a0;
+  a {
+    color: #868686;
+    font-weight: bold;
+    text-indent: 5px;
+    transition: .2s;
+    &:hover {
+      color: #333;
+    }
+  }
+  .copyright {
+    text-indent: 15px;
+    font-size: smaller;
+  }
+}
+
+hr {
+  margin: 30px;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  #vk {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+</style>
