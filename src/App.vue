@@ -188,7 +188,7 @@ hr {
 
 .content {
   flex-grow: 1;
-  padding: 20px;
+  padding: 30px 20px;
   #vk {
     max-width: 800px;
     width: 100%;
