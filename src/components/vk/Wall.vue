@@ -35,6 +35,14 @@
       <config-result v-if="!del.process" :main-config="main" />
     </div>
 
+    <hr>
+    <div class="revert block">
+      <!--TODO Revert v-if*-->
+      <at-button>
+        Удалить все записи с {{ main.count.min }} по {{ main.count.max }}, которые не попадают под параметры ниже
+      </at-button>
+    </div>
+
     <!--TODO ___Удалить все записи, которые не совпадают с настройками или наоборот___ REVERT-->
     <hr>
     <div class="wall-config block">
@@ -206,7 +214,8 @@ export default {
           min: 1,
           max: null
         },
-        isDeletePosts: 0
+        isDeletePosts: 0,
+        revert: false
       },
       wall: {
         id: '',
@@ -560,6 +569,19 @@ export default {
 .block-buttons {
   > button {
     width: 100%;
+  }
+}
+
+.revert {
+  margin: 0 auto;
+  > button {
+    width: 100%;
+    max-width: 600px;
+    padding: 40px 20px;
+    border-radius: 20px;
+    white-space: normal;
+    font-weight: bold;
+    cursor: no-drop; // FIXME Temporary
   }
 }
 </style>
