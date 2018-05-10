@@ -143,6 +143,7 @@
               <at-radio-button :label="1">Больше</at-radio-button>
             </at-radio-group>
           </div>
+          <!--TODO Date-->
         </div>
       </div>
     </div>
@@ -154,6 +155,7 @@
         <!--TODO From_id-->
         <!--TODO Text-->
         <!--TODO Attachments-->
+        <!--TODO Date-->
         <!--TODO Count [likes]-->
       </div>
     </template>
@@ -202,7 +204,7 @@ export default {
         filter: 'all',
         count: {
           min: 1,
-          max: 1
+          max: null
         },
         isDeletePosts: 0
       },
@@ -258,46 +260,28 @@ export default {
       // TODO Global process for block
       this.del.process = true
 
-      send('wall.get', {
-        owner_id: this.main.owner_id,
-        filter: this.main.filter,
-        count: MAX_GET_POSTS,
-        offset: this.main.count.min - 1
-      }, { icon: ICON_WALL, msg: 'Get the data about the wall' })
-        .then(res => {
-          if (res.body.response && res.body.response.items.length) {
-            return this.fetchDeletePosts(res.body.response.items, 0)
-          }
-          this.stopDelete()
-        })
-        .catch(() => {
-          this.stopDelete(false)
-        })
+      sleep(randomInteger(500, 1500)).then(() => {
+        send('wall.get', {
+          owner_id: this.main.owner_id,
+          filter: this.main.filter,
+          count: MAX_GET_POSTS,
+          offset: this.main.count.min - 1
+        }, { icon: ICON_WALL, msg: 'Get the data about the wall' })
+          .then(res => {
+            if (res.body.response && res.body.response.items.length) {
+              return this.deletePosts(res.body.response.items, 0)
+            }
+            this.stopDelete(typeof res.body.error === 'undefined')
+          })
+          .catch(() => {
+            this.stopDelete(false)
+          })
+      })
     },
-    fetchDeletePosts (items, index) {
-      if (!this.del.continue || this.main.count.min > this.main.count.max) {
-        return this.stopDelete()
-      }
-
-      // If all posts (MAX_GET_POSTS) are deleted, we receive new
-      if (index + 1 >= MAX_GET_POSTS) {
-        return this.fetchGetWall()
-      }
-
-      const post = items[index]
-
-      // Of the record is empty, but the size should be still - stop
-      if (typeof post === 'undefined') {
-        return this.stopDelete()
-      }
-
-      if (this.checkWallConfiguration(post)) {
-        this.main.count.min++
-        return this.fetchDeletePosts(items, ++index)
-      }
-
+    fetchDeletePost (post, items, index) {
       sleep(randomInteger(1500, 2500)).then(() => {
         send('wall.delete', {
+          owner_id: this.main.owner_id,
           post_id: post.id
         }, { icon: ICON_WALL, msg: `Remove the ${post.id}st post` })
           .then(res => {
@@ -305,7 +289,7 @@ export default {
               this.main.count.max--
             }
 
-            return this.fetchDeletePosts(items, ++index)
+            return this.deletePosts(items, ++index)
           })
           .catch(() => {
             this.stopDelete(false)
@@ -318,11 +302,44 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    startDelete () {
-      // TODO Check input (min, max, etc)
+    deletePosts (items, index) {
+      if (!this.del.continue || this.main.count.min > this.main.count.max) {
+        return this.stopDelete()
+      }
 
+      // If all posts (MAX_GET_POSTS) are deleted, we receive new
+      if (index >= MAX_GET_POSTS) {
+        return this.fetchGetWall()
+      }
+
+      const post = items[index]
+
+      // Of the record is empty, but the size should be still - stop
+      if (typeof post === 'undefined') {
+        return this.stopDelete()
+      }
+
+      if (this.checkWallConfiguration(post)) {
+        this.main.count.min++
+        return this.deletePosts(items, ++index)
+      }
+
+      this.fetchDeletePost(post, items, index)
+    },
+    startDelete () {
       this.del.dialog = false
-      this.fetchGetWall()
+
+      const min = parseInt(this.main.count.min)
+      const max = parseInt(this.main.count.max)
+
+      if (min > 0 && max > 0 && max >= min) {
+        return this.fetchGetWall()
+      }
+
+      this.$Modal.alert({
+        title: 'Ошибка',
+        content: 'Проверьте корректность данных в основных настроек'
+      })
     },
     stopDelete (isSuccess = true) {
       if (isSuccess) {
@@ -331,7 +348,7 @@ export default {
         this.$Message.error('Action stopped')
       }
       this.del.process = false
-      this.del.continueDelete = true
+      this.del.continue = true
     },
 
     /* | -----------------------------------------------------------------------------
@@ -360,8 +377,6 @@ export default {
       if (this.checkWallCounts(post)) {
         return true
       }
-
-      // TODO
 
       return false
     },
@@ -411,7 +426,7 @@ export default {
       return false
     },
     checkWallCountObj (post, localObj) {
-      if (post[localObj] === 'undefined') {
+      if (typeof post[localObj] === 'undefined') {
         return false
       }
 
