@@ -8,6 +8,7 @@ import AtComponents from 'at-ui'
 import * as vk from './heplers/vk'
 import * as config from './config'
 import VueResource from 'vue-resource'
+import 'font-awesome/scss/font-awesome.scss'
 import { addLog, COLOR_ERROR, COLOR_INFO, COLOR_SUCCESS } from './heplers/logs'
 
 Vue.use(AtComponents)
