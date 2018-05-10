@@ -14,12 +14,6 @@
       </router-link>
     </header>
     <div class="content">
-      <!--TODO Temporary-->
-      <select v-model="locale">
-        <option>en-US</option>
-        <option>ru-RU</option>
-      </select>
-
       <keep-alive>
         <router-view />
       </keep-alive>
@@ -31,13 +25,21 @@
           @alexeykhr
         </a>
       </div>
-      <a href="#" class="lang" @click.prevent="openDialogChooseLanguage">
+      <a href="#" class="lang" @click.prevent="locale.modal = true">
         <i class="fa fa-language" aria-hidden="true"></i> Translate
       </a>
       <!--TODO Change-->
       <iframe src="https://ghbtns.com/github-btn.html?user=Alexeykhr&repo=Social-Cleaner&type=star&count=true"
               frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
     </footer>
+
+    <at-modal v-model="locale.modal" title="Choose language" :showFooter="false">
+      <!--TODO Temporary-->
+      <select v-model="locale.value">
+        <option>en-US</option>
+        <option>ru-RU</option>
+      </select>
+    </at-modal>
   </div>
 </template>
 
@@ -49,7 +51,19 @@ export default {
     return {
       vk,
       version,
-      locale: 'en-US'
+      locale: {
+        modal: false,
+        value: 'en-US'
+      }
+    }
+  },
+  created () {
+    const lang = localStorage.getItem('lang')
+
+    if (lang) {
+      this.locale.value = lang
+    } else {
+      this.locale.modal = true
     }
   },
   computed: {
@@ -58,18 +72,15 @@ export default {
     },
     firstLog () {
       return this.$store.state.logs.storage[0]
-    }
-  },
-  methods: {
-    openDialogChooseLanguage () {
-      console.log(this.$i18n)
-      console.log('Open dialog')
+    },
+    localeValue () {
+      return this.locale.value
     }
   },
   watch: {
-    locale (val) {
+    localeValue (val) {
+      localStorage.setItem('lang', val)
       this.$i18n.locale = val
-      console.log(this.$i18n.locale)
     }
   }
 }
