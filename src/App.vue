@@ -34,23 +34,22 @@
     </footer>
 
     <at-modal v-model="locale.modal" title="Choose language" :showFooter="false">
-      <!--TODO Temporary-->
-      <select v-model="locale.value">
-        <option>en-US</option>
-        <option>ru-RU</option>
-      </select>
+      <a href="#" class="lang-item" v-for="lang in languages" :key="lang.value" @click="setLocale(lang.value)">
+        {{ lang.name }}
+      </a>
     </at-modal>
   </div>
 </template>
 
 <script>
-import { vk, version } from './config'
+import { vk, version, languages } from './config'
 
 export default {
   data () {
     return {
       vk,
       version,
+      languages,
       locale: {
         modal: false,
         value: 'en-US'
@@ -72,13 +71,11 @@ export default {
     },
     firstLog () {
       return this.$store.state.logs.storage[0]
-    },
-    localeValue () {
-      return this.locale.value
     }
   },
-  watch: {
-    localeValue (val) {
+  methods: {
+    setLocale (val) {
+      this.locale.modal = false
       localStorage.setItem('lang', val)
       this.$i18n.locale = val
     }
@@ -196,5 +193,12 @@ hr {
     width: 100%;
     margin: 0 auto;
   }
+}
+
+.lang-item {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 1rem;
+  margin: 5px;
 }
 </style>

@@ -2,6 +2,11 @@ import { ICON_TOKEN, ICON_WALL } from './heplers/logs'
 
 export const version = require('../package').version
 
+export const languages = [
+  { name: 'English', value: 'en-US' },
+  { name: 'Русский', value: 'ru-RU' }
+]
+
 /* | ---------------------------------------------------------
  * | Social Networks
  * | ---------------------------------------------------------
