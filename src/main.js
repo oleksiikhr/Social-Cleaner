@@ -3,6 +3,7 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import router from './router'
+import i18n from './translate'
 import AtComponents from 'at-ui'
 import * as vk from './heplers/vk'
 import * as config from './config'
@@ -57,6 +58,7 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   components: { App },
   template: '<App/>'
 })

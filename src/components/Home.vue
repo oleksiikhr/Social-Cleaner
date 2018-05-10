@@ -1,5 +1,11 @@
 <template>
   <div id="dashboard">
+    <!--TODO Temporary-->
+    <select v-model="locale">
+      <option>en</option>
+      <option>ru</option>
+    </select>
+
     <div class="header">
       <at-input v-model="search" placeholder="Find name" icon="search" />
     </div>
@@ -20,7 +26,8 @@ export default {
   data () {
     return {
       networks,
-      search: ''
+      search: '',
+      locale: 'en'
     }
   },
   activated () {
@@ -44,6 +51,11 @@ export default {
           return n
         }
       })
+    }
+  },
+  watch: {
+    locale (val) {
+      this.$i18n.locale = val
     }
   }
 }
