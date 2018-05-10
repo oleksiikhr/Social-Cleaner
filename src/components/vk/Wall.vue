@@ -294,18 +294,8 @@ export default {
           post_id: post.id
         }, ICON_WALL)
           .then(res => {
-            if (res.body.error && res.body.error.error_code === 210) {
-              this.$Modal.error({
-                title: 'Access to wall\'s post denied',
-                content: 'Error code: 210'
-              })
-              return this.stopDelete(false)
-            }
-
             if (res.body.response) {
               this.main.count.max--
-            } else {
-              this.main.count.min++
             }
 
             return this.deletePosts(items, ++index)
@@ -336,6 +326,15 @@ export default {
       // Of the record is empty, but the size should be still - stop
       if (typeof post === 'undefined') {
         return this.stopDelete()
+      }
+
+      // If can't delete - stopDelete
+      if (typeof post.can_delete === 'undefined' || !post.can_delete) {
+        this.$Modal.error({
+          title: 'Access to wall\'s post denied',
+          content: 'Error code: 210'
+        })
+        return this.stopDelete(false)
       }
 
       if (this.checkWallConfiguration(post)) {

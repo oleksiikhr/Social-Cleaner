@@ -80,7 +80,7 @@ export default {
         owner_id: this.mainConfig.owner_id,
         filter: this.mainConfig.filter,
         count: 1,
-        offset: this.mainConfig.count.min
+        offset: this.mainConfig.count.min - 1
       }, ICON_WALL)
         .then(res => {
           this.wall = res.data
