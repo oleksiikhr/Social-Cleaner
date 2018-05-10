@@ -275,7 +275,7 @@ export default {
           filter: this.main.filter,
           count: MAX_GET_POSTS,
           offset: this.main.count.min - 1
-        }, { icon: ICON_WALL, msg: 'Get the data about the wall' })
+        }, ICON_WALL)
           .then(res => {
             if (res.body.response && res.body.response.items.length) {
               return this.deletePosts(res.body.response.items, 0)
@@ -292,7 +292,7 @@ export default {
         send('wall.delete', {
           owner_id: this.main.owner_id,
           post_id: post.id
-        }, { icon: ICON_WALL, msg: `Remove the ${post.id}st post` })
+        }, ICON_WALL)
           .then(res => {
             if (res.body.error && res.body.error.error_code === 210) {
               this.$Modal.error({

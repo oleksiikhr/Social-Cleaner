@@ -8,7 +8,7 @@
       <i v-if="socialNetwork.icon" :class="'current fa ' + socialNetwork.icon" aria-hidden="true"></i>
       <router-link to="/logs" class="logs">
         <template v-if="firstLog">
-          <span :class="firstLog.color">{{ firstLog.title }}</span>
+          <span :class="firstLog.color">{{ firstLog.method }}</span>
         </template>
         <span v-else>{{ $t('app.no_logs') }}</span>
       </router-link>
@@ -25,7 +25,7 @@
           @alexeykhr
         </a>
       </div>
-      <a href="#" class="lang" @click.prevent="locale.modal = true">
+      <a class="lang" @click.prevent="locale.modal = true">
         <i class="fa fa-language" aria-hidden="true"></i> Translate
       </a>
       <!--TODO Change-->
@@ -34,7 +34,7 @@
     </footer>
 
     <at-modal v-model="locale.modal" title="Choose language" :showFooter="false">
-      <a href="#" class="lang-item" v-for="lang in languages" :key="lang.value" @click="setLocale(lang.value)">
+      <a class="lang-item" v-for="lang in languages" :key="lang.value" @click="setLocale(lang.value)">
         {{ lang.name }}
       </a>
     </at-modal>
@@ -151,24 +151,25 @@ footer {
   height: 30px;
   justify-content: space-between;
   color: #a0a0a0;
+  a {
+    color: #868686;
+    font-weight: bold;
+    text-indent: 5px;
+    transition: .2s;
+    &:hover {
+      color: #333;
+    }
+  }
   .copyright, iframe {
     width: 180px;
   }
   .lang {
     text-indent: 0;
+    font-size: .8rem;
   }
   .copyright {
     text-indent: 15px;
     font-size: smaller;
-    a {
-      color: #868686;
-      font-weight: bold;
-      text-indent: 5px;
-      transition: .2s;
-      &:hover {
-        color: #333;
-      }
-    }
   }
 }
 

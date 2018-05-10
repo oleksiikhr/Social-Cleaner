@@ -173,12 +173,12 @@ button {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 20px;
+  padding: 30px;
   border: 1px solid #e7e7e7;
   color: #333;
   opacity: 0.7;
   flex-wrap: wrap;
-  width: 150px;
+  width: 180px;
   margin: 10px;
   font-size: 1rem;
   transition: .2s;

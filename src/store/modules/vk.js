@@ -54,7 +54,7 @@ const actions = {
   vkInit ({commit}, token) {
     send('account.getAppPermissions', {
       access_token: token
-    }, { icon: ICON_TOKEN, msg: 'Received token data' })
+    }, ICON_TOKEN)
       .then(res => {
         if (res.body.response) {
           store.commit('VK_SET_PERMISSIONS', res.body.response)
@@ -63,11 +63,10 @@ const actions = {
 
           send('users.get', {
             fields: 'has_photo,photo_100,counters'
-          }, { icon: ICON_TOKEN, msg: 'Received user information' })
+          }, ICON_TOKEN)
             .then(res => {
               if (res.body.response) {
                 store.commit('VK_SET_USER', res.body.response[0])
-                Vue.prototype.$Message.success('User installed')
               }
             })
         } else {

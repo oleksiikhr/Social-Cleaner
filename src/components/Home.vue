@@ -11,7 +11,7 @@
 
 <script>
 import { networks } from '../config'
-import Card from './Card'
+import Card from './parts/Card'
 
 export default {
   components: {
