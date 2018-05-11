@@ -195,7 +195,6 @@
 <script>
 import { sleep, randomInteger } from '../../heplers/methods'
 import ConfigResult from './parts/WallConfigResult'
-import { ICON_WALL } from '../../heplers/logs'
 import { send } from '../../heplers/vk'
 import { vk } from '../../config'
 
