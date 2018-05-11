@@ -275,7 +275,7 @@ export default {
           filter: this.main.filter,
           count: MAX_GET_POSTS,
           offset: this.main.count.min - 1
-        }, ICON_WALL)
+        })
           .then(res => {
             if (res.body.response && res.body.response.items.length) {
               return this.deletePosts(res.body.response.items, 0)
@@ -292,7 +292,7 @@ export default {
         send('wall.delete', {
           owner_id: this.main.owner_id,
           post_id: post.id
-        }, ICON_WALL)
+        })
           .then(res => {
             if (res.body.response) {
               this.main.count.max--

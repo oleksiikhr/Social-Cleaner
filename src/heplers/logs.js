@@ -2,7 +2,7 @@ import store from '../store/index'
 
 // Font-awesome
 export const ICON_TOKEN = 'key'
-export const ICON_WALL = 'bars' // Temporary
+export const ICON_WALL = 'bars'
 
 export const COLOR_SUCCESS = 'success'
 export const COLOR_WARNING = 'warning'

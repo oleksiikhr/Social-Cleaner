@@ -39,7 +39,6 @@
 </template>
 
 <script>
-import { ICON_WALL } from '../../../heplers/logs'
 import { send } from '../../../heplers/vk'
 import { vk } from '../../../config'
 
@@ -81,7 +80,7 @@ export default {
         filter: this.mainConfig.filter,
         count: 1,
         offset: this.mainConfig.count.min - 1
-      }, ICON_WALL)
+      })
         .then(res => {
           this.wall = res.data
         })
@@ -90,7 +89,7 @@ export default {
       send('users.get', {
         user_ids: this.mainConfig.owner_id,
         fields: 'photo_100'
-      }, ICON_WALL)
+      })
         .then(res => {
           if (res.data.response) {
             this.page = { isUser: true, response: res.data.response[0] }
@@ -100,7 +99,7 @@ export default {
     fetchGetGroupsById () {
       send('groups.getById', {
         group_ids: this.mainConfig.owner_id.substr(1)
-      }, ICON_WALL)
+      })
         .then(res => {
           if (res.data.response) {
             this.page = { isUser: false, response: res.data.response[0] }

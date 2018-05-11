@@ -12,11 +12,10 @@ export const version = '5.74'
  *
  * @param method
  * @param params
- * @param icon
  *
  * @returns {*}
  */
-export function send (method, params, icon) {
+export function send (method, params) {
   params.v = version
 
   if (!params.access_token) {
@@ -24,7 +23,6 @@ export function send (method, params, icon) {
   }
 
   return Vue.http.jsonp(urlApi + method, {
-    params: params,
-    icon: icon
+    params: params
   })
 }
