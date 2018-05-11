@@ -25,7 +25,7 @@
           @alexeykhr
         </a>
       </div>
-      <a class="lang" @click.prevent="locale.modal = true">
+      <a class="lang" @click.prevent="localeModal = true">
         <i class="fa fa-language" aria-hidden="true"></i> Translate
       </a>
       <!--TODO Change-->
@@ -33,7 +33,7 @@
               frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
     </footer>
 
-    <at-modal v-model="locale.modal" title="Choose language" :showFooter="false">
+    <at-modal v-model="localeModal" title="Choose language" :showFooter="false">
       <a class="lang-item" v-for="lang in languages" :key="lang.value" @click="setLocale(lang.value)">
         {{ lang.name }}
       </a>
@@ -50,19 +50,16 @@ export default {
       vk,
       version,
       languages,
-      locale: {
-        modal: false,
-        value: 'en-US'
-      }
+      localeModal: false
     }
   },
   created () {
     const lang = localStorage.getItem('lang')
 
     if (lang) {
-      this.locale.value = lang
+      this.setLocale(lang)
     } else {
-      this.locale.modal = true
+      this.localeModal = true
     }
   },
   computed: {
@@ -75,7 +72,7 @@ export default {
   },
   methods: {
     setLocale (val) {
-      this.locale.modal = false
+      this.localeModal = false
       localStorage.setItem('lang', val)
       this.$i18n.locale = val
     }
