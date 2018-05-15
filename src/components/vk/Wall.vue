@@ -36,10 +36,10 @@
     </div>
 
     <hr>
-    <div class="revert block">
-      <!--TODO Revert v-if*-->
-      <at-button>
-        Удалить все записи с {{ main.count.min }} по {{ main.count.max }}, которые не попадают под параметры ниже
+    <div :class="'revert ' + (main.revert ? 'on' : 'off') + ' block'">
+      <at-button @click="main.revert = !main.revert">
+        Удалить все записи с {{ main.count.min }} по {{ main.count.max }},
+        которые <strong>{{ main.revert ? '' : 'не ' }}попадают</strong> под параметры ниже (хотя бы 1 из них)
       </at-button>
     </div>
 
@@ -170,7 +170,9 @@
 
     <hr>
     <div class="block-buttons block">
-      <at-button type="error" @click="del.dialog = true" v-if="!del.process">Удалить записи</at-button>
+      <at-button type="error" @click="del.dialog = true" v-if="!del.process">
+        Удалить записи с {{ main.count.min }} по {{ main.count.max }}
+      </at-button>
       <at-button type="primary" @click="del.continue = false" v-if="del.continue && del.process">
         Остановить
       </at-button>
@@ -336,7 +338,8 @@ export default {
         return this.stopDelete(false)
       }
 
-      if (this.checkWallConfiguration(post)) {
+      if ((this.main.revert && !this.checkWallConfiguration(post)) ||
+        (!this.main.revert && this.checkWallConfiguration(post))) {
         this.main.count.min++
         return this.deletePosts(items, ++index)
       }
@@ -589,7 +592,18 @@ export default {
     border-radius: 20px;
     white-space: normal;
     font-weight: bold;
-    cursor: no-drop; // FIXME Temporary
+  }
+  &.off {
+    > button {
+      border-color: #ff8080;
+      background-color: rgba(220, 142, 142, 0.07);
+    }
+  }
+  &.on {
+    > button {
+      border-color: #477fc5;
+      background-color: rgba(71, 127, 197, 0.07);
+    }
   }
 }
 </style>
