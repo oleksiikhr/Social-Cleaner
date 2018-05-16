@@ -168,6 +168,15 @@
       </div>
     </template>
 
+
+    <hr>
+    <!--TODO Styles-->
+    <at-button type="info" class="preview-btn" @click="previewPosts()">
+      Проверить первые 100 записей, начиная с {{ main.count.min }}
+    </at-button>
+    Найдены совпадения
+    {{ preview.ids }}
+
     <hr>
     <div class="block-buttons block">
       <at-button type="error" @click="del.dialog = true" v-if="!del.process">
@@ -176,7 +185,6 @@
       <at-button type="primary" @click="del.continue = false" v-if="del.continue && del.process">
         Остановить
       </at-button>
-      <!--TODO Preview posts-->
 
       <at-modal v-model="del.dialog">
         <div slot="header">
@@ -200,7 +208,8 @@ import ConfigResult from './parts/WallConfigResult'
 import { send } from '../../heplers/vk'
 import { vk } from '../../config'
 
-const MAX_GET_POSTS = 25
+const CURRENT_GET_POSTS = 25
+const MAX_GET_POSTS = 100
 
 export default {
   components: {
@@ -249,6 +258,9 @@ export default {
         dialog: false,
         process: false,
         continue: true
+      },
+      preview: {
+        ids: []
       }
     }
   },
@@ -270,11 +282,12 @@ export default {
       // TODO Global process for block
       this.del.process = true
 
+      // TODO Global sleep
       sleep(randomInteger(500, 1500)).then(() => {
         send('wall.get', {
           owner_id: this.main.owner_id,
           filter: this.main.filter,
-          count: MAX_GET_POSTS,
+          count: CURRENT_GET_POSTS,
           offset: this.main.count.min - 1
         })
           .then(res => {
@@ -318,7 +331,7 @@ export default {
       }
 
       // If all posts (MAX_GET_POSTS) are deleted, we receive new
-      if (index >= MAX_GET_POSTS) {
+      if (index >= CURRENT_GET_POSTS) {
         return this.fetchGetWall()
       }
 
@@ -338,8 +351,7 @@ export default {
         return this.stopDelete(false)
       }
 
-      if ((this.main.revert && !this.checkWallConfiguration(post)) ||
-        (!this.main.revert && this.checkWallConfiguration(post))) {
+      if (this.checkWallConfiguration(post)) {
         this.main.count.min++
         return this.deletePosts(items, ++index)
       }
@@ -370,6 +382,30 @@ export default {
       this.del.process = false
       this.del.continue = true
     },
+    previewPosts () {
+      // TODO Comments*
+      this.preview.ids = []
+
+      send('wall.get', {
+        owner_id: this.main.owner_id,
+        filter: this.main.filter,
+        count: MAX_GET_POSTS,
+        offset: this.main.count.min - 1
+      })
+        .then(res => {
+          if (res.body.response && res.body.response.items.length) {
+            res.body.response.items.forEach(item => {
+              if (this.checkWallConfiguration(item)) {
+                this.preview.ids.push(item.id)
+              }
+            })
+          }
+          this.stopDelete()
+        })
+        .catch(() => {
+          this.stopDelete(false)
+        })
+    },
 
     /* | -----------------------------------------------------------------------------
      * | Check posts
@@ -378,27 +414,31 @@ export default {
      */
     // TODO checkCommentsConfiguration
     checkWallConfiguration (post) {
+      const revert = this.main.revert
+
       if (this.checkWallIds(post.id)) {
-        return true
+        return revert
       }
 
       if (this.checkWallFromIds(post.from_id)) {
-        return true
+        return revert
       }
 
       if (this.checkWallTexts(post.text)) {
-        return true
+        return revert
       }
 
       if (this.checkWallAttachments(post.attachments)) {
-        return true
+        return revert
       }
 
       if (this.checkWallCounts(post)) {
-        return true
+        return revert
       }
 
-      return false
+      // TODO Date
+
+      return !revert
     },
     checkWallIds (postId) {
       return this.wall.ids.includes(postId)
@@ -605,5 +645,9 @@ export default {
       background-color: rgba(71, 127, 197, 0.07);
     }
   }
+}
+
+.preview-btn {
+  margin-bottom: 20px;
 }
 </style>
