@@ -10,7 +10,6 @@
       <div class="block__attr">
         <p>Фильтр записей</p>
         <at-select v-model="main.filter" :disabled="del.process" size="large">
-          <!--TODO v-for-->
           <at-option value="suggests">Предложенные записи на стене сообщества</at-option>
           <at-option value="postponed">Отложенные записи</at-option>
           <at-option value="owner">Записи владельца стены</at-option>
@@ -37,13 +36,12 @@
 
     <hr>
     <div :class="'revert ' + (main.revert ? 'on' : 'off') + ' block'">
-      <at-button @click="main.revert = !main.revert">
+      <at-button @click="changeRevert()">
         Удалить все записи с {{ main.count.min }} по {{ main.count.max }},
         которые <strong>{{ main.revert ? '' : 'не ' }}попадают</strong> под параметры ниже (хотя бы 1 из них)
       </at-button>
     </div>
 
-    <!--TODO ___Удалить все записи, которые не совпадают с настройками или наоборот___ REVERT-->
     <hr>
     <div class="wall-config block">
       <h2>Параметры стены</h2>
@@ -85,7 +83,6 @@
       <div class="block__attr">
         <p>Added media attachments</p>
         <at-checkbox-group v-model="wall.attachments">
-          <!--TODO v-for-->
           <at-checkbox label="photo">Photo</at-checkbox>
           <at-checkbox label="video">Video</at-checkbox>
           <at-checkbox label="audio">Audio</at-checkbox>
@@ -102,7 +99,6 @@
       <div class="block__attr">
         <p>Значения</p>
         <div class="counts">
-          <!--TODO v-for-->
           <div class="count-comments count">
             <div class="flex">
               <i class="fa fa-comment-o" aria-hidden="true"></i>
@@ -168,14 +164,28 @@
       </div>
     </template>
 
-
-    <hr>
-    <!--TODO Styles-->
-    <at-button type="info" class="preview-btn" @click="previewPosts()">
-      Проверить первые 100 записей, начиная с {{ main.count.min }}
-    </at-button>
-    Найдены совпадения
-    {{ preview.ids }}
+    <template v-if="!del.process">
+      <hr>
+      <div class="block-preview block">
+        <at-button v-if="!preview.show" type="info" class="preview-btn" @click="previewPosts()" hollow>
+          Проверить первые 100 записей, начиная с {{ main.count.min }}
+        </at-button>
+        <template v-else>
+          <at-button type="primary" @click="preview.show = false" hollow>Закрыть</at-button>
+          <div class="block__result">
+            <p>Найдены совпадения:</p>
+            <template v-if="preview.loading">
+              Загрузка..
+            </template>
+            <template v-else>
+              <at-tag v-for="id in preview.ids" :key="id" :name="id">
+                <a :href="getLinkPost(id)" target="_blank" rel="noreferrer">{{ id }}</a>
+              </at-tag>
+            </template>
+          </div>
+        </template>
+      </div>
+    </template>
 
     <hr>
     <div class="block-buttons block">
@@ -260,7 +270,9 @@ export default {
         continue: true
       },
       preview: {
-        ids: []
+        ids: [],
+        show: false,
+        loading: false
       }
     }
   },
@@ -383,7 +395,9 @@ export default {
       this.del.continue = true
     },
     previewPosts () {
-      // TODO Comments*
+      // TODO Preview comments*
+      this.preview.loading = true
+      this.preview.show = true
       this.preview.ids = []
 
       send('wall.get', {
@@ -400,9 +414,11 @@ export default {
               }
             })
           }
+          this.preview.loading = false
           this.stopDelete()
         })
         .catch(() => {
+          this.preview.loading = false
           this.stopDelete(false)
         })
     },
@@ -549,6 +565,16 @@ export default {
       }
 
       return vk.url + 'id' + id
+    },
+
+    /* | -----------------------------------------------------------------------------
+     * | Other
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    changeRevert () {
+      this.main.revert = !this.main.revert
+      this.preview.show = false
     }
   }
 }
@@ -647,7 +673,20 @@ export default {
   }
 }
 
-.preview-btn {
-  margin-bottom: 20px;
+.block-preview {
+  text-align: center;
+  > button {
+    width: 100%;
+  }
+  .block__result {
+    text-align: left;
+    > p {
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    > .at-tag {
+      margin: 2px;
+    }
+  }
 }
 </style>
