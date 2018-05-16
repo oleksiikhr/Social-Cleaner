@@ -1,4 +1,5 @@
 <template>
+  <!--TODO IMPORTANT Изменить на совпадение со всеми параметрами-->
   <div id="wall">
     <div class="main-config block">
       <h2>Основные настройки</h2>
@@ -46,7 +47,7 @@
     <div class="wall-config block">
       <h2>Параметры стены</h2>
       <div class="block__attr">
-        <p>ID записей</p>
+        <p :class="getStyleStatus(wall.ids.length)">ID записей</p>
         <at-input v-model="wall.id" :disabled="del.process" @keyup.enter.native="addConfigWallArrayId('id', 'ids')" />
         <div class="block__attr-inner">
           <at-tag v-for="(id, index) in wall.ids" :key="index" :name="id" :closable="!del.process"
@@ -57,7 +58,7 @@
         <small>After filling, press enter to add to the list.</small>
       </div>
       <div class="block__attr">
-        <p>ID авторов записей</p>
+        <p :class="getStyleStatus(wall.fromIds.length)">ID авторов записей</p>
         <at-input v-model="wall.fromId" :disabled="del.process"
                   @keyup.enter.native="addConfigWallArrayId('fromId', 'fromIds')" />
         <div class="block__attr-inner">
@@ -69,7 +70,7 @@
         <small>After filling, press enter to add to the list. Use a negative value to designate a community ID.</small>
       </div>
       <div class="block__attr">
-        <p>Фразы в тексты</p>
+        <p :class="getStyleStatus(wall.texts.length)">Фразы в тексты</p>
         <at-input v-model="wall.text" :disabled="del.process"
                   @keyup.enter.native="addConfigWallArrayValue('text', 'texts')" />
         <div class="block__attr-inner">
@@ -81,7 +82,7 @@
         <small>After filling, press enter to add to the list.</small>
       </div>
       <div class="block__attr">
-        <p>Added media attachments</p>
+        <p :class="getStyleStatus(wall.attachments.length)">Added media attachments</p>
         <at-checkbox-group v-model="wall.attachments">
           <at-checkbox label="photo">Photo</at-checkbox>
           <at-checkbox label="video">Video</at-checkbox>
@@ -97,7 +98,7 @@
         </at-checkbox-group>
       </div>
       <div class="block__attr">
-        <p>Значения</p>
+        <p :class="getStyleStatus(isActiveWallCount)">Значения</p>
         <div class="counts">
           <div class="count-comments count">
             <div class="flex">
@@ -282,6 +283,12 @@ export default {
   computed: {
     user () {
       return this.$store.state.vk.user
+    },
+    isActiveWallCount () {
+      return this.wall.count.comments.state !== 0 ||
+              this.wall.count.likes.state !== 0 ||
+              this.wall.count.reposts.state !== 0 ||
+              this.wall.count.views.state !== 0
     }
   },
   methods: {
@@ -575,6 +582,10 @@ export default {
     changeRevert () {
       this.main.revert = !this.main.revert
       this.preview.show = false
+    },
+    getStyleStatus (status) {
+      console.log(status)
+      return 'status status-' + (status ? 'on' : 'off')
     }
   }
 }
@@ -687,6 +698,23 @@ export default {
     > .at-tag {
       margin: 2px;
     }
+  }
+}
+
+.status {
+  position: relative;
+  &:after {
+    font-size: .6rem;
+    vertical-align: top;
+    margin-left: 4px;
+  }
+  &.status-on:after {
+    content: 'ON';
+    color: #0dad54;
+  }
+  &.status-off:after {
+    content: 'OFF';
+    color: #ff8080;
   }
 }
 </style>
