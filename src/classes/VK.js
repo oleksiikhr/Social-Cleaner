@@ -12,15 +12,15 @@ export class VK {
   static COUNT_GET_POSTS_BASIC = 25
   static COUNT_GET_POSTS_MAX = 100
 
+  /* | -----------------------------------------------------------------------------
+   * | API
+   * | -----------------------------------------------------------------------------
+   * |
+   */
   /**
    * Send request to VK.
-   *
-   * @param method
-   * @param params
-   *
-   * @returns {*}
    */
-  static async send (method, params) {
+  static async send (method, params = []) {
     params.v = this.version
 
     if (!params.access_token) {
@@ -33,7 +33,9 @@ export class VK {
 
     return result
   }
-
+  /**
+   * @see https://vk.com/dev/wall.get
+   */
   static async fetchWallGet (
     ownerId = store.state.vk.user.id,
     filter = 'all',
@@ -49,8 +51,44 @@ export class VK {
 
     return result
   }
+  /**
+   * @see https://vk.com/dev/users.get
+   */
+  static async fetchUsersGet (userIds = store.state.vk.user.id, fields = '') {
+    const result = await this.send('users.get', {
+      user_ids: userIds,
+      fields: fields
+    })
 
+    return result
+  }
+  /**
+   * @see https://vk.com/dev/groups.getById
+   */
+  static async fetchGroupsGetById (groupIds, fields = '') {
+    const result = await this.send('groups.getById', {
+      group_ids: groupIds,
+      fields: fields
+    })
+
+    return result
+  }
+
+  /* | -----------------------------------------------------------------------------
+   * | LINKS
+   * | -----------------------------------------------------------------------------
+   * |
+   */
+  /**
+   * @see https://vk.com/dev/objects/post
+   */
   static getLinkWall (item) {
-    return vk.url + 'wall' + item.from_id + '_' + item.id
+    return `${vk.url}wall${item.from_id}_${item.id}`
+  }
+  static getLinkUser (id) {
+    return `${vk.url}id${id}`
+  }
+  static getLinkGroup (id) {
+    return `${vk.url}public${id}`
   }
 }

@@ -6,18 +6,18 @@
     <template v-else>
       <at-button type="primary" @click="close()" hollow>Close</at-button>
       <div class="wall-config-result">
-        <div v-if="page.response" class="page section">
-          <span>{{ page.isUser ? 'User' : 'Group' }}</span>
+        <div v-if="page.id" class="page section">
+          <span>{{ isUser ? 'User' : 'Group' }}</span>
           <div class="flex">
-            <img :src="page.response.photo_100" alt="Page image" />
+            <img :src="page.photo_100" alt="Page image" />
             <div class="info">
-              <p><strong>ID:</strong> {{ page.response.id }}</p>
-              <template v-if="page.isUser">
-                <p><strong>Name:</strong> {{ page.response.last_name + ' ' + page.response.first_name }}</p>
+              <p><strong>ID:</strong> {{ page.id }}</p>
+              <template v-if="isUser">
+                <p><strong>Name:</strong> {{ page.last_name + ' ' + page.first_name }}</p>
               </template>
               <template v-else>
-                <p><strong>Name:</strong> {{ page.response.name }}</p>
-                <p><strong>Is admin:</strong> {{ page.response.is_admin ? 'Yes' : 'No' }}</p>
+                <p><strong>Name:</strong> {{ page.name }}</p>
+                <p><strong>Is admin:</strong> {{ page.is_admin ? 'Yes' : 'No' }}</p>
               </template>
               <p><a :href="linkPage" target="_blank" rel="noreferrer">Follow the link</a></p>
             </div>
@@ -39,9 +39,7 @@
 </template>
 
 <script>
-import { send } from '../../../heplers/vk'
 import { VK } from '../../../classes/VK'
-import { vk } from '../../../config'
 
 export default {
   props: {
@@ -53,7 +51,8 @@ export default {
   data () {
     return {
       wall: {},
-      page: {}
+      page: {},
+      isUser: false
     }
   },
   computed: {
@@ -61,7 +60,11 @@ export default {
       return this.wall.response.items.length > 0
     },
     linkPage () {
-      return vk.url + (this.page.isUser ? 'id' : 'public') + this.page.response.id
+      if (this.isUser) {
+        return VK.getLinkUser(this.page.id)
+      }
+
+      return VK.getLinkGroup(this.page.id)
     },
     linkWall () {
       return VK.getLinkWall(this.wall.response.items[0])
@@ -74,32 +77,25 @@ export default {
      * |
      */
     async fetchGetWall () {
-      const result = await VK.fetchWallGet(this.mainConfig.owner_id, this.mainConfig.filter, 1, this.mainConfig.count.min - 1)
+      const res = await VK.fetchWallGet(this.mainConfig.owner_id, this.mainConfig.filter, 1, this.mainConfig.count.min - 1)
 
-      if (result.ok) {
-        this.wall = result.body
+      if (res.ok) {
+        this.wall = res.body
       }
     },
-    fetchGetUsersById () {
-      send('users.get', {
-        user_ids: this.mainConfig.owner_id,
-        fields: 'photo_100'
-      })
-        .then(res => {
-          if (res.data.response) {
-            this.page = { isUser: true, response: res.data.response[0] }
-          }
-        })
+    async fetchGetUsersById () {
+      const res = await VK.fetchUsersGet(this.mainConfig.owner_id, 'photo_100')
+
+      if (res.ok && res.body.response) {
+        this.page = res.body.response[0]
+      }
     },
-    fetchGetGroupsById () {
-      send('groups.getById', {
-        group_ids: this.mainConfig.owner_id.substr(1)
-      })
-        .then(res => {
-          if (res.data.response) {
-            this.page = { isUser: false, response: res.data.response[0] }
-          }
-        })
+    async fetchGetGroupsById () {
+      const res = await VK.fetchGroupsGetById(this.mainConfig.owner_id.substr(1))
+
+      if (res.ok && res.body.response) {
+        this.page = res.body.response[0]
+      }
     },
 
     /* | -----------------------------------------------------------------------------
@@ -109,8 +105,9 @@ export default {
      */
     sendRequest () {
       this.fetchGetWall()
+      this.isUser = this.mainConfig.owner_id !== '-'
 
-      if (this.mainConfig.owner_id[0] !== '-') {
+      if (this.isUser) {
         this.fetchGetUsersById()
       } else {
         this.fetchGetGroupsById()
