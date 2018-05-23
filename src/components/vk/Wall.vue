@@ -36,10 +36,10 @@
     </div>
 
     <hr>
-    <div :class="'revert ' + (main.revert ? 'on' : 'off') + ' block'">
+    <div :class="'revert ' + (wall.revert ? 'on' : 'off') + ' block'">
       <at-button @click="changeRevert()">
         Удалить все записи с {{ main.count.min }} по {{ main.count.max }},
-        которые <strong>{{ main.revert ? '' : 'не ' }}попадают</strong> под параметры ниже (хотя бы 1 из них)
+        которые <strong>{{ wall.revert ? '' : 'не ' }}попадают</strong> под параметры ниже (хотя бы 1 из них)
       </at-button>
     </div>
 
@@ -217,10 +217,8 @@
 import { sleep, randomInteger } from '../../heplers/methods'
 import ConfigResult from './parts/WallConfigResult'
 import { send } from '../../heplers/vk'
+import { VK } from '../../classes/VK'
 import { vk } from '../../config'
-
-const CURRENT_GET_POSTS = 25
-const MAX_GET_POSTS = 100
 
 export default {
   components: {
@@ -235,8 +233,7 @@ export default {
           min: 1,
           max: null
         },
-        isDeletePosts: 0,
-        revert: false
+        isDeletePosts: 0
       },
       wall: {
         id: '',
@@ -263,7 +260,8 @@ export default {
             state: 0,
             count: 0
           }
-        }
+        },
+        revert: false
       },
       del: {
         dialog: false,
@@ -306,7 +304,7 @@ export default {
         send('wall.get', {
           owner_id: this.main.owner_id,
           filter: this.main.filter,
-          count: CURRENT_GET_POSTS,
+          count: VK.COUNT_GET_POSTS_BASIC,
           offset: this.main.count.min - 1
         })
           .then(res => {
@@ -350,7 +348,7 @@ export default {
       }
 
       // If all posts (MAX_GET_POSTS) are deleted, we receive new
-      if (index >= CURRENT_GET_POSTS) {
+      if (index >= VK.COUNT_GET_POSTS_BASIC) {
         return this.fetchGetWall()
       }
 
@@ -410,7 +408,7 @@ export default {
       send('wall.get', {
         owner_id: this.main.owner_id,
         filter: this.main.filter,
-        count: MAX_GET_POSTS,
+        count: VK.COUNT_GET_POSTS_MAX,
         offset: this.main.count.min - 1
       })
         .then(res => {
@@ -437,7 +435,7 @@ export default {
      */
     // TODO checkCommentsConfiguration
     checkWallConfiguration (post) {
-      const revert = this.main.revert
+      const revert = this.wall.revert
 
       if (this.checkWallIds(post.id)) {
         return revert
@@ -580,7 +578,7 @@ export default {
      * |
      */
     changeRevert () {
-      this.main.revert = !this.main.revert
+      this.wall.revert = !this.wall.revert
       this.preview.show = false
     },
     getStyleStatus (status) {
