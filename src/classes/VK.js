@@ -73,9 +73,23 @@ export class VK {
 
     return result
   }
-  static async fetchStatusGet (id) {
+  /**
+   * @see https://vk.com/dev/status.get
+   */
+  static async fetchStatusGet (id = store.state.vk.user.id) {
     const result = await this.send('status.get', {
       user_id: id
+    })
+
+    return result
+  }
+  /**
+   * @see https://vk.com/dev/status.set
+   */
+  static async fetchStatusSet (text = '', group_id = null) {
+    const result = await this.send('status.set', {
+      text: text,
+      group_id: group_id
     })
 
     return result
@@ -92,7 +106,7 @@ export class VK {
   static getLinkWall (item) {
     return `${vk.url}wall${item.from_id}_${item.id}`
   }
-  static getLinkUser (id) {
+  static getLinkUser (id = store.state.vk.user.id) {
     return `${vk.url}id${id}`
   }
   static getLinkGroup (id) {
