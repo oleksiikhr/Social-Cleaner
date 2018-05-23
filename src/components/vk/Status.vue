@@ -13,8 +13,10 @@
           Получить статус
         </at-button>
       </div>
+    </div>
 
-      <hr>
+    <hr>
+    <div class="block">
       <div class="block__result">
         <h2>Статус</h2>
         <div class="status-text">
@@ -22,8 +24,10 @@
           <a :href="link" target="_blank" rel="noreferrer"> - ссылка</a>
         </div>
       </div>
-      <hr>
+    </div>
+    <hr>
 
+    <div class="block">
       <div class="text-center">
         <!--FIXME v-if global process-->
         <at-button type="error" :disabled="!status" @click="fetchDeleteStatus()">
@@ -86,11 +90,6 @@ export default {
 <style lang="scss" scoped>
 hr {
   margin: 30px 0;
-}
-
-#status {
-  max-width: 500px;
-  margin: 0 auto;
 }
 
 .block__result {
