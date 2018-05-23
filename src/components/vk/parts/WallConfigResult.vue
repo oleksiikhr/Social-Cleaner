@@ -40,6 +40,7 @@
 
 <script>
 import { send } from '../../../heplers/vk'
+import { VK } from '../../../classes/VK'
 import { vk } from '../../../config'
 
 export default {
@@ -63,9 +64,7 @@ export default {
       return vk.url + (this.page.isUser ? 'id' : 'public') + this.page.response.id
     },
     linkWall () {
-      const item = this.wall.response.items[0]
-
-      return vk.url + 'wall' + item.from_id + '_' + item.id
+      return VK.getLinkWall(this.wall.response.items[0])
     }
   },
   methods: {
@@ -74,16 +73,12 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    fetchGetWall () {
-      send('wall.get', {
-        owner_id: this.mainConfig.owner_id,
-        filter: this.mainConfig.filter,
-        count: 1,
-        offset: this.mainConfig.count.min - 1
-      })
-        .then(res => {
-          this.wall = res.data
-        })
+    async fetchGetWall () {
+      const result = await VK.fetchWallGet(this.mainConfig.owner_id, this.mainConfig.filter, 1, this.mainConfig.count.min - 1)
+
+      if (result.ok) {
+        this.wall = result.body
+      }
     },
     fetchGetUsersById () {
       send('users.get', {

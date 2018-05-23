@@ -584,7 +584,6 @@ export default {
       this.preview.show = false
     },
     getStyleStatus (status) {
-      console.log(status)
       return 'status status-' + (status ? 'on' : 'off')
     }
   }
