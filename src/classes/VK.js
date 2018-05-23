@@ -73,6 +73,13 @@ export class VK {
 
     return result
   }
+  static async fetchStatusGet (id) {
+    const result = await this.send('status.get', {
+      user_id: id
+    })
+
+    return result
+  }
 
   /* | -----------------------------------------------------------------------------
    * | LINKS

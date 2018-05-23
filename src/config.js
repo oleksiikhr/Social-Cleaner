@@ -1,4 +1,4 @@
-import { ICON_TOKEN, ICON_WALL } from './heplers/logs'
+import { ICON_STATUS, ICON_TOKEN, ICON_WALL } from './heplers/logs'
 
 export const version = require('../package').version
 
@@ -39,7 +39,8 @@ export const vk = {
   icon: 'fa-vk',
   sections: [
     { name: 'vk.sections.token', to: 'vk-token', icon: ICON_TOKEN },
-    { name: 'vk.sections.wall', to: 'vk-wall', icon: ICON_WALL }
+    { name: 'vk.sections.wall', to: 'vk-wall', icon: ICON_WALL },
+    { name: 'vk.sections.status', to: 'vk-status', icon: ICON_STATUS }
   ]
 }
 

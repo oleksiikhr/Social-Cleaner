@@ -5,7 +5,8 @@ export default {
   vk: {
     sections: {
       token: 'Token',
-      wall: 'Wall'
+      wall: 'Wall',
+      status: 'Status'
     },
     token: {
       user: {

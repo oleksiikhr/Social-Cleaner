@@ -589,37 +589,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.block {
-  max-width: 500px;
-  margin: 0 auto;
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .block__attr {
-    margin-bottom: 15px;
-    > p {
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-    .flex {
-      align-items: center;
-      > .at-input {
-        margin: 0 10px;
-        &:first-child {
-          margin-left: 0;
-        }
-        &:last-child {
-          margin-right: 0;
-        }
-      }
-    }
-    .at-checkbox {
-      margin: 5px;
-    }
-  }
-}
-
 .counts {
   display: flex;
   flex-wrap: wrap;
@@ -695,23 +664,6 @@ export default {
     > .at-tag {
       margin: 2px;
     }
-  }
-}
-
-.status {
-  position: relative;
-  &:after {
-    font-size: .6rem;
-    vertical-align: top;
-    margin-left: 4px;
-  }
-  &.status-on:after {
-    content: 'ON';
-    color: #0dad54;
-  }
-  &.status-off:after {
-    content: 'OFF';
-    color: #ff8080;
   }
 }
 </style>

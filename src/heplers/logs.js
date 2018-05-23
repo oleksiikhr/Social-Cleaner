@@ -3,6 +3,7 @@ import store from '../store/index'
 // Font-awesome
 export const ICON_TOKEN = 'key'
 export const ICON_WALL = 'bars'
+export const ICON_STATUS = 'comment-o'
 
 export const COLOR_SUCCESS = 'success'
 export const COLOR_WARNING = 'warning'
