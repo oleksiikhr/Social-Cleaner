@@ -43,6 +43,13 @@ Vue.http.interceptors.push((req, next) => {
     next(res => {
       if (res.status >= 200 && res.status < 300) {
         addLog(config.vk, method, res.body, icon, res.body.error ? COLOR_ERROR : COLOR_SUCCESS)
+        // Show Global Error
+        if (res.body.error) {
+          Vue.prototype.$Notify.error({
+            title: res.body.error.error_msg || 'Error',
+            message: method
+          })
+        }
       } else {
         addLog(config.vk, method, 'Server error', icon, COLOR_ERROR)
       }
