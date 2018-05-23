@@ -105,7 +105,7 @@ export default {
      */
     sendRequest () {
       this.fetchGetWall()
-      this.isUser = this.mainConfig.owner_id !== '-'
+      this.isUser = this.mainConfig.owner_id[0] !== '-'
 
       if (this.isUser) {
         this.fetchGetUsersById()
