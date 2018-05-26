@@ -18,48 +18,21 @@
         <router-view />
       </keep-alive>
     </div>
-    <footer>
-      <div class="copyright">
-        <span>Made with 💖 by: </span>
-        <a href="https://github.com/alexeykhr" target="_blank" rel="noreferrer" title="Alexey Khrushch">
-          @alexeykhr
-        </a>
-      </div>
-      <a class="lang" @click.prevent="localeModal = true">
-        <i class="fa fa-language" aria-hidden="true"></i> Translate
-      </a>
-      <!--TODO Change-->
-      <iframe src="https://ghbtns.com/github-btn.html?user=Alexeykhr&repo=Social-Cleaner&type=star&count=true"
-              frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
-    </footer>
-
-    <at-modal v-model="localeModal" title="Choose language" :showFooter="false">
-      <a class="lang-item" v-for="lang in languages" :key="lang.value" @click="setLocale(lang.value)">
-        {{ lang.name }}
-      </a>
-    </at-modal>
+    <footer-component />
   </div>
 </template>
 
 <script>
-import { vk, version, languages } from './config'
+import FooterComponent from './components/footer/Index'
+import { version } from './config'
 
 export default {
+  components: {
+    FooterComponent
+  },
   data () {
     return {
-      vk,
-      version,
-      languages,
-      localeModal: false
-    }
-  },
-  created () {
-    const lang = localStorage.getItem('lang')
-
-    if (lang) {
-      this.setLocale(lang)
-    } else {
-      this.localeModal = true
+      version
     }
   },
   computed: {
@@ -68,13 +41,6 @@ export default {
     },
     firstLog () {
       return this.$store.state.logs.storage[0]
-    }
-  },
-  methods: {
-    setLocale (val) {
-      this.localeModal = false
-      localStorage.setItem('lang', val)
-      this.$i18n.locale = val
     }
   }
 }
@@ -141,35 +107,6 @@ header {
   }
 }
 
-footer {
-  display: flex;
-  align-items: center;
-  border-top: 1px solid #e7e7e7;
-  height: 30px;
-  justify-content: space-between;
-  color: #a0a0a0;
-  a {
-    color: #868686;
-    font-weight: bold;
-    text-indent: 5px;
-    transition: .2s;
-    &:hover {
-      color: #333;
-    }
-  }
-  .copyright, iframe {
-    width: 180px;
-  }
-  .lang {
-    text-indent: 0;
-    font-size: .8rem;
-  }
-  .copyright {
-    text-indent: 15px;
-    font-size: smaller;
-  }
-}
-
 hr {
   margin: 30px;
   border: none;
@@ -191,13 +128,6 @@ hr {
     width: 100%;
     margin: 0 auto;
   }
-}
-
-.lang-item {
-  display: inline-block;
-  padding: 2px 10px;
-  font-size: 1rem;
-  margin: 5px;
 }
 
 // Component (Block)

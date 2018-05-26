@@ -1,18 +1,28 @@
 import { ICON_STATUS, ICON_TOKEN, ICON_WALL } from './heplers/logs'
+import locale from './locale/lang'
 
+/* | ---------------------------------------------------------
+ * | Information from package.json
+ * | ---------------------------------------------------------
+ * |
+ */
 export const version = require('../package').version
+export const repository = require('../package').name
 
-export const languages = [
-  { name: 'English', value: 'en-US' },
-  { name: 'Русский', value: 'ru-RU' }
-]
+/* | ---------------------------------------------------------
+ * | Translations. See Locale folder
+ * | ---------------------------------------------------------
+ * |
+ */
+export const languages = Object.keys(locale).map((key) => {
+  return { name: locale[key]['name'], value: key }
+})
 
 /* | ---------------------------------------------------------
  * | Social Networks
  * | ---------------------------------------------------------
  * |
  */
-
 export const facebook = {
   name: 'Facebook',
   to: '/facebook',
