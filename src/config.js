@@ -7,7 +7,7 @@ import locale from './locale/lang'
  * |
  */
 export const version = require('../package').version
-export const repository = require('../package').name
+export const repository = require('../package').repository
 
 /* | ---------------------------------------------------------
  * | Translations. See Locale folder

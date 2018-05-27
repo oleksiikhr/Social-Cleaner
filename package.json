@@ -1,9 +1,10 @@
 {
-  "name": "Alexeykhr/Social-Cleaner",
+  "name": "social-cleaner",
   "version": "2.1.0",
   "description": "Cleaning data from Social Networks",
   "author": "Alexey Khrushch <alexeykhr@outlook.com>",
-  "private": false,
+  "repository": "Alexeykhr/Social-Cleaner",
+  "license": "MIT",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
