@@ -48,7 +48,7 @@
           </div>
           <div class="info">
             <p class="i1">{{ $t('vk.token.guest.info') }}</p>
-            <p>{{ VK.prototype.redirectUri }}#access_token=<strong>{{ $t('vk.token.guest.copy_here') }}</strong>&expires_in=86400&user_id=..</p>
+            <p>{{ VK.prototype.urlRedirect }}#access_token=<strong>{{ $t('vk.token.guest.copy_here') }}</strong>&expires_in=86400&user_id=..</p>
           </div>
         </template>
       </div>
@@ -89,7 +89,7 @@ export default {
       this.$store.dispatch('vkExit')
     },
     goGetToken () {
-      window.open(`${VK.prototype.urlOauth}?client_id=${this.appId}&display=page&redirect_uri=${VK.prototype.redirectUri}
+      window.open(`${VK.prototype.urlOauth}?client_id=${this.appId}&display=page&redirect_uri=${VK.prototype.urlRedirect}
         &scope=${this.scope.join(',')}&response_type=token&v=${VK.prototype.version}`, '_blank')
     }
   }
