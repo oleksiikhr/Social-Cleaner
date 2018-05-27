@@ -1,4 +1,6 @@
 <template>
+  <!--TODO IMPORTANT Изменить на совпадение со всеми параметрами-->
+  <!--TODO Change to class*-->
   <div id="wall">
     <div class="main-config block">
       <h2>Основные настройки</h2>
@@ -10,7 +12,6 @@
       <div class="block__attr">
         <p>Фильтр записей</p>
         <at-select v-model="main.filter" :disabled="del.process" size="large">
-          <!--TODO v-for-->
           <at-option value="suggests">Предложенные записи на стене сообщества</at-option>
           <at-option value="postponed">Отложенные записи</at-option>
           <at-option value="owner">Записи владельца стены</at-option>
@@ -36,19 +37,18 @@
     </div>
 
     <hr>
-    <div class="revert block">
-      <!--TODO Revert v-if*-->
-      <at-button>
-        Удалить все записи с {{ main.count.min }} по {{ main.count.max }}, которые не попадают под параметры ниже
+    <div :class="'revert ' + (wall.revert ? 'on' : 'off') + ' block'">
+      <at-button @click="changeRevert()">
+        Удалить все записи с {{ main.count.min }} по {{ main.count.max }},
+        которые <strong>{{ wall.revert ? '' : 'не ' }}попадают</strong> под параметры ниже (хотя бы 1 из них)
       </at-button>
     </div>
 
-    <!--TODO ___Удалить все записи, которые не совпадают с настройками или наоборот___ REVERT-->
     <hr>
     <div class="wall-config block">
       <h2>Параметры стены</h2>
       <div class="block__attr">
-        <p>ID записей</p>
+        <p :class="getStyleStatus(wall.ids.length)">ID записей</p>
         <at-input v-model="wall.id" :disabled="del.process" @keyup.enter.native="addConfigWallArrayId('id', 'ids')" />
         <div class="block__attr-inner">
           <at-tag v-for="(id, index) in wall.ids" :key="index" :name="id" :closable="!del.process"
@@ -59,7 +59,7 @@
         <small>After filling, press enter to add to the list.</small>
       </div>
       <div class="block__attr">
-        <p>ID авторов записей</p>
+        <p :class="getStyleStatus(wall.fromIds.length)">ID авторов записей</p>
         <at-input v-model="wall.fromId" :disabled="del.process"
                   @keyup.enter.native="addConfigWallArrayId('fromId', 'fromIds')" />
         <div class="block__attr-inner">
@@ -71,7 +71,7 @@
         <small>After filling, press enter to add to the list. Use a negative value to designate a community ID.</small>
       </div>
       <div class="block__attr">
-        <p>Фразы в тексты</p>
+        <p :class="getStyleStatus(wall.texts.length)">Фразы в тексты</p>
         <at-input v-model="wall.text" :disabled="del.process"
                   @keyup.enter.native="addConfigWallArrayValue('text', 'texts')" />
         <div class="block__attr-inner">
@@ -83,9 +83,8 @@
         <small>After filling, press enter to add to the list.</small>
       </div>
       <div class="block__attr">
-        <p>Added media attachments</p>
+        <p :class="getStyleStatus(wall.attachments.length)">Added media attachments</p>
         <at-checkbox-group v-model="wall.attachments">
-          <!--TODO v-for-->
           <at-checkbox label="photo">Photo</at-checkbox>
           <at-checkbox label="video">Video</at-checkbox>
           <at-checkbox label="audio">Audio</at-checkbox>
@@ -100,9 +99,8 @@
         </at-checkbox-group>
       </div>
       <div class="block__attr">
-        <p>Значения</p>
+        <p :class="getStyleStatus(isActiveWallCount)">Значения</p>
         <div class="counts">
-          <!--TODO v-for-->
           <div class="count-comments count">
             <div class="flex">
               <i class="fa fa-comment-o" aria-hidden="true"></i>
@@ -168,13 +166,37 @@
       </div>
     </template>
 
+    <template v-if="!del.process">
+      <hr>
+      <div class="block-preview block">
+        <at-button v-if="!preview.show" type="info" class="preview-btn" @click="previewPosts()" hollow>
+          Проверить первые 100 записей, начиная с {{ main.count.min }}
+        </at-button>
+        <template v-else>
+          <at-button type="primary" @click="preview.show = false" hollow>Закрыть</at-button>
+          <div class="block__result">
+            <p>Найдены совпадения:</p>
+            <template v-if="preview.loading">
+              Загрузка..
+            </template>
+            <template v-else>
+              <at-tag v-for="id in preview.ids" :key="id" :name="id">
+                <a :href="getLinkPost(id)" target="_blank" rel="noreferrer">{{ id }}</a>
+              </at-tag>
+            </template>
+          </div>
+        </template>
+      </div>
+    </template>
+
     <hr>
     <div class="block-buttons block">
-      <at-button type="error" @click="del.dialog = true" v-if="!del.process">Удалить записи</at-button>
+      <at-button type="error" @click="del.dialog = true" v-if="!del.process">
+        Удалить записи с {{ main.count.min }} по {{ main.count.max }}
+      </at-button>
       <at-button type="primary" @click="del.continue = false" v-if="del.continue && del.process">
         Остановить
       </at-button>
-      <!--TODO Preview posts-->
 
       <at-modal v-model="del.dialog">
         <div slot="header">
@@ -195,11 +217,8 @@
 <script>
 import { sleep, randomInteger } from '../../heplers/methods'
 import ConfigResult from './parts/WallConfigResult'
-import { ICON_WALL } from '../../heplers/logs'
 import { send } from '../../heplers/vk'
-import { vk } from '../../config'
-
-const MAX_GET_POSTS = 25
+import VK from '../../networks/VK'
 
 export default {
   components: {
@@ -214,8 +233,7 @@ export default {
           min: 1,
           max: null
         },
-        isDeletePosts: 0,
-        revert: false
+        isDeletePosts: 0
       },
       wall: {
         id: '',
@@ -242,12 +260,18 @@ export default {
             state: 0,
             count: 0
           }
-        }
+        },
+        revert: false
       },
       del: {
         dialog: false,
         process: false,
         continue: true
+      },
+      preview: {
+        ids: [],
+        show: false,
+        loading: false
       }
     }
   },
@@ -257,6 +281,13 @@ export default {
   computed: {
     user () {
       return this.$store.state.vk.user
+    },
+    isActiveWallCount () {
+      return Object.keys(this.wall.count).some(o => {
+        if (this.wall.count[o].state !== 0) {
+          return true
+        }
+      })
     }
   },
   methods: {
@@ -269,13 +300,14 @@ export default {
       // TODO Global process for block
       this.del.process = true
 
+      // TODO Global sleep
       sleep(randomInteger(500, 1500)).then(() => {
         send('wall.get', {
           owner_id: this.main.owner_id,
           filter: this.main.filter,
-          count: MAX_GET_POSTS,
+          count: VK.prototype.COUNT_GET_POSTS_BASIC,
           offset: this.main.count.min - 1
-        }, ICON_WALL)
+        })
           .then(res => {
             if (res.body.response && res.body.response.items.length) {
               return this.deletePosts(res.body.response.items, 0)
@@ -292,7 +324,7 @@ export default {
         send('wall.delete', {
           owner_id: this.main.owner_id,
           post_id: post.id
-        }, ICON_WALL)
+        })
           .then(res => {
             if (res.body.response) {
               this.main.count.max--
@@ -317,7 +349,7 @@ export default {
       }
 
       // If all posts (MAX_GET_POSTS) are deleted, we receive new
-      if (index >= MAX_GET_POSTS) {
+      if (index >= VK.prototype.COUNT_GET_POSTS_BASIC) {
         return this.fetchGetWall()
       }
 
@@ -368,6 +400,34 @@ export default {
       this.del.process = false
       this.del.continue = true
     },
+    previewPosts () {
+      // TODO Preview comments*
+      this.preview.loading = true
+      this.preview.show = true
+      this.preview.ids = []
+
+      send('wall.get', {
+        owner_id: this.main.owner_id,
+        filter: this.main.filter,
+        count: VK.prototype.COUNT_GET_POSTS_MAX,
+        offset: this.main.count.min - 1
+      })
+        .then(res => {
+          if (res.body.response && res.body.response.items.length) {
+            res.body.response.items.forEach(item => {
+              if (this.checkWallConfiguration(item)) {
+                this.preview.ids.push(item.id)
+              }
+            })
+          }
+          this.preview.loading = false
+          this.stopDelete()
+        })
+        .catch(() => {
+          this.preview.loading = false
+          this.stopDelete(false)
+        })
+    },
 
     /* | -----------------------------------------------------------------------------
      * | Check posts
@@ -376,27 +436,31 @@ export default {
      */
     // TODO checkCommentsConfiguration
     checkWallConfiguration (post) {
+      const revert = this.wall.revert
+
       if (this.checkWallIds(post.id)) {
-        return true
+        return revert
       }
 
       if (this.checkWallFromIds(post.from_id)) {
-        return true
+        return revert
       }
 
       if (this.checkWallTexts(post.text)) {
-        return true
+        return revert
       }
 
       if (this.checkWallAttachments(post.attachments)) {
-        return true
+        return revert
       }
 
       if (this.checkWallCounts(post)) {
-        return true
+        return revert
       }
 
-      return false
+      // TODO Date
+
+      return !revert
     },
     checkWallIds (postId) {
       return this.wall.ids.includes(postId)
@@ -497,53 +561,35 @@ export default {
      * |
      */
     getLinkPost (id) {
-      return `${vk.url}/wall${this.main.owner_id}_${id}`
+      return { from_id: this.main.owner_id, id: id }
     },
     getLinkPage (id) {
       const strId = id.toString()
 
       if (strId.charAt(0) === '-') {
-        return vk.url + 'public' + strId.slice(1)
+        return VK.getLinkGroup(strId.slice(1))
       }
 
-      return vk.url + 'id' + id
+      return VK.getLinkUser(id)
+    },
+
+    /* | -----------------------------------------------------------------------------
+     * | Other
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    changeRevert () {
+      this.wall.revert = !this.wall.revert
+      this.preview.show = false
+    },
+    getStyleStatus (status) {
+      return 'status status-' + (status ? 'on' : 'off')
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.block {
-  max-width: 500px;
-  margin: 0 auto;
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .block__attr {
-    margin-bottom: 15px;
-    > p {
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-    .flex {
-      align-items: center;
-      > .at-input {
-        margin: 0 10px;
-        &:first-child {
-          margin-left: 0;
-        }
-        &:last-child {
-          margin-right: 0;
-        }
-      }
-    }
-    .at-checkbox {
-      margin: 5px;
-    }
-  }
-}
-
 .counts {
   display: flex;
   flex-wrap: wrap;
@@ -590,7 +636,35 @@ export default {
     border-radius: 20px;
     white-space: normal;
     font-weight: bold;
-    cursor: no-drop; // FIXME Temporary
+  }
+  &.off {
+    > button {
+      border-color: #ff8080;
+      background-color: rgba(220, 142, 142, 0.07);
+    }
+  }
+  &.on {
+    > button {
+      border-color: #477fc5;
+      background-color: rgba(71, 127, 197, 0.07);
+    }
+  }
+}
+
+.block-preview {
+  text-align: center;
+  > button {
+    width: 100%;
+  }
+  .block__result {
+    text-align: left;
+    > p {
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    > .at-tag {
+      margin: 2px;
+    }
   }
 }
 </style>

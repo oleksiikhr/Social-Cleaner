@@ -1,11 +1,13 @@
 export default {
+  name: 'Русский',
   app: {
     no_logs: 'Логи отсутствуют'
   },
   vk: {
     sections: {
       token: 'Токен',
-      wall: 'Стена'
+      wall: 'Стена',
+      status: 'Статус'
     },
     token: {
       user: {
@@ -26,7 +28,7 @@ export default {
           docs: 'Документы',
           groups: 'Группы'
         },
-        copy_here: 'СКОПИРОВАТЬ_ЗДЕСЬ',
+        copy_here: 'СКОПИРОВАТЬ',
         application_id: 'ID приложения',
         generate: 'Сгенерировать временной токен',
         info: 'Вам нужно скопировать значение access_token из URL поля:',

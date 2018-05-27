@@ -1,11 +1,13 @@
 export default {
+  name: 'English',
   app: {
     no_logs: 'No logs'
   },
   vk: {
     sections: {
       token: 'Token',
-      wall: 'Wall'
+      wall: 'Wall',
+      status: 'Status'
     },
     token: {
       user: {

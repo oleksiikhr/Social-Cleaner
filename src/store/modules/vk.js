@@ -1,7 +1,6 @@
-import { ICON_TOKEN } from '../../heplers/logs'
-import { send } from '../../heplers/vk'
 import router from '../../router/index'
 import store from '../../store/index'
+import VK from '../../networks/VK'
 import Vue from 'vue'
 
 const state = {
@@ -52,26 +51,23 @@ const mutations = {
 
 const actions = {
   vkInit ({commit}, token) {
-    send('account.getAppPermissions', {
+    VK.send('account.getAppPermissions', {
       access_token: token
-    }, ICON_TOKEN)
+    })
       .then(res => {
         if (res.body.response) {
           store.commit('VK_SET_PERMISSIONS', res.body.response)
           store.commit('VK_SET_TOKEN', token)
           Vue.prototype.$Message.success('Token installed')
 
-          send('users.get', {
+          VK.send('users.get', {
             fields: 'has_photo,photo_100,counters'
-          }, ICON_TOKEN)
+          })
             .then(res => {
               if (res.body.response) {
                 store.commit('VK_SET_USER', res.body.response[0])
               }
             })
-        } else {
-          const msg = res.body.error ? res.body.error.error_msg : 'Token is not installed'
-          Vue.prototype.$Message.error(msg)
         }
       })
   },
@@ -79,7 +75,7 @@ const actions = {
     commit('VK_CLEAR_TOKEN')
     commit('VK_CLEAR_USER')
     commit('VK_CLEAR_PERMISSIONS')
-    Vue.prototype.$Message.info('Deleted user')
+    Vue.prototype.$Message.info('Token deleted')
     router.push({ name: 'vk-token' })
   }
 }

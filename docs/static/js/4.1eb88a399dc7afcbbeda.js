@@ -1,0 +1,2 @@
+webpackJsonp([4],{JkEi:function(e,t){},lO7g:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r={render:function(){var e=this.$createElement;return(this._self._c||e)("div",{attrs:{id:"home"}})},staticRenderFns:[]};var i=n("VU/8")({activated:function(){this.$router.push({name:"explore"})}},r,!1,function(e){n("JkEi")},"data-v-c215d396",null);t.default=i.exports}});
+//# sourceMappingURL=4.1eb88a399dc7afcbbeda.js.map

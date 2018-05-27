@@ -3,8 +3,12 @@ const state = {
 }
 
 const mutations = {
-  SET_SOCIAL_NETWORK (state, obj) {
-    state.socialNetwork = obj
+  SET_SOCIAL_NETWORK (state, cls) {
+    const prototype = cls.prototype
+    state.socialNetwork = {
+      name: prototype.name,
+      icon: prototype.icon
+    }
   },
   CLEAR_SOCIAL_NETWORK (state) {
     state.socialNetwork = {}
