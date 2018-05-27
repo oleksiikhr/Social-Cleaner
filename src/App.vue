@@ -47,6 +47,62 @@ export default {
 </script>
 
 <style lang="scss">
+hr {
+  margin: 30px;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+// Component (Block)
+.block {
+  max-width: 500px;
+  margin: 0 auto;
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .block__attr {
+    margin-bottom: 15px;
+    > p {
+      font-weight: bold;
+      margin-bottom: 15px;
+      &.status {
+        position: relative;
+        &:after {
+          font-size: .6rem;
+          vertical-align: top;
+          margin-left: 4px;
+        }
+        &.status-on:after {
+          content: 'ON';
+          color: #0dad54;
+        }
+        &.status-off:after {
+          content: 'OFF';
+          color: #ff8080;
+        }
+      }
+    }
+    .flex {
+      align-items: center;
+      > .at-input {
+        margin: 0 10px;
+        &:first-child {
+          margin-left: 0;
+        }
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+    .at-checkbox {
+      margin: 5px;
+    }
+  }
+}
+</style>
+
+<style lang="scss" scoped>
 body, #app {
   min-height: 100%;
 }
@@ -107,12 +163,6 @@ header {
   }
 }
 
-hr {
-  margin: 30px;
-  border: none;
-  border-bottom: 1px solid #e0e0e0;
-}
-
 #app {
   display: flex;
   flex-direction: column;
@@ -127,54 +177,6 @@ hr {
     max-width: 800px;
     width: 100%;
     margin: 0 auto;
-  }
-}
-
-// Component (Block)
-.block {
-  max-width: 500px;
-  margin: 0 auto;
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .block__attr {
-    margin-bottom: 15px;
-    > p {
-      font-weight: bold;
-      margin-bottom: 15px;
-      &.status {
-        position: relative;
-        &:after {
-          font-size: .6rem;
-          vertical-align: top;
-          margin-left: 4px;
-        }
-        &.status-on:after {
-          content: 'ON';
-          color: #0dad54;
-        }
-        &.status-off:after {
-          content: 'OFF';
-          color: #ff8080;
-        }
-      }
-    }
-    .flex {
-      align-items: center;
-      > .at-input {
-        margin: 0 10px;
-        &:first-child {
-          margin-left: 0;
-        }
-        &:last-child {
-          margin-right: 0;
-        }
-      }
-    }
-    .at-checkbox {
-      margin: 5px;
-    }
   }
 }
 </style>
