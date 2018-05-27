@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { VK } from '../../../classes/VK'
+import VK from '../../../networks/VK'
 
 export default {
   props: {

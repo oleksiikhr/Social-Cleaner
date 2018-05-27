@@ -1,17 +1,8 @@
-import { vk } from '../config'
+import { ICON_STATUS, ICON_TOKEN, ICON_WALL } from '../heplers/logs'
 import store from '../store'
 import Vue from 'vue'
 
-export class VK {
-  static urlOauth = 'https://oauth.vk.com/authorize/'
-  static urlApi = 'https://api.vk.com/method/'
-  static redirectUri = 'https://oauth.vk.com/blank.html'
-  static clientId = 6244330
-  static version = '5.76'
-
-  static COUNT_GET_POSTS_BASIC = 25
-  static COUNT_GET_POSTS_MAX = 100
-
+const network = class VK {
   /* | -----------------------------------------------------------------------------
    * | API
    * | -----------------------------------------------------------------------------
@@ -21,13 +12,13 @@ export class VK {
    * Send request to VK.
    */
   static async send (method, params = []) {
-    params.v = this.version
+    params.v = this.prototype.version
 
     if (!params.access_token) {
       params.access_token = store.state.vk.token
     }
 
-    const result = await Vue.http.jsonp(this.urlApi + method, {
+    const result = await Vue.http.jsonp(this.prototype.urlApi + method, {
       params: params
     })
 
@@ -39,7 +30,7 @@ export class VK {
   static async fetchWallGet (
     ownerId = store.state.vk.user.id,
     filter = 'all',
-    count = this.COUNT_GET_POSTS_BASIC,
+    count = this.prototype.COUNT_GET_POSTS_BASIC,
     offset = 0
   ) {
     const result = await this.send('wall.get', {
@@ -104,12 +95,35 @@ export class VK {
    * @see https://vk.com/dev/objects/post
    */
   static getLinkWall (item) {
-    return `${vk.url}wall${item.from_id}_${item.id}`
+    return `${this.prototype.url}wall${item.from_id}_${item.id}`
   }
   static getLinkUser (id = store.state.vk.user.id) {
-    return `${vk.url}id${id}`
+    return `${this.prototype.url}id${id}`
   }
   static getLinkGroup (id) {
-    return `${vk.url}public${id}`
+    return `${this.prototype.url}public${id}`
   }
 }
+
+network.prototype.name = 'Vkontakte'
+network.prototype.to = '/vk'
+network.prototype.domain = 'vk.com'
+network.prototype.icon = 'fa-vk'
+network.prototype.sections = [
+  { name: 'vk.sections.token', to: 'vk-token', icon: ICON_TOKEN },
+  { name: 'vk.sections.wall', to: 'vk-wall', icon: ICON_WALL },
+  { name: 'vk.sections.status', to: 'vk-status', icon: ICON_STATUS }
+]
+
+network.prototype.url = 'https://vk.com/'
+network.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
+network.prototype.urlApi = 'https://api.vk.com/method/'
+
+network.prototype.redirectUri = 'https://oauth.vk.com/blank.html'
+network.prototype.clientId = 6244330
+network.prototype.version = '5.76'
+
+network.prototype.COUNT_GET_POSTS_BASIC = 25
+network.prototype.COUNT_GET_POSTS_MAX = 100
+
+export default network

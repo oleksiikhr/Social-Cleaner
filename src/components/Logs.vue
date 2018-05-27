@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { networks } from '../config'
+import networks from '../networks'
 import moment from 'moment'
 
 export default {

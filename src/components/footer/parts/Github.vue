@@ -1,14 +1,12 @@
 <template>
-  <a :href="Github.url + repository" target="_blank" rel="noreferrer" class="github">
+  <a :href="Github.prototype.url + repository" target="_blank" rel="noreferrer" class="github">
     <div class="github__icon">
       <i class="fa fa-github" aria-hidden="true"></i>
     </div>
     <div class="github__inner">
       <div class="github__name">{{ repository }}</div>
       <div class="github__info">
-        <template v-if="loading">
-          <p>Loading..</p>
-        </template>
+        <p v-if="loading">Loading..</p>
         <template v-else>
           <p class="github__start">{{ stars }} Stars</p>
           <div class="github__dot"></div>
@@ -20,7 +18,7 @@
 </template>
 
 <script>
-import { Github } from '../../../classes/Github'
+import Github from '../../../networks/Github'
 import { repository } from '../../../config'
 
 export default {

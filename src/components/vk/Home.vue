@@ -1,7 +1,7 @@
 <template>
   <div id="vk">
     <at-menu v-if="user" mode="horizontal" :activeName="routeName">
-      <at-menu-item v-for="item in vk.sections" :key="item.to" :to="{ name: item.to }">
+      <at-menu-item v-for="item in VK.prototype.sections" :key="item.to" :to="{ name: item.to }">
         <i :class="`fa fa-${item.icon}`" aria-hidden="true"></i> {{ $t(item.name) }}
       </at-menu-item>
     </at-menu>
@@ -12,16 +12,11 @@
 </template>
 
 <script>
-import { vk } from '../../config'
+import VK from '../../networks/VK'
 
 export default {
-  data () {
-    return {
-      vk
-    }
-  },
   activated () {
-    this.$store.commit('SET_SOCIAL_NETWORK', vk)
+    this.$store.commit('SET_SOCIAL_NETWORK', VK)
     if (this.$route.name === 'vk') {
       this.$router.push({ name: 'vk-token' })
     }

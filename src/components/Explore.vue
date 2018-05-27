@@ -1,7 +1,8 @@
 <template>
   <div id="dashboard">
     <div class="header">
-      <at-input v-model="search" placeholder="Find name" icon="search" />
+      <h1>Choose a Social Network</h1>
+      <at-input v-model="search" placeholder="Search" icon="search" />
     </div>
     <div class="result">
       <card v-for="(item, index) in filteredNetworks" :key="index" :item="item" />
@@ -10,7 +11,7 @@
 </template>
 
 <script>
-import { networks } from '../config'
+import networks from '../networks'
 import Card from './parts/Card'
 
 export default {
@@ -40,7 +41,7 @@ export default {
       search = search.toLocaleLowerCase().trim()
 
       return networks.filter(n => {
-        if (n.name.toLowerCase().indexOf(search) !== -1) {
+        if (n.name.toLowerCase().indexOf(search) !== -1 || n.domain.indexOf(search) !== -1) {
           return n
         }
       })
@@ -51,7 +52,12 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  max-width: 500px;
+  max-width: 400px;
   margin: 0 auto 30px;
+  > h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+  }
 }
 </style>

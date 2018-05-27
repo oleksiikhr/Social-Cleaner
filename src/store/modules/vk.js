@@ -68,9 +68,6 @@ const actions = {
                 store.commit('VK_SET_USER', res.body.response[0])
               }
             })
-        } else {
-          const msg = res.body.error ? res.body.error.error_msg : 'Token is not installed'
-          Vue.prototype.$Message.error(msg)
         }
       })
   },
@@ -78,7 +75,7 @@ const actions = {
     commit('VK_CLEAR_TOKEN')
     commit('VK_CLEAR_USER')
     commit('VK_CLEAR_PERMISSIONS')
-    Vue.prototype.$Message.info('Deleted user')
+    Vue.prototype.$Message.info('Token deleted')
     router.push({ name: 'vk-token' })
   }
 }

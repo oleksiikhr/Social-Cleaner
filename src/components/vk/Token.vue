@@ -11,7 +11,7 @@
       <div class="sections">
         <p>{{ $t('vk.token.user.sections') }}</p>
         <div class="inner">
-          <router-link class="section" v-for="section in vk.sections" :key="section.name" :to="{ name: section.to }"
+          <router-link class="section" v-for="section in VK.prototype.sections" :key="section.name" :to="{ name: section.to }"
                        v-if="section.to !== 'vk-token'">
             <i :class="`fa fa-${section.icon}`" aria-hidden="true"></i>
             <span>{{ $t(section.name) }}</span>
@@ -48,7 +48,7 @@
           </div>
           <div class="info">
             <p class="i1">{{ $t('vk.token.guest.info') }}</p>
-            <p>https://oauth.vk.com/blank.html#access_token=<strong>{{ $t('vk.token.guest.copy_here') }}</strong>&expires_in=86400&user_id=1</p>
+            <p>{{ VK.prototype.redirectUri }}#access_token=<strong>{{ $t('vk.token.guest.copy_here') }}</strong>&expires_in=86400&user_id=..</p>
           </div>
         </template>
       </div>
@@ -64,16 +64,15 @@
 </template>
 
 <script>
-import { urlOauth, clientId, redirectUri, version } from '../../heplers/vk'
-import { vk } from '../../config'
+import VK from '../../networks/VK'
 
 export default {
   data () {
     return {
-      vk,
+      VK,
       token: '',
       scope: [],
-      appId: clientId
+      appId: VK.prototype.clientId
     }
   },
   computed: {
@@ -90,8 +89,8 @@ export default {
       this.$store.dispatch('vkExit')
     },
     goGetToken () {
-      window.open(`${urlOauth}?client_id=${this.appId}&display=page&redirect_uri=${redirectUri}
-        &scope=${this.scope.join(',')}&response_type=token&v=${version}`, '_blank')
+      window.open(`${VK.prototype.urlOauth}?client_id=${this.appId}&display=page&redirect_uri=${VK.prototype.redirectUri}
+        &scope=${this.scope.join(',')}&response_type=token&v=${VK.prototype.version}`, '_blank')
     }
   }
 }

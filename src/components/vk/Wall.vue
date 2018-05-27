@@ -217,8 +217,7 @@
 import { sleep, randomInteger } from '../../heplers/methods'
 import ConfigResult from './parts/WallConfigResult'
 import { send } from '../../heplers/vk'
-import { VK } from '../../classes/VK'
-import { vk } from '../../config'
+import VK from '../../networks/VK'
 
 export default {
   components: {
@@ -283,10 +282,11 @@ export default {
       return this.$store.state.vk.user
     },
     isActiveWallCount () {
-      return this.wall.count.comments.state !== 0 ||
-              this.wall.count.likes.state !== 0 ||
-              this.wall.count.reposts.state !== 0 ||
-              this.wall.count.views.state !== 0
+      return Object.keys(this.wall.count).some(o => {
+        if (this.wall.count[o].state !== 0) {
+          return true
+        }
+      })
     }
   },
   methods: {
@@ -304,7 +304,7 @@ export default {
         send('wall.get', {
           owner_id: this.main.owner_id,
           filter: this.main.filter,
-          count: VK.COUNT_GET_POSTS_BASIC,
+          count: VK.prototype.COUNT_GET_POSTS_BASIC,
           offset: this.main.count.min - 1
         })
           .then(res => {
@@ -348,7 +348,7 @@ export default {
       }
 
       // If all posts (MAX_GET_POSTS) are deleted, we receive new
-      if (index >= VK.COUNT_GET_POSTS_BASIC) {
+      if (index >= VK.prototype.COUNT_GET_POSTS_BASIC) {
         return this.fetchGetWall()
       }
 
@@ -408,7 +408,7 @@ export default {
       send('wall.get', {
         owner_id: this.main.owner_id,
         filter: this.main.filter,
-        count: VK.COUNT_GET_POSTS_MAX,
+        count: VK.prototype.COUNT_GET_POSTS_MAX,
         offset: this.main.count.min - 1
       })
         .then(res => {
@@ -560,16 +560,16 @@ export default {
      * |
      */
     getLinkPost (id) {
-      return `${vk.url}/wall${this.main.owner_id}_${id}`
+      return { from_id: this.main.owner_id, id: id }
     },
     getLinkPage (id) {
       const strId = id.toString()
 
       if (strId.charAt(0) === '-') {
-        return vk.url + 'public' + strId.slice(1)
+        return VK.getLinkGroup(strId.slice(1))
       }
 
-      return vk.url + 'id' + id
+      return VK.getLinkUser(id)
     },
 
     /* | -----------------------------------------------------------------------------
