@@ -1,5 +1,6 @@
 <template>
   <!--TODO IMPORTANT Изменить на совпадение со всеми параметрами-->
+  <!--TODO Change to class*-->
   <div id="wall">
     <div class="main-config block">
       <h2>Основные настройки</h2>

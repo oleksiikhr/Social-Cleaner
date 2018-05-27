@@ -6,6 +6,7 @@ const mutations = {
   SET_SOCIAL_NETWORK (state, cls) {
     const prototype = cls.prototype
     state.socialNetwork = {
+      name: prototype.name,
       icon: prototype.icon
     }
   },

@@ -1,6 +1,6 @@
-import { send } from '../../heplers/vk'
 import router from '../../router/index'
 import store from '../../store/index'
+import VK from '../../networks/VK'
 import Vue from 'vue'
 
 const state = {
@@ -51,7 +51,7 @@ const mutations = {
 
 const actions = {
   vkInit ({commit}, token) {
-    send('account.getAppPermissions', {
+    VK.send('account.getAppPermissions', {
       access_token: token
     })
       .then(res => {
@@ -60,7 +60,7 @@ const actions = {
           store.commit('VK_SET_TOKEN', token)
           Vue.prototype.$Message.success('Token installed')
 
-          send('users.get', {
+          VK.send('users.get', {
             fields: 'has_photo,photo_100,counters'
           })
             .then(res => {

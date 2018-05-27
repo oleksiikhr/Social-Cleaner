@@ -2,7 +2,7 @@
   <div id="logs">
     <div class="header">
       <at-input v-model="searchMethod" placeholder="Method" icon="search" />
-      <at-select v-model="selectedNetworkName" placeholder="Social Network" clearable>
+      <at-select v-model="selectedNetworkName" placeholder="Social Network" size="large" clearable>
         <at-option v-for="network in networks" :key="network.to" :value="network.name">
           {{ network.name }}
         </at-option>
