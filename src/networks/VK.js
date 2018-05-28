@@ -1,7 +1,11 @@
-import * as logsHelper from '../heplers/logs'
+import { sleep, randomInteger } from '../heplers/methods'
+import * as colors from '../heplers/colors'
+import * as icons from '../heplers/icons'
+import { addLog } from '../heplers/logs'
 import store from '../store'
 import Vue from 'vue'
 
+// TODO Global process for block (send)
 const network = class VK {
   /* | -----------------------------------------------------------------------------
    * | API
@@ -11,7 +15,7 @@ const network = class VK {
   /**
    * Send request to VK.
    */
-  static async send (method, params = []) {
+  static async send (method, params = [], rnd = { min: 0, max: 0 }) {
     params.v = this.prototype.version
 
     if (!params.access_token) {
@@ -21,6 +25,10 @@ const network = class VK {
     const result = await Vue.http.jsonp(this.prototype.urlApi + method, {
       params: params
     })
+
+    if (rnd.max > 0 && rnd.min <= rnd.max) {
+      await sleep(randomInteger(rnd.min, rnd.max))
+    }
 
     return result
   }
@@ -128,16 +136,16 @@ const network = class VK {
       }
     })
 
-    logsHelper.addLog(this, method, { method: method, params: params }, logsHelper.COLOR_INFO)
+    addLog(this, method, { method: method, params: params }, colors.INFO)
 
     next(res => {
       if (res.status >= 200 && res.status < 300) {
-        logsHelper.addLog(this, method, res.body, res.body.error ? logsHelper.COLOR_ERROR : logsHelper.COLOR_SUCCESS)
+        addLog(this, method, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
         if (res.body.error) {
           Vue.prototype.$Notify.error({ title: res.body.error.error_msg || 'Error', message: method })
         }
       } else {
-        logsHelper.addLog(this, method, 'Server error', logsHelper.COLOR_ERROR)
+        addLog(this, method, 'Server error', colors.ERROR)
         Vue.prototype.$Notify.error({ title: 'Server error', message: method })
       }
     })
@@ -149,9 +157,9 @@ network.prototype.to = '/vk'
 network.prototype.domain = 'vk.com'
 network.prototype.icon = 'fa-vk'
 network.prototype.sections = [
-  { name: 'vk.sections.token', to: 'vk-token', icon: logsHelper.ICON_TOKEN },
-  { name: 'vk.sections.wall', to: 'vk-wall', icon: logsHelper.ICON_WALL },
-  { name: 'vk.sections.status', to: 'vk-status', icon: logsHelper.ICON_STATUS }
+  { name: 'vk.sections.token', to: 'vk-token', icon: icons.TOKEN },
+  { name: 'vk.sections.wall', to: 'vk-wall', icon: icons.WALL },
+  { name: 'vk.sections.status', to: 'vk-status', icon: icons.STATUS }
 ]
 
 network.prototype.url = 'https://vk.com/'
