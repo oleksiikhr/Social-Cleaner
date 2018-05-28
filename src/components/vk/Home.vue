@@ -15,6 +15,11 @@
 import VK from '../../networks/VK'
 
 export default {
+  data () {
+    return {
+      VK
+    }
+  },
   activated () {
     this.$store.commit('SET_SOCIAL_NETWORK', VK)
     if (this.$route.name === 'vk') {
