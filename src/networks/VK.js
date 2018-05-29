@@ -171,8 +171,8 @@ network.prototype.domain = 'vk.com'
 network.prototype.icon = 'fa-vk'
 network.prototype.sections = [
   { name: 'vk.sections.token', to: 'vk-token', icon: icons.TOKEN },
-  { name: 'vk.sections.wall', to: 'vk-wall', icon: icons.WALL },
-  { name: 'vk.sections.status', to: 'vk-status', icon: icons.STATUS }
+  { name: 'vk.sections.wall', val: 'wall', to: 'vk-wall', icon: icons.WALL },
+  { name: 'vk.sections.status', val: 'status', to: 'vk-status', icon: icons.STATUS }
 ]
 
 // URL

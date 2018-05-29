@@ -7,17 +7,7 @@
           {{ $t('vk.token.user.button') }}
         </at-button>
       </div>
-      <hr>
-      <div class="sections">
-        <p>{{ $t('vk.token.user.sections') }}</p>
-        <div class="inner">
-          <router-link class="section" v-for="section in VK.prototype.sections" :key="section.name" :to="{ name: section.to }"
-                       v-if="section.to !== 'vk-token'">
-            <i :class="`fa fa-${section.icon}`" aria-hidden="true"></i>
-            <span>{{ $t(section.name) }}</span>
-          </router-link>
-        </div>
-      </div>
+      <!--TODO Info about user-->
     </div>
 
     <template v-else>
@@ -151,41 +141,6 @@ button {
     > button {
       margin-top: 20px;
     }
-  }
-}
-
-.sections {
-  margin-top: 20px;
-  text-align: center;
-  > p {
-    font-weight: bold;
-    font-size: 1rem;
-    margin-bottom: 20px;
-  }
-  > .inner {
-    display: flex;
-  }
-}
-
-.section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 30px;
-  border: 1px solid #e7e7e7;
-  color: #333;
-  opacity: 0.7;
-  flex-wrap: wrap;
-  width: 180px;
-  margin: 10px;
-  font-size: 1rem;
-  transition: .2s;
-  &:hover {
-    background: #f7f7f7;
-  }
-  > span {
-    margin-top: 10px;
   }
 }
 </style>
