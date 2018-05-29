@@ -1,6 +1,6 @@
 <template>
-  <!--TODO IMPORTANT Изменить на совпадение со всеми параметрами-->
-  <!--TODO Change to class*-->
+  <!--TODO Translate-->
+  <!--TODO Documentation for the user-->
   <div id="wall">
     <div class="main-config block">
       <h2>Основные настройки</h2>
@@ -12,11 +12,9 @@
       <div class="block__attr">
         <p>Фильтр записей</p>
         <at-select v-model="main.filter" :disabled="del.process" size="large">
-          <at-option value="suggests">Предложенные записи на стене сообщества</at-option>
-          <at-option value="postponed">Отложенные записи</at-option>
-          <at-option value="owner">Записи владельца стены</at-option>
-          <at-option value="others">Записи не от владельца стены</at-option>
-          <at-option value="all">Все</at-option>
+          <at-option v-for="filter in html.main.filters" :key="filter.val" :value="filter.val">
+            {{ filter.name }}
+          </at-option>
         </at-select>
       </div>
       <div class="block__attr">
@@ -37,113 +35,82 @@
     </div>
 
     <hr>
-    <div :class="'revert ' + (wall.revert ? 'on' : 'off') + ' block'">
-      <at-button @click="changeRevert()">
-        Удалить все записи с {{ main.count.min }} по {{ main.count.max }},
-        которые <strong>{{ wall.revert ? '' : 'не ' }}попадают</strong> под параметры ниже (хотя бы 1 из них)
-      </at-button>
-    </div>
-
-    <hr>
     <div class="wall-config block">
       <h2>Параметры стены</h2>
       <div class="block__attr">
-        <p :class="getStyleStatus(wall.ids.length)">ID записей</p>
-        <at-input v-model="wall.id" :disabled="del.process" @keyup.enter.native="addConfigWallArrayId('id', 'ids')" />
+        <div class="top">
+          <p :class="getStyleStatus(wall.ids.items.length)">ID записей</p>
+          <a class="compare" disabled>One</a>
+        </div>
+        <at-input v-model="wall.ids.input" :disabled="del.process" @keyup.enter.native="addConfigWallArrayId('ids')" />
         <div class="block__attr-inner">
-          <at-tag v-for="(id, index) in wall.ids" :key="index" :name="id" :closable="!del.process"
-                  @on-close="wall.ids.splice(index, 1)">
+          <at-tag v-for="(id, index) in wall.ids.items" :key="index" :name="id" :closable="!del.process"
+                  @on-close="wall.ids.items.splice(index, 1)">
             <a :href="getLinkPost(id)" target="_blank" rel="noreferrer">{{ id }}</a>
           </at-tag>
         </div>
         <small>After filling, press enter to add to the list.</small>
       </div>
       <div class="block__attr">
-        <p :class="getStyleStatus(wall.fromIds.length)">ID авторов записей</p>
-        <at-input v-model="wall.fromId" :disabled="del.process"
-                  @keyup.enter.native="addConfigWallArrayId('fromId', 'fromIds')" />
+        <div class="top">
+          <p :class="getStyleStatus(wall.fromIds.items.length)">ID авторов записей</p>
+          <a class="compare" disabled>
+            One
+          </a>
+        </div>
+        <at-input v-model="wall.fromIds.input" :disabled="del.process" @keyup.enter.native="addConfigWallArrayId('fromIds')" />
         <div class="block__attr-inner">
-          <at-tag v-for="(id, index) in wall.fromIds" :key="index" :name="id" :closable="!del.process"
-                  @on-close="wall.fromIds.splice(index, 1)">
+          <at-tag v-for="(id, index) in wall.fromIds.items" :key="index" :name="id" :closable="!del.process"
+                  @on-close="wall.fromIds.items.splice(index, 1)">
             <a :href="getLinkPage(id)" target="_blank" rel="noreferrer">{{ id }}</a>
           </at-tag>
         </div>
         <small>After filling, press enter to add to the list. Use a negative value to designate a community ID.</small>
       </div>
       <div class="block__attr">
-        <p :class="getStyleStatus(wall.texts.length)">Фразы в тексты</p>
-        <at-input v-model="wall.text" :disabled="del.process"
-                  @keyup.enter.native="addConfigWallArrayValue('text', 'texts')" />
+        <div class="top">
+          <p :class="getStyleStatus(wall.texts.items.length)">Фразы в тексты</p>
+          <a @click="wall.texts.compareAll = !wall.texts.compareAll" class="compare">
+            {{ wall.texts.compareAll ? 'All' : 'One' }}
+          </a>
+        </div>
+        <at-input v-model="wall.texts.input" :disabled="del.process" @keyup.enter.native="addConfigWallArrayValue('texts')" />
         <div class="block__attr-inner">
-          <at-tag v-for="(text, index) in wall.texts" :key="index" :name="index" :closable="!del.process"
-                  @on-close="wall.texts.splice(index, 1)">
+          <at-tag v-for="(text, index) in wall.texts.items" :key="index" :name="index" :closable="!del.process"
+                  @on-close="wall.texts.items.splice(index, 1)">
             {{ text }}
           </at-tag>
         </div>
         <small>After filling, press enter to add to the list.</small>
       </div>
       <div class="block__attr">
-        <p :class="getStyleStatus(wall.attachments.length)">Added media attachments</p>
-        <at-checkbox-group v-model="wall.attachments">
-          <at-checkbox label="photo">Photo</at-checkbox>
-          <at-checkbox label="video">Video</at-checkbox>
-          <at-checkbox label="audio">Audio</at-checkbox>
-          <at-checkbox label="doc">Document</at-checkbox>
-          <at-checkbox label="link">Link</at-checkbox>
-          <at-checkbox label="note">Note</at-checkbox>
-          <at-checkbox label="poll">Poll</at-checkbox>
-          <at-checkbox label="page">Wiki Page</at-checkbox>
-          <at-checkbox label="photos_list">Photos List</at-checkbox>
-          <at-checkbox label="market">Market Item</at-checkbox>
-          <at-checkbox label="market_album">Market Collection</at-checkbox>
+        <div class="top">
+          <p :class="getStyleStatus(wall.attachments.items.length)">Added media attachments</p>
+          <a @click="wall.attachments.compareAll = !wall.attachments.compareAll" class="compare">
+            {{ wall.attachments.compareAll ? 'All' : 'One' }}
+          </a>
+        </div>
+        <at-checkbox-group v-model="wall.attachments.items">
+          <at-checkbox v-for="attachment in html.wall.attachments" :key="attachment.val" :label="attachment.val">
+            {{ attachment.name }}
+          </at-checkbox>
         </at-checkbox-group>
       </div>
       <div class="block__attr">
-        <p :class="getStyleStatus(isActiveWallCount)">Значения</p>
+        <div class="top">
+          <p :class="getStyleStatus(isActiveWallCount)">Значения</p>
+          <a @click="wall.count.compareAll = !wall.count.compareAll" class="compare">
+            {{ wall.count.compareAll ? 'All' : 'One' }}
+          </a>
+        </div>
         <div class="counts">
-          <div class="count-comments count">
+          <div :class="`count-${item.icon} count`" v-for="item in html.wall.count" :key="item.attr">
             <div class="flex">
               <i class="fa fa-comment-o" aria-hidden="true"></i>
-              <p>Comments</p>
+              <p>{{ item.name }}</p>
             </div>
-            <at-input v-model="wall.count.comments.count" :disabled="del.process || wall.count.comments.state === 0" />
-            <at-radio-group v-model="wall.count.comments.state" :disabled="del.process">
-              <at-radio-button :label="-1">Меньше</at-radio-button>
-              <at-radio-button :label="0">Выкл.</at-radio-button>
-              <at-radio-button :label="1">Больше</at-radio-button>
-            </at-radio-group>
-          </div>
-          <div class="count-likes count">
-            <div class="flex">
-              <i class="fa fa-heart-o" aria-hidden="true"></i>
-              <p>Likes</p>
-            </div>
-            <at-input v-model="wall.count.likes.count" :disabled="del.process || wall.count.likes.state === 0" />
-            <at-radio-group v-model="wall.count.likes.state" :disabled="del.process">
-              <at-radio-button :label="-1">Меньше</at-radio-button>
-              <at-radio-button :label="0">Выкл.</at-radio-button>
-              <at-radio-button :label="1">Больше</at-radio-button>
-            </at-radio-group>
-          </div>
-          <div class="count-reposts count">
-            <div class="flex">
-              <i class="fa fa-bullhorn" aria-hidden="true"></i>
-              <p>Reposts</p>
-            </div>
-            <at-input v-model="wall.count.reposts.count" :disabled="del.process || wall.count.reposts.state === 0" />
-            <at-radio-group v-model="wall.count.reposts.state" :disabled="del.process">
-              <at-radio-button :label="-1">Меньше</at-radio-button>
-              <at-radio-button :label="0">Выкл.</at-radio-button>
-              <at-radio-button :label="1">Больше</at-radio-button>
-            </at-radio-group>
-          </div>
-          <div class="count-views count">
-            <div class="flex">
-              <i class="fa fa-eye" aria-hidden="true"></i>
-              <p>Views</p>
-            </div>
-            <at-input v-model="wall.count.views.count" :disabled="del.process || wall.count.views.state === 0" />
-            <at-radio-group v-model="wall.count.views.state" :disabled="del.process">
+            <at-input v-model="wall.count.items[item.attr].count" :disabled="del.process || wall.count.items[item.attr].state === 0" />
+            <at-radio-group v-model="wall.count.items[item.attr].state" :disabled="del.process">
               <at-radio-button :label="-1">Меньше</at-radio-button>
               <at-radio-button :label="0">Выкл.</at-radio-button>
               <at-radio-button :label="1">Больше</at-radio-button>
@@ -169,8 +136,8 @@
     <template v-if="!del.process">
       <hr>
       <div class="block-preview block">
-        <at-button v-if="!preview.show" type="info" class="preview-btn" @click="previewPosts()" hollow>
-          Проверить первые 100 записей, начиная с {{ main.count.min }}
+        <at-button v-if="!preview.show" type="info" class="preview-btn" @click="startPreviewPosts()" hollow>
+          Проверить список удаляемых записей
         </at-button>
         <template v-else>
           <at-button type="primary" @click="preview.show = false" hollow>Закрыть</at-button>
@@ -191,6 +158,7 @@
 
     <hr>
     <div class="block-buttons block">
+      <!--TODO Dialog deleted posts-->
       <at-button type="error" @click="del.dialog = true" v-if="!del.process">
         Удалить записи с {{ main.count.min }} по {{ main.count.max }}
       </at-button>
@@ -203,11 +171,11 @@
           <span>The confirmation</span>
         </div>
         <div style="text-align:center;">
-          <p>Are you sure you want to start {{ main.isDeletePosts ? 'deleting posts' : 'clearing comments' }}?</p>
+          <p>Are you sure you want to start deleting posts?</p>
         </div>
         <div slot="footer">
           <at-button @click="del.dialog = false">Cancel</at-button>
-          <at-button type="error" @click="startDelete()">Run cleanup</at-button>
+          <at-button type="error" @click="startDeletePosts()">Run cleanup</at-button>
         </div>
       </at-modal>
     </div>
@@ -215,10 +183,14 @@
 </template>
 
 <script>
-import { sleep, randomInteger } from '../../heplers/methods'
 import ConfigResult from './parts/WallConfigResult'
-import { send } from '../../heplers/vk'
 import VK from '../../networks/VK'
+
+const SLEEP_DELETE_MIN = 1500
+const SLEEP_DELETE_MAX = 2500
+
+const SLEEP_GET_MIN = 500
+const SLEEP_GET_MAX = 1500
 
 export default {
   components: {
@@ -230,38 +202,52 @@ export default {
         owner_id: '',
         filter: 'all',
         count: {
-          min: 1,
-          max: null
+          min: '1',
+          max: '20'
         },
         isDeletePosts: 0
       },
       wall: {
-        id: '',
-        ids: [],
-        fromId: '',
-        fromIds: [],
-        text: '',
-        texts: [],
-        attachments: [],
-        count: {
-          comments: {
-            state: 0,
-            count: 0
-          },
-          likes: {
-            state: 0,
-            count: 0
-          },
-          reposts: {
-            state: 0,
-            count: 0
-          },
-          views: {
-            state: 0,
-            count: 0
-          }
+        ids: {
+          input: '',
+          items: [],
+          compareAll: false
         },
-        revert: false
+        fromIds: {
+          input: '',
+          items: [],
+          compareAll: false
+        },
+        texts: {
+          input: '',
+          items: [],
+          compareAll: false
+        },
+        attachments: {
+          items: [],
+          compareAll: true
+        },
+        count: {
+          items: {
+            comments: {
+              state: 0,
+              count: 0
+            },
+            likes: {
+              state: 0,
+              count: 0
+            },
+            reposts: {
+              state: 0,
+              count: 0
+            },
+            views: {
+              state: 0,
+              count: 0
+            }
+          },
+          compareAll: true
+        }
       },
       del: {
         dialog: false,
@@ -272,6 +258,38 @@ export default {
         ids: [],
         show: false,
         loading: false
+      },
+      html: {
+        main: {
+          filters: [
+            { name: 'Предложенные записи на стене сообщества', val: 'suggests' },
+            { name: 'Отложенные записи', val: 'postponed' },
+            { name: 'Записи владельца стены', val: 'owner' },
+            { name: 'Записи не от владельца стены', val: 'others' },
+            { name: 'Все', val: 'all' }
+          ]
+        },
+        wall: {
+          attachments: [
+            { name: 'Photo', val: 'photo' },
+            { name: 'Video', val: 'video' },
+            { name: 'Audio', val: 'audio' },
+            { name: 'Document', val: 'doc' },
+            { name: 'Link', val: 'link' },
+            { name: 'Note', val: 'note' },
+            { name: 'Poll', val: 'poll' },
+            { name: 'Wiki Page', val: 'page' },
+            { name: 'Photos List', val: 'photos_list' },
+            { name: 'Market Item', val: 'market' },
+            { name: 'Market Collection', val: 'market_album' }
+          ],
+          count: [
+            { name: 'Comments', attr: 'comments', icon: 'fa-comment-o' },
+            { name: 'Likes', attr: 'likes', icon: 'fa-heart-o' },
+            { name: 'Reposts', attr: 'reposts', icon: 'fa-bullhorn' },
+            { name: 'Views', attr: 'views', icon: 'fa-eye' }
+          ]
+        }
       }
     }
   },
@@ -282,9 +300,12 @@ export default {
     user () {
       return this.$store.state.vk.user
     },
+    /**
+     * @return boolean
+     */
     isActiveWallCount () {
-      return Object.keys(this.wall.count).some(o => {
-        if (this.wall.count[o].state !== 0) {
+      return Object.keys(this.wall.count.items).some(o => {
+        if (this.wall.count.items[o].state !== 0) {
           return true
         }
       })
@@ -296,237 +317,261 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    fetchGetWall () {
-      // TODO Global process for block
-      this.del.process = true
+    async fetchGetWall (count = VK.prototype.COUNT_WALL_POSTS, offset = this.main.count.min - 1) {
+      const res = await VK.fetchWallGet(
+        this.main.owner_id,
+        this.main.filter,
+        count,
+        offset,
+        SLEEP_GET_MIN,
+        SLEEP_GET_MAX
+      )
 
-      // TODO Global sleep
-      sleep(randomInteger(500, 1500)).then(() => {
-        send('wall.get', {
-          owner_id: this.main.owner_id,
-          filter: this.main.filter,
-          count: VK.prototype.COUNT_GET_POSTS_BASIC,
-          offset: this.main.count.min - 1
-        })
-          .then(res => {
-            if (res.body.response && res.body.response.items.length) {
-              return this.deletePosts(res.body.response.items, 0)
-            }
-            this.stopDelete(typeof res.body.error === 'undefined')
-          })
-          .catch(() => {
-            this.stopDelete(false)
-          })
-      })
+      return res
     },
-    fetchDeletePost (post, items, index) {
-      sleep(randomInteger(1500, 2500)).then(() => {
-        send('wall.delete', {
-          owner_id: this.main.owner_id,
-          post_id: post.id
-        })
-          .then(res => {
-            if (res.body.response) {
-              this.main.count.max--
-            }
+    async fetchDeletePost (id) {
+      const res = await VK.fetchWallDelete(id, this.main.owner_id, SLEEP_DELETE_MIN, SLEEP_DELETE_MAX)
 
-            return this.deletePosts(items, ++index)
-          })
-          .catch(() => {
-            this.stopDelete(false)
-          })
-      })
+      return res
     },
 
     /* | -----------------------------------------------------------------------------
-     * | Start/Stop delete
+     * | Start posts/preview/comments
      * | -----------------------------------------------------------------------------
      * |
      */
-    deletePosts (items, index) {
-      if (!this.del.continue || this.main.count.min > this.main.count.max) {
-        return this.stopDelete()
+    async startDeletePosts () {
+      if (!this.startAction()) {
+        return
       }
 
-      // If all posts (MAX_GET_POSTS) are deleted, we receive new
-      if (index >= VK.prototype.COUNT_GET_POSTS_BASIC) {
-        return this.fetchGetWall()
+      for (let i = 0; i < this.getCountLoop(); i++) {
+        const count = this.getCountDeletePosts()
+        const res = await this.fetchGetWall(count > 100 ? 100 : count)
+
+        if (res.ok && res.body.response) {
+          const len = res.body.response.items.length
+          for (let j = 0; j < len; j++) {
+            const post = res.body.response.items[j]
+
+            // If user click the stop button
+            if (!this.del.continue) {
+              return this.stopAction()
+            }
+
+            // If can't delete post - show modal and stopDelete
+            if (typeof post.can_delete === 'undefined' || !post.can_delete) {
+              this.$Modal.error({ title: 'Access to wall\'s post denied', content: 'Error code: 210' })
+              return this.stopAction(false)
+            }
+
+            if (this.checkWallConfiguration(post)) {
+              this.main.count.min++
+              continue
+            }
+
+            const resDelete = this.fetchDeletePost(post.id)
+
+            if (resDelete.ok && resDelete.body.response) {
+              this.main.count.max--
+            }
+          }
+        } else {
+          return this.stopAction(res.ok && typeof res.body.error === 'undefined')
+        }
       }
 
-      const post = items[index]
-
-      // Of the record is empty, but the size should be still - stop
-      if (typeof post === 'undefined') {
-        return this.stopDelete()
-      }
-
-      // If can't delete - stopDelete
-      if (typeof post.can_delete === 'undefined' || !post.can_delete) {
-        this.$Modal.error({
-          title: 'Access to wall\'s post denied',
-          content: 'Error code: 210'
-        })
-        return this.stopDelete(false)
-      }
-
-      if (this.checkWallConfiguration(post)) {
-        this.main.count.min++
-        return this.deletePosts(items, ++index)
-      }
-
-      this.fetchDeletePost(post, items, index)
+      this.stopAction()
     },
-    startDelete () {
-      this.del.dialog = false
-
-      const min = parseInt(this.main.count.min)
-      const max = parseInt(this.main.count.max)
-
-      if (min > 0 && max > 0 && max >= min) {
-        return this.fetchGetWall()
+    async startPreviewPosts () {
+      if (!this.startAction()) {
+        return
       }
 
-      this.$Modal.alert({
-        title: 'Ошибка',
-        content: 'Проверьте корректность данных в основных настроек'
-      })
-    },
-    stopDelete (isSuccess = true) {
-      if (isSuccess) {
-        this.$Message.success('Action stopped')
-      } else {
-        this.$Message.error('Action stopped')
-      }
-      this.del.process = false
-      this.del.continue = true
-    },
-    previewPosts () {
-      // TODO Preview comments*
       this.preview.loading = true
       this.preview.show = true
       this.preview.ids = []
 
-      send('wall.get', {
-        owner_id: this.main.owner_id,
-        filter: this.main.filter,
-        count: VK.prototype.COUNT_GET_POSTS_MAX,
-        offset: this.main.count.min - 1
-      })
-        .then(res => {
-          if (res.body.response && res.body.response.items.length) {
-            res.body.response.items.forEach(item => {
-              if (this.checkWallConfiguration(item)) {
-                this.preview.ids.push(item.id)
-              }
-            })
-          }
-          this.preview.loading = false
-          this.stopDelete()
-        })
-        .catch(() => {
-          this.preview.loading = false
-          this.stopDelete(false)
-        })
+      for (let i = 0; i < this.getCountLoop(); i++) {
+        // If user click the stop button
+        if (!this.del.continue) {
+          return this.stopAction()
+        }
+
+        const offset = i * VK.prototype.COUNT_WALL_POSTS
+        const res = await this.fetchGetWall(this.getCountDeletePosts() - offset, offset)
+
+        if (res.ok && res.body.response && res.body.response.items.length) {
+          res.body.response.items.forEach(post => {
+            if (this.checkWallConfiguration(post)) {
+              this.preview.ids.push(post.id)
+            }
+          })
+        } else {
+          this.stopAction(!!res.ok)
+          return
+        }
+      }
+
+      this.stopAction()
     },
+    // TODO Start delete comments
+    // TODO Preview comments*
 
     /* | -----------------------------------------------------------------------------
      * | Check posts
      * | -----------------------------------------------------------------------------
      * |
+     * | null - config is off
+     * | true - matches found
+     * | false - no matches found
+     * |
+     * | todo checkCommentsConfiguration
      */
-    // TODO checkCommentsConfiguration
     checkWallConfiguration (post) {
-      const revert = this.wall.revert
+      const items = [
+        this.checkWallNumber('ids', post.id),
+        this.checkWallNumber('fromIds', post.from_id),
+        this.checkWallTexts(post.text),
+        this.checkWallAttachments(post.attachments),
+        this.checkWallCounts(post)
+        // TODO Date
+      ]
 
-      if (this.checkWallIds(post.id)) {
-        return revert
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i]
+
+        if (item === null) {
+          continue
+        }
+
+        if (!item) {
+          return false
+        }
       }
 
-      if (this.checkWallFromIds(post.from_id)) {
-        return revert
-      }
-
-      if (this.checkWallTexts(post.text)) {
-        return revert
-      }
-
-      if (this.checkWallAttachments(post.attachments)) {
-        return revert
-      }
-
-      if (this.checkWallCounts(post)) {
-        return revert
-      }
-
-      // TODO Date
-
-      return !revert
+      return true
     },
-    checkWallIds (postId) {
-      return this.wall.ids.includes(postId)
-    },
-    checkWallFromIds (postFromId) {
-      return this.wall.fromIds.includes(postFromId)
+    checkWallNumber (attr, val) {
+      const compareAll = this.wall[attr].compareAll
+      const items = this.wall[attr].items
+      const len = items.length
+
+      if (!len) {
+        return null
+      }
+
+      if (compareAll) {
+        for (let i = 0; i < items; i++) {
+          if (items[i] !== val) {
+            return false
+          }
+        }
+        return true
+      }
+
+      return items.includes(val)
     },
     checkWallTexts (postText) {
+      const compareAll = this.wall.texts.compareAll
+      const items = this.wall.texts.items
+      const len = items.length
+
+      if (!len) {
+        return null
+      }
+
       postText = postText.toLowerCase().trim()
 
-      return this.wall.texts.some(text => {
-        if (postText.indexOf(text) > -1) {
+      for (let i = 0; i < len; i++) {
+        const isFind = postText.indexOf(items[i]) !== -1
+
+        if (compareAll && !isFind) {
+          return false
+        }
+        if (!compareAll && isFind) {
           return true
         }
-      })
+      }
+
+      return compareAll
     },
     checkWallAttachments (postAttachments) {
+      const compareAll = this.wall.attachments.compareAll
+      const items = this.wall.attachments.items
+      const len = items.length
+
+      if (!len) {
+        return null
+      }
+
       if (typeof postAttachments === 'undefined') {
         return false
       }
 
-      return postAttachments.some(attachment => {
-        if (this.wall.attachments.includes(attachment.type)) {
+      postAttachments = postAttachments.map(attachment => {
+        return attachment.type
+      })
+
+      for (let i = 0; i < len; i++) {
+        const include = postAttachments.includes(items[i])
+
+        if (compareAll && !include) {
+          return false
+        }
+        if (!compareAll && include) {
           return true
         }
-      })
+      }
+
+      return compareAll
     },
     checkWallCounts (post) {
-      if (this.checkWallCountObj(post, 'comments')) {
-        return true
+      if (!this.isActiveWallCount) {
+        return null
       }
 
-      if (this.checkWallCountObj(post, 'likes')) {
-        return true
+      const compareAll = this.wall.count.compareAll
+      const results = Object.keys(this.wall.count.items).map(attr => {
+        return this.checkWallCountAttr(post, attr)
+      })
+
+      for (let i = 0; i < results.length; i++) {
+        if (results[i] === null) {
+          continue
+        }
+        if (compareAll && !results[i]) {
+          return false
+        }
+        if (!compareAll && results[i]) {
+          return true
+        }
       }
 
-      if (this.checkWallCountObj(post, 'reposts')) {
-        return true
-      }
-
-      if (this.checkWallCountObj(post, 'views')) {
-        return true
-      }
-
-      return false
+      return compareAll
     },
-    checkWallCountObj (post, localObj) {
-      if (typeof post[localObj] === 'undefined') {
+    checkWallCountAttr (post, attr) {
+      if (typeof post[attr] === 'undefined') {
         return false
       }
 
-      const postCount = post[localObj].count
-      const state = this.wall.count[localObj].state
+      const state = this.wall.count.items[attr].state
 
-      if (state !== 0) {
-        const count = parseInt(this.wall.count[localObj].count)
-
-        switch (state) {
-          case -1:
-            return postCount < count
-          case 1:
-            return postCount > count
-        }
+      if (state === 0) {
+        return null
       }
 
-      return false
+      const count = parseInt(this.wall.count.items[attr].count)
+      const postCount = post[attr].count
+
+      switch (state) {
+        case -1:
+          return postCount < count
+        case 1:
+          return postCount > count
+        default:
+          return false
+      }
     },
 
     /* | -----------------------------------------------------------------------------
@@ -534,25 +579,25 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    addConfigWallArrayId (str, arr) {
-      const id = parseInt(this.wall[str])
+    addConfigWallArrayId (property) {
+      const id = parseInt(this.wall[property].input)
 
       if (id) {
-        this.wall[arr].push(id)
-        this.wall[arr] = Array.from(new Set(this.wall[arr].sort((a, b) => a - b)))
+        this.wall[property].items.push(id)
+        this.wall[property].items = Array.from(new Set(this.wall[property].items.sort((a, b) => a - b)))
       }
 
-      this.wall[str] = ''
+      this.wall[property].input = ''
     },
-    addConfigWallArrayValue (str, arr) {
-      const value = this.wall[str].toLowerCase().trim()
+    addConfigWallArrayValue (property) {
+      const value = this.wall[property].input.toLowerCase().trim()
 
       if (value) {
-        this.wall[arr].push(value)
-        this.wall[arr] = Array.from(new Set(this.wall[arr].sort()))
+        this.wall[property].items.push(value)
+        this.wall[property].items = Array.from(new Set(this.wall[property].items.sort()))
       }
 
-      this.wall[str] = ''
+      this.wall[property].input = ''
     },
 
     /* | -----------------------------------------------------------------------------
@@ -560,9 +605,19 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
+    /**
+     * @param {int} id
+     *
+     * @return string
+     */
     getLinkPost (id) {
-      return { from_id: this.main.owner_id, id: id }
+      return VK.getLinkWall({ from_id: this.main.owner_id, id: id })
     },
+    /**
+     * @param {int} id
+     *
+     * @return string
+     */
     getLinkPage (id) {
       const strId = id.toString()
 
@@ -578,12 +633,61 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    changeRevert () {
-      this.wall.revert = !this.wall.revert
-      this.preview.show = false
+    /**
+     * @return boolean
+     */
+    startAction () {
+      this.del.dialog = false
+      this.del.process = true
+
+      const min = parseInt(this.main.count.min)
+      const max = parseInt(this.main.count.max)
+
+      if (min > 0 && max > 0 && max >= min) {
+        this.main.count.min = min.toString()
+        this.main.count.max = max.toString()
+        return true
+      }
+
+      this.stopAction(false)
+      this.$Modal.alert({ title: 'Ошибка', content: 'Проверьте диапазон удаляемых постов в основных настройках' })
+      return false
     },
-    getStyleStatus (status) {
-      return 'status status-' + (status ? 'on' : 'off')
+    stopAction (isSuccess = true) {
+      if (isSuccess) {
+        this.$Message.success('Action stopped')
+      } else {
+        this.$Message.error('Action stopped')
+      }
+      this.preview.loading = false
+      this.del.process = false
+      this.del.continue = true
+    },
+    /**
+     * HTML (on / off).
+     *
+     * @param {int|boolean} inner
+     *
+     * @return string
+     */
+    getStyleStatus (inner) {
+      return 'status status-' + (inner ? 'on' : 'off')
+    },
+    /**
+     * How many posts you need to receive to completely delete posts.
+     *
+     * @return number
+     */
+    getCountLoop () {
+      return Math.ceil((this.main.count.max - this.main.count.min + 1) / VK.prototype.COUNT_WALL_POSTS)
+    },
+    /**
+     * How many posts you need to delete.
+     *
+     * @return number
+     */
+    getCountDeletePosts () {
+      return this.main.count.max - this.main.count.min + 1
     }
   }
 }
@@ -624,30 +728,6 @@ export default {
 .block-buttons {
   > button {
     width: 100%;
-  }
-}
-
-.revert {
-  margin: 0 auto;
-  > button {
-    width: 100%;
-    max-width: 600px;
-    padding: 40px 20px;
-    border-radius: 20px;
-    white-space: normal;
-    font-weight: bold;
-  }
-  &.off {
-    > button {
-      border-color: #ff8080;
-      background-color: rgba(220, 142, 142, 0.07);
-    }
-  }
-  &.on {
-    > button {
-      border-color: #477fc5;
-      background-color: rgba(71, 127, 197, 0.07);
-    }
   }
 }
 
