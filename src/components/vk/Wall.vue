@@ -104,9 +104,9 @@
           </a>
         </div>
         <div class="counts">
-          <div :class="`count-${item.icon} count`" v-for="item in html.wall.count" :key="item.attr">
+          <div :class="`count-${item.attr} count`" v-for="item in html.wall.count" :key="item.attr">
             <div class="flex">
-              <i class="fa fa-comment-o" aria-hidden="true"></i>
+              <i :class="`fa fa-${item.icon}`" aria-hidden="true"></i>
               <p>{{ item.name }}</p>
             </div>
             <at-input v-model="wall.count.items[item.attr].count" :disabled="del.process || wall.count.items[item.attr].state === 0" />
