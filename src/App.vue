@@ -63,11 +63,19 @@ hr {
   }
   .block__attr {
     margin-bottom: 15px;
-    > p {
+    p {
+      margin-bottom: 5px;
       font-weight: bold;
-      margin-bottom: 15px;
-      &.status {
+    }
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-weight: bold;
+      .status {
         position: relative;
+        margin: 0;
         &:after {
           font-size: .6rem;
           vertical-align: top;
@@ -81,6 +89,10 @@ hr {
           content: 'OFF';
           color: #ff8080;
         }
+      }
+      .compare {
+        font-size: .7rem;
+        text-transform: uppercase;
       }
     }
     .flex {

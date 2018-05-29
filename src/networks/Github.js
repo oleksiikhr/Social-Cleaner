@@ -1,4 +1,5 @@
-import { addLog, COLOR_INFO } from '../heplers/logs'
+import * as colors from '../heplers/colors'
+import { addLog } from '../heplers/logs'
 import Vue from 'vue'
 
 const network = class Github {
@@ -27,7 +28,7 @@ const network = class Github {
    */
   static logs (req, next) {
     const method = req.url.substr(this.prototype.urlApi.length)
-    addLog(this, method, { method: method, params: req.params }, COLOR_INFO)
+    addLog(this, method, { method: method, params: req.params }, colors.INFO)
 
     next(res => {
       // TODO Error type, response code*

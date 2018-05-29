@@ -4,6 +4,7 @@ import VK from '../../networks/VK'
 import Vue from 'vue'
 
 const state = {
+  // TODO Global process
   token: '',
   user: {},
   access: {
