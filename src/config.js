@@ -14,6 +14,10 @@ export const repository = pack.repository
  * | -----------------------------------------------------------------------------
  * |
  */
-export const languages = Object.keys(locale).map((key) => {
-  return { name: locale[key]['name'], value: key }
-})
+export const languages = Object.keys(locale)
+  .filter(key => {
+    return typeof locale[key]['name'] !== 'undefined'
+  })
+  .map(key => {
+    return { name: locale[key]['name'], value: key }
+  })
