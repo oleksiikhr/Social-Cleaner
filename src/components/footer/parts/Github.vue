@@ -37,7 +37,7 @@ export default {
     if (storage) {
       try {
         const parse = JSON.parse(storage)
-        if (parse.time && parse.time + 3600 < new Date().getTime()) {
+        if (parse.time && parse.time + 3600 < this.getSecondsNow()) {
           this.stars = +parse.stars
           this.forks = +parse.forks
           return
@@ -58,11 +58,14 @@ export default {
         localStorage.setItem('github', JSON.stringify({
           stars: this.stars,
           forks: this.forks,
-          time: new Date().getTime()
+          time: this.getSecondsNow()
         }))
       }
 
       this.loading = false
+    },
+    getSecondsNow () {
+      return Math.floor(Date.now() / 1000)
     }
   }
 }
