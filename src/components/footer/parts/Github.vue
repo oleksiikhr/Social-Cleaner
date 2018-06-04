@@ -37,7 +37,7 @@ export default {
     if (storage) {
       try {
         const parse = JSON.parse(storage)
-        if (parse.time && parse.time + 3600 < this.getSecondsNow()) {
+        if (parse.time && parse.time + 3600 > this.getSecondsNow()) {
           this.stars = +parse.stars
           this.forks = +parse.forks
           return
