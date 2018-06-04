@@ -8,4 +8,4 @@
 export const TOKEN = 'key'
 export const WALL = 'bars'
 export const STATUS = 'comment-o'
-export const DOCS = 'file'
+export const DOCS = 'file-text-o'

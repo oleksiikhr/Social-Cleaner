@@ -1,6 +1,6 @@
 <template>
   <div id="status">
-    <div class="block">
+    <div class="main-config block">
       <h2>Настройки</h2>
       <div class="block__attr">
         <p>Community identifier in which the status will be set</p>

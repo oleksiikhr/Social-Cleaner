@@ -110,6 +110,12 @@ hr {
     .at-checkbox {
       margin: 5px;
     }
+    .at-radio {
+      margin: 5px;
+      > .at-radio__label {
+        font-size: 13px;
+      }
+    }
   }
 }
 </style>
