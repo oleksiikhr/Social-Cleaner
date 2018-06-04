@@ -7,7 +7,8 @@ export default {
     sections: {
       token: 'Token',
       wall: 'Wall',
-      status: 'Status'
+      status: 'Status',
+      docs: 'Documents'
     },
     token: {
       user: {

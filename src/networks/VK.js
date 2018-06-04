@@ -172,7 +172,8 @@ network.prototype.icon = 'fa-vk'
 network.prototype.sections = [
   { name: 'vk.sections.token', to: 'vk-token', icon: icons.TOKEN },
   { name: 'vk.sections.wall', val: 'wall', to: 'vk-wall', icon: icons.WALL },
-  { name: 'vk.sections.status', val: 'status', to: 'vk-status', icon: icons.STATUS }
+  { name: 'vk.sections.status', val: 'status', to: 'vk-status', icon: icons.STATUS },
+  { name: 'vk.sections.docs', val: 'docs', to: 'vk-docs', icon: icons.DOCS }
 ]
 
 // URL

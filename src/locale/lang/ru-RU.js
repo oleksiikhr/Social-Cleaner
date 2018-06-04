@@ -7,7 +7,8 @@ export default {
     sections: {
       token: 'Токен',
       wall: 'Стена',
-      status: 'Статус'
+      status: 'Статус',
+      docs: 'Документы'
     },
     token: {
       user: {
