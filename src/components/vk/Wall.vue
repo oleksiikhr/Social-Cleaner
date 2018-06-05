@@ -6,12 +6,12 @@
       <h2>Основные настройки</h2>
       <div class="block__attr">
         <p>ID на страницу или группу</p>
-        <at-input v-model="main.owner_id" :disabled="del.process" />
+        <at-input v-model="main.owner_id" :disabled="process" />
         <small>Use a negative value to designate a community ID.</small>
       </div>
       <div class="block__attr">
         <p>Фильтр записей</p>
-        <at-select v-model="main.filter" :disabled="del.process" size="large">
+        <at-select v-model="main.filter" :disabled="process" size="large">
           <at-option v-for="filter in html.main.filters" :key="filter.val" :value="filter.val">
             {{ filter.name }}
           </at-option>
@@ -20,18 +20,18 @@
       <div class="block__attr">
         <p>Количество записей (от и до), включительно</p>
         <div class="flex">
-          <at-input v-model="main.count.min" :disabled="del.process" placeholder="От" /> -
-          <at-input v-model="main.count.max" :disabled="del.process" placeholder="До" />
+          <at-input v-model="main.count.min" :disabled="process" placeholder="От" /> -
+          <at-input v-model="main.count.max" :disabled="process" placeholder="До" />
         </div>
       </div>
       <div class="block__attr">
         <p>Удалить записи или очистить комментарии</p>
         <at-radio-group v-model="main.isDeletePosts">
-          <at-radio-button :label="0" :disabled="del.process">Записи</at-radio-button>
+          <at-radio-button :label="0" :disabled="process">Записи</at-radio-button>
           <at-radio-button :label="1" disabled>Комментарии</at-radio-button>
         </at-radio-group>
       </div>
-      <config-result v-if="!del.process" :main-config="main" />
+      <config-result v-if="!process" :main-config="main" />
     </div>
 
     <hr>
@@ -42,9 +42,9 @@
           <p :class="getStyleStatus(wall.ids.items.length)">ID записей</p>
           <a class="compare" disabled>One</a>
         </div>
-        <at-input v-model="wall.ids.input" :disabled="del.process" @keyup.enter.native="addConfigWallArrayId('ids')" />
+        <at-input v-model="wall.ids.input" :disabled="process" @keyup.enter.native="addConfigWallArrayId('ids')" />
         <div class="block__attr-inner">
-          <at-tag v-for="(id, index) in wall.ids.items" :key="index" :name="id" :closable="!del.process"
+          <at-tag v-for="(id, index) in wall.ids.items" :key="index" :name="id" :closable="!process"
                   @on-close="wall.ids.items.splice(index, 1)">
             <a :href="getLinkPost(id)" target="_blank" rel="noreferrer">{{ id }}</a>
           </at-tag>
@@ -58,9 +58,9 @@
             One
           </a>
         </div>
-        <at-input v-model="wall.fromIds.input" :disabled="del.process" @keyup.enter.native="addConfigWallArrayId('fromIds')" />
+        <at-input v-model="wall.fromIds.input" :disabled="process" @keyup.enter.native="addConfigWallArrayId('fromIds')" />
         <div class="block__attr-inner">
-          <at-tag v-for="(id, index) in wall.fromIds.items" :key="index" :name="id" :closable="!del.process"
+          <at-tag v-for="(id, index) in wall.fromIds.items" :key="index" :name="id" :closable="!process"
                   @on-close="wall.fromIds.items.splice(index, 1)">
             <a :href="getLinkPage(id)" target="_blank" rel="noreferrer">{{ id }}</a>
           </at-tag>
@@ -74,9 +74,9 @@
             {{ wall.texts.compareAll ? 'All' : 'One' }}
           </a>
         </div>
-        <at-input v-model="wall.texts.input" :disabled="del.process" @keyup.enter.native="addConfigWallArrayValue('texts')" />
+        <at-input v-model="wall.texts.input" :disabled="process" @keyup.enter.native="addConfigWallArrayValue('texts')" />
         <div class="block__attr-inner">
-          <at-tag v-for="(text, index) in wall.texts.items" :key="index" :name="index" :closable="!del.process"
+          <at-tag v-for="(text, index) in wall.texts.items" :key="index" :name="index" :closable="!process"
                   @on-close="wall.texts.items.splice(index, 1)">
             {{ text }}
           </at-tag>
@@ -109,8 +109,8 @@
               <i :class="`fa fa-${item.icon}`" aria-hidden="true"></i>
               <p>{{ item.name }}</p>
             </div>
-            <at-input v-model="wall.count.items[item.attr].count" :disabled="del.process || wall.count.items[item.attr].state === 0" />
-            <at-radio-group v-model="wall.count.items[item.attr].state" :disabled="del.process">
+            <at-input v-model="wall.count.items[item.attr].count" :disabled="process || wall.count.items[item.attr].state === 0" />
+            <at-radio-group v-model="wall.count.items[item.attr].state" :disabled="process">
               <at-radio-button :label="-1">Меньше</at-radio-button>
               <at-radio-button :label="0">Выкл.</at-radio-button>
               <at-radio-button :label="1">Больше</at-radio-button>
@@ -133,7 +133,7 @@
       </div>
     </template>
 
-    <template v-if="!del.process">
+    <template v-if="!process">
       <hr>
       <div class="block-preview block">
         <at-button v-if="!preview.show" type="info" class="preview-btn" @click="startPreviewPosts()" hollow>
@@ -159,10 +159,10 @@
     <hr>
     <div class="block-buttons block">
       <!--TODO Dialog deleted posts-->
-      <at-button type="error" @click="del.dialog = true" v-if="!del.process">
+      <at-button type="error" @click="del.dialog = true" v-if="!process">
         Удалить записи с {{ main.count.min }} по {{ main.count.max }}
       </at-button>
-      <at-button type="primary" @click="del.continue = false" v-if="del.continue && del.process">
+      <at-button type="primary" @click="del.continue = false" v-if="del.continue && process">
         Остановить
       </at-button>
 
@@ -299,6 +299,9 @@ export default {
   computed: {
     user () {
       return this.$store.state.vk.user
+    },
+    process () {
+      return this.$store.state.vk.process
     },
     /**
      * @return boolean
@@ -637,8 +640,8 @@ export default {
      * @return boolean
      */
     startAction () {
+      this.$store.commit('VK_SET_PROCESS')
       this.del.dialog = false
-      this.del.process = true
 
       const min = parseInt(this.main.count.min)
       const max = parseInt(this.main.count.max)
@@ -660,18 +663,8 @@ export default {
         this.$Message.error('Action stopped')
       }
       this.preview.loading = false
-      this.del.process = false
       this.del.continue = true
-    },
-    /**
-     * HTML (on / off).
-     *
-     * @param {int|boolean} inner
-     *
-     * @return string
-     */
-    getStyleStatus (inner) {
-      return 'status status-' + (inner ? 'on' : 'off')
+      this.$store.commit('VK_SET_PROCESS', false)
     },
     /**
      * How many posts you need to receive to completely delete posts.

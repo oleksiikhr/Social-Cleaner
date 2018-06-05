@@ -42,3 +42,18 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+Vue.mixin({
+  methods: {
+    /**
+     * HTML (on / off).
+     *
+     * @param {int|boolean} inner
+     *
+     * @return string
+     */
+    getStyleStatus (inner) {
+      return 'status status-' + (inner ? 'on' : 'off')
+    }
+  }
+})

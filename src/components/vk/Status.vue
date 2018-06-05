@@ -8,8 +8,7 @@
         <small>Positive number. Null - Current User.</small>
       </div>
       <div class="text-center">
-        <!--FIXME v-if global process-->
-        <at-button type="primary" @click="fetchGetStatus()">
+        <at-button type="primary" @click="fetchGetStatus()" :disabled="process">
           Получить статус
         </at-button>
       </div>
@@ -29,8 +28,7 @@
 
     <div class="block">
       <div class="text-center">
-        <!--FIXME v-if global process-->
-        <at-button type="error" :disabled="!status" @click="fetchDeleteStatus()">
+        <at-button type="error" :disabled="!status || process" @click="fetchDeleteStatus()">
           Очистить статус
         </at-button>
       </div>
@@ -55,6 +53,9 @@ export default {
   computed: {
     user () {
       return this.$store.state.vk.user
+    },
+    process () {
+      return this.$store.state.vk.process
     }
   },
   methods: {
@@ -71,13 +72,7 @@ export default {
       this.link = this.id ? VK.getLinkGroup(this.id) : VK.getLinkUser()
     },
     async fetchDeleteStatus () {
-      let result
-
-      if (this.id) {
-        result = await VK.fetchStatusSet('', this.id)
-      } else {
-        result = await VK.fetchStatusSet('')
-      }
+      let result = await VK.fetchStatusSet('', this.id || null)
 
       if (result.ok && result.body.response) {
         this.status = ''

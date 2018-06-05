@@ -4,20 +4,20 @@
       <h2>Основные настройки</h2>
       <div class="block__attr">
         <p>ID на группу</p>
-        <at-input v-model="main.owner_id" :disabled="del.process" />
+        <at-input v-model="main.owner_id" :disabled="process" />
         <small>Positive number. Null - Current User.</small>
       </div>
       <div class="block__attr">
         <p>Количество документов (от и до), включительно</p>
         <div class="flex">
-          <at-input v-model="main.count.min" :disabled="del.process" placeholder="От" /> -
-          <at-input v-model="main.count.max" :disabled="del.process" placeholder="До" />
+          <at-input v-model="main.count.min" :disabled="process" placeholder="От" /> -
+          <at-input v-model="main.count.max" :disabled="process" placeholder="До" />
         </div>
       </div>
       <div class="block__attr">
         <p>Фильтр</p>
         <at-radio-group v-model="main.type">
-          <at-radio v-for="type in html.main.types" :key="type.val" :label="type.val" :disabled="del.process">
+          <at-radio v-for="type in html.main.types" :key="type.val" :label="type.val" :disabled="process">
             {{ type.name }}
           </at-radio>
         </at-radio-group>
@@ -40,9 +40,6 @@ export default {
         },
         type: 0
       },
-      del: {
-        process: false
-      },
       html: {
         main: {
           types: [
@@ -60,10 +57,9 @@ export default {
       }
     }
   },
-  methods: {
-    // TODO Global method
-    getStyleStatus (inner) {
-      return 'status status-' + (inner ? 'on' : 'off')
+  computed: {
+    process () {
+      return this.$store.state.vk.process
     }
   }
 }
