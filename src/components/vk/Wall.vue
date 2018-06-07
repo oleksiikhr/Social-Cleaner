@@ -42,7 +42,7 @@
           <p :class="getStyleStatus(wall.ids.items.length)">ID записей</p>
           <a class="compare" disabled>One</a>
         </div>
-        <at-input v-model="wall.ids.input" :disabled="process" @keyup.enter.native="addConfigWallArrayId('ids')" />
+        <at-input v-model="wall.ids.input" :disabled="process" @keyup.enter.native="pushNumber(wall.ids)" />
         <div class="block__attr-inner">
           <at-tag v-for="(id, index) in wall.ids.items" :key="index" :name="id" :closable="!process"
                   @on-close="wall.ids.items.splice(index, 1)">
@@ -58,7 +58,7 @@
             One
           </a>
         </div>
-        <at-input v-model="wall.fromIds.input" :disabled="process" @keyup.enter.native="addConfigWallArrayId('fromIds')" />
+        <at-input v-model="wall.fromIds.input" :disabled="process" @keyup.enter.native="pushNumber(wall.fromIds)" />
         <div class="block__attr-inner">
           <at-tag v-for="(id, index) in wall.fromIds.items" :key="index" :name="id" :closable="!process"
                   @on-close="wall.fromIds.items.splice(index, 1)">
@@ -74,7 +74,7 @@
             {{ wall.texts.compareAll ? 'All' : 'One' }}
           </a>
         </div>
-        <at-input v-model="wall.texts.input" :disabled="process" @keyup.enter.native="addConfigWallArrayValue('texts')" />
+        <at-input v-model="wall.texts.input" :disabled="process" @keyup.enter.native="pushString(wall.texts)" />
         <div class="block__attr-inner">
           <at-tag v-for="(text, index) in wall.texts.items" :key="index" :name="index" :closable="!process"
                   @on-close="wall.texts.items.splice(index, 1)">
@@ -575,32 +575,6 @@ export default {
         default:
           return false
       }
-    },
-
-    /* | -----------------------------------------------------------------------------
-     * | Wall Config
-     * | -----------------------------------------------------------------------------
-     * |
-     */
-    addConfigWallArrayId (property) {
-      const id = parseInt(this.wall[property].input)
-
-      if (id) {
-        this.wall[property].items.push(id)
-        this.wall[property].items = Array.from(new Set(this.wall[property].items.sort((a, b) => a - b)))
-      }
-
-      this.wall[property].input = ''
-    },
-    addConfigWallArrayValue (property) {
-      const value = this.wall[property].input.toLowerCase().trim()
-
-      if (value) {
-        this.wall[property].items.push(value)
-        this.wall[property].items = Array.from(new Set(this.wall[property].items.sort()))
-      }
-
-      this.wall[property].input = ''
     },
 
     /* | -----------------------------------------------------------------------------
