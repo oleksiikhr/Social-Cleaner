@@ -117,6 +117,24 @@ const network = class VK {
   static getLinkWall (item) {
     return `${this.prototype.url}wall${item.from_id}_${item.id}`
   }
+  /**
+   * Returns a link to a user or community page.
+   *
+   * @param {int|string} id
+   *
+   * @return string
+   */
+  static getLinkPage (id) {
+    if (typeof id === 'number') {
+      id = id.toString()
+    }
+
+    if (id.charAt(0) === '-') {
+      return this.getLinkGroup(id.slice(1))
+    }
+
+    return this.getLinkUser(id)
+  }
   static getLinkUser (id = store.state.vk.user.id) {
     return `${this.prototype.url}id${id}`
   }

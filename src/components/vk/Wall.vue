@@ -582,27 +582,11 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    /**
-     * @param {int} id
-     *
-     * @return string
-     */
     getLinkPost (id) {
       return VK.getLinkWall({ from_id: this.main.owner_id, id: id })
     },
-    /**
-     * @param {int} id
-     *
-     * @return string
-     */
     getLinkPage (id) {
-      const strId = id.toString()
-
-      if (strId.charAt(0) === '-') {
-        return VK.getLinkGroup(strId.slice(1))
-      }
-
-      return VK.getLinkUser(id)
+      return VK.getLinkPage(id)
     },
 
     /* | -----------------------------------------------------------------------------
