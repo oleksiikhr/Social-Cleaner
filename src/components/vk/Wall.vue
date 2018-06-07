@@ -162,6 +162,7 @@
       <at-button type="error" @click="del.dialog = true" v-if="!process">
         Удалить записи с {{ main.count.min }} по {{ main.count.max }}
       </at-button>
+      <!--TODO Rewritten to global stop action (bottom-right panel*)-->
       <at-button type="primary" @click="del.continue = false" v-if="del.continue && process">
         Остановить
       </at-button>

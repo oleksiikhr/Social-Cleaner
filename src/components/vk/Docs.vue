@@ -3,9 +3,9 @@
     <div class="main-config block">
       <h2>Основные настройки</h2>
       <div class="block__attr">
-        <p>ID на группу</p>
+        <p>ID сообщества.</p>
         <at-input v-model="main.owner_id" :disabled="process" />
-        <small>Positive number. Null - Current User.</small>
+        <small>Positive number. Default - Current User.</small>
       </div>
       <div class="block__attr">
         <p>Количество документов (от и до), включительно</p>
@@ -25,11 +25,27 @@
     </div>
 
     <hr>
+    <div class="docs-config block">
+      <h2>Настройки</h2>
+      <attribute :obj="config.fromIds" name="ID авторов документов" :push="pushNumber" :link-tag="getLinkPage"
+                 info="After filling, press enter to add to the list. Use a negative value to designate a community ID." />
+      <attribute :obj="config.exts" name="Расширения документов" :push="pushString"
+                 info="After filling, press enter to add to the list. Without a dot. Example: png, jpg" />
+      <attribute :obj="config.texts" name="Фразы в названии" :push="pushString" compare
+                 info="After filling, press enter to add to the list." />
+      <!--TODO Date-->
+    </div>
   </div>
 </template>
 
 <script>
+import Attribute from '../block/Attribute'
+import VK from '../../networks/VK'
+
 export default {
+  components: {
+    Attribute
+  },
   data () {
     return {
       main: {
@@ -39,6 +55,23 @@ export default {
           max: '20'
         },
         type: 0
+      },
+      config: {
+        texts: {
+          input: '',
+          items: [],
+          compareAll: false
+        },
+        exts: {
+          input: '',
+          items: [],
+          compareAll: false
+        },
+        fromIds: {
+          input: '',
+          items: [],
+          compareAll: false
+        }
       },
       html: {
         main: {
@@ -60,6 +93,11 @@ export default {
   computed: {
     process () {
       return this.$store.state.vk.process
+    }
+  },
+  methods: {
+    getLinkPage (id) {
+      return VK.getLinkPage(id)
     }
   }
 }
