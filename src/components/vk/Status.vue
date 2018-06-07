@@ -14,18 +14,20 @@
       </div>
     </div>
 
-    <hr>
-    <div class="block">
-      <div class="block__result">
-        <h2>{{ $t('vk.status.current_status') }}</h2>
+    <template v-if="link">
+      <hr>
+      <div class="block">
+        <div class="block__result">
+          <h2>{{ $t('vk.status.current_status') }}</h2>
           <a v-if="status" :href="link" class="status-text" target="_blank" rel="noopener">
             {{ status }}
           </a>
-        <a v-else :href="link" target="_blank" rel="noopener">
-          <at-alert :message="$t('vk.status.empty')" type="info" show-icon />
-        </a>
+          <a v-else :href="link" target="_blank" rel="noopener">
+            <at-alert :message="$t('vk.status.empty')" type="info" show-icon />
+          </a>
+        </div>
       </div>
-    </div>
+    </template>
 
     <template v-if="status">
       <hr>
@@ -83,6 +85,12 @@ export default {
       }
 
       this.$store.commit('VK_SET_PROCESS', false)
+    }
+  },
+  watch: {
+    id () {
+      this.status = ''
+      this.link = ''
     }
   }
 }
