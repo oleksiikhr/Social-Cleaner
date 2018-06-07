@@ -1,9 +1,8 @@
+import app from './app'
 import vk from './vk'
 
 export default {
   name: 'Русский',
-  app: {
-    no_logs: 'Логи отсутствуют'
-  },
+  app,
   vk
 }
