@@ -1,5 +1,5 @@
 <template>
-  <a :href="Github.prototype.url + repository" target="_blank" rel="noreferrer" class="github">
+  <a :href="Github.prototype.url + repository" target="_blank" rel="noopener" class="github">
     <div class="github__icon">
       <i class="fa fa-github" aria-hidden="true"></i>
     </div>
@@ -8,9 +8,9 @@
       <div class="github__info">
         <p v-if="loading">Loading..</p>
         <template v-else>
-          <p class="github__start">{{ stars }} Stars</p>
+          <span class="github__start">{{ stars }} Stars</span>
           <div class="github__dot"></div>
-          <p class="github__forks">{{ forks }} Forks</p>
+          <span class="github__forks">{{ forks }} Forks</span>
         </template>
     </div>
     </div>
@@ -92,7 +92,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    > p {
+    > span {
       font-size: .7rem;
       color: #868686;
     }

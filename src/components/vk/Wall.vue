@@ -46,7 +46,7 @@
         <div class="block__attr-inner">
           <at-tag v-for="(id, index) in wall.ids.items" :key="index" :name="id" :closable="!process"
                   @on-close="wall.ids.items.splice(index, 1)">
-            <a :href="getLinkPost(id)" target="_blank" rel="noreferrer">{{ id }}</a>
+            <a :href="getLinkPost(id)" target="_blank" rel="noopener">{{ id }}</a>
           </at-tag>
         </div>
         <small>After filling, press enter to add to the list.</small>
@@ -62,7 +62,7 @@
         <div class="block__attr-inner">
           <at-tag v-for="(id, index) in wall.fromIds.items" :key="index" :name="id" :closable="!process"
                   @on-close="wall.fromIds.items.splice(index, 1)">
-            <a :href="getLinkPage(id)" target="_blank" rel="noreferrer">{{ id }}</a>
+            <a :href="getLinkPage(id)" target="_blank" rel="noopener">{{ id }}</a>
           </at-tag>
         </div>
         <small>After filling, press enter to add to the list. Use a negative value to designate a community ID.</small>
@@ -148,7 +148,7 @@
             </template>
             <template v-else>
               <at-tag v-for="id in preview.ids" :key="id" :name="id">
-                <a :href="getLinkPost(id)" target="_blank" rel="noreferrer">{{ id }}</a>
+                <a :href="getLinkPost(id)" target="_blank" rel="noopener">{{ id }}</a>
               </at-tag>
             </template>
           </div>

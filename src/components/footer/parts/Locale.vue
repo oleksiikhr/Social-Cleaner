@@ -34,8 +34,9 @@ export default {
   methods: {
     setLocale (val) {
       this.modal = false
-      localStorage.setItem('lang', val)
       this.$i18n.locale = val
+      localStorage.setItem('lang', val)
+      document.getElementsByTagName('html')[0].setAttribute('lang', val.split('-')[0])
     }
   }
 }

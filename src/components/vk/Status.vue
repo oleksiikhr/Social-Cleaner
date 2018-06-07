@@ -18,10 +18,10 @@
     <div class="block">
       <div class="block__result">
         <h2>{{ $t('vk.status.current_status') }}</h2>
-          <a v-if="status" :href="link" class="status-text" target="_blank" rel="noreferrer">
+          <a v-if="status" :href="link" class="status-text" target="_blank" rel="noopener">
             {{ status }}
           </a>
-        <a v-else :href="link" target="_blank" rel="noreferrer">
+        <a v-else :href="link" target="_blank" rel="noopener">
           <at-alert :message="$t('vk.status.empty')" type="info" show-icon />
         </a>
       </div>

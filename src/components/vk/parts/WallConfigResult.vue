@@ -19,7 +19,7 @@
                 <p><strong>Name:</strong> {{ page.name }}</p>
                 <p><strong>Is admin:</strong> {{ page.is_admin ? 'Yes' : 'No' }}</p>
               </template>
-              <p><a :href="linkPage" target="_blank" rel="noreferrer">Follow the link</a></p>
+              <p><a :href="linkPage" target="_blank" rel="noopener">Follow the link</a></p>
             </div>
           </div>
         </div>
@@ -29,7 +29,7 @@
             <p><strong>Count:</strong> {{ wall.response.count }}</p>
             <p v-if="hasWallPosts">
               <strong>Start from the first post:</strong>
-              <a :href="linkWall" target="_blank" rel="noreferrer">Follow the link</a>
+              <a :href="linkWall" target="_blank" rel="noopener">Follow the link</a>
             </p>
           </div>
         </div>
