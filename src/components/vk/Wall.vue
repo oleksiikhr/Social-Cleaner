@@ -379,7 +379,7 @@ export default {
               continue
             }
 
-            const resDelete = this.fetchDeletePost(post.id)
+            const resDelete = await this.fetchDeletePost(post.id)
 
             if (resDelete.ok && resDelete.body.response) {
               this.main.count.max--
@@ -446,8 +446,6 @@ export default {
         this.checkWallCounts(post)
         // TODO Date
       ]
-
-      console.log(items)
 
       for (let i = 0; i < items.length; i++) {
         const item = items[i]
