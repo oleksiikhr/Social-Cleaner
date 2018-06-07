@@ -4,7 +4,6 @@ import VK from '../../networks/VK'
 import Vue from 'vue'
 
 const state = {
-  // TODO Global process
   token: '',
   user: {},
   access: {
@@ -16,7 +15,8 @@ const state = {
     wall: false,
     docs: false,
     groups: false
-  }
+  },
+  process: false
 }
 
 const mutations = {
@@ -47,6 +47,9 @@ const mutations = {
     Object.keys(state.access).forEach(key => {
       state.access[key] = false
     })
+  },
+  VK_SET_PROCESS (state, bool = true) {
+    state.process = bool
   }
 }
 

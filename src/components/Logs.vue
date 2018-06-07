@@ -1,13 +1,28 @@
 <template>
+  <!--TODO Global color styles-->
   <div id="logs">
+    <h1>API logs</h1>
     <div class="header">
-      <at-input v-model="searchMethod" placeholder="Method" icon="search" />
-      <at-select v-model="selectedNetworkName" placeholder="Social Network" size="large" clearable>
+      <at-input v-model="search" placeholder="Method" icon="search" />
+      <at-select v-model="networkName" placeholder="Social Network" clearable>
         <at-option v-for="network in networks" :key="network.to" :value="network.name">
           {{ network.name }}
         </at-option>
       </at-select>
-      <!--TODO Header: Select color-->
+      <at-select v-model="color" placeholder="Type" clearable>
+        <at-option value="info" label="Request">
+          <span>Request</span>
+          <span style="float: right;color: #6c94e1;">**</span>
+        </at-option>
+        <at-option value="success" label="Success">
+          <span>Success</span>
+          <span style="float: right;color: #0dad54;">**</span>
+        </at-option>
+        <at-option value="error" label="Error">
+          <span>Error</span>
+          <span style="float: right;color: #ff5b5b;">**</span>
+        </at-option>
+      </at-select>
     </div>
 
     <div class="items">
@@ -31,8 +46,9 @@ export default {
   data () {
     return {
       networks,
-      selectedNetworkName: '',
-      searchMethod: ''
+      networkName: '',
+      color: '',
+      search: ''
     }
   },
   // TODO Update time every 10sec (destroy on deactivated*)
@@ -44,13 +60,16 @@ export default {
       return this.$store.state.logs.storage
     },
     filteredLogs () {
-      const search = this.searchMethod.toLocaleLowerCase().trim()
+      const search = this.search.toLocaleLowerCase().trim()
 
       return this.logs.filter(log => {
         if (search && log.method.toLowerCase().indexOf(search) <= -1) {
           return false
         }
-        if (this.selectedNetworkName && this.selectedNetworkName !== log.socialNetwork.name) {
+        if (this.networkName && this.networkName !== log.socialNetwork.name) {
+          return false
+        }
+        if (this.color && log.color !== this.color) {
           return false
         }
 
@@ -71,6 +90,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+}
+
 .header {
   display: flex;
   align-items: center;

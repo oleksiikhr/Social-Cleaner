@@ -55,7 +55,7 @@ const network = class VK {
    * @see https://vk.com/dev/wall.delete
    */
   static async fetchWallDelete (postId, ownerId = store.state.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
-    const result = await this.send('wall.get', {
+    const result = await this.send('wall.delete', {
       owner_id: ownerId,
       post_id: postId
     }, { min: sleepMin, max: sleepMax })
@@ -117,6 +117,24 @@ const network = class VK {
   static getLinkWall (item) {
     return `${this.prototype.url}wall${item.from_id}_${item.id}`
   }
+  /**
+   * Returns a link to a user or community page.
+   *
+   * @param {int|string} id
+   *
+   * @return string
+   */
+  static getLinkPage (id) {
+    if (typeof id === 'number') {
+      id = id.toString()
+    }
+
+    if (id.charAt(0) === '-') {
+      return this.getLinkGroup(id.slice(1))
+    }
+
+    return this.getLinkUser(id)
+  }
   static getLinkUser (id = store.state.vk.user.id) {
     return `${this.prototype.url}id${id}`
   }
@@ -172,7 +190,8 @@ network.prototype.icon = 'fa-vk'
 network.prototype.sections = [
   { name: 'vk.sections.token', to: 'vk-token', icon: icons.TOKEN },
   { name: 'vk.sections.wall', val: 'wall', to: 'vk-wall', icon: icons.WALL },
-  { name: 'vk.sections.status', val: 'status', to: 'vk-status', icon: icons.STATUS }
+  { name: 'vk.sections.status', val: 'status', to: 'vk-status', icon: icons.STATUS },
+  { name: 'vk.sections.docs', val: 'docs', to: 'vk-docs', icon: icons.DOCS }
 ]
 
 // URL

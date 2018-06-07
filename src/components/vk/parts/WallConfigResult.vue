@@ -1,5 +1,5 @@
 <template>
-  <div class="block__result" v-if="mainConfig.owner_id">
+  <div class="block__result">
     <at-button type="primary" @click="sendRequest()" v-if="!page.response && !wall.response" hollow>
       Check main settings
     </at-button>
@@ -19,7 +19,7 @@
                 <p><strong>Name:</strong> {{ page.name }}</p>
                 <p><strong>Is admin:</strong> {{ page.is_admin ? 'Yes' : 'No' }}</p>
               </template>
-              <p><a :href="linkPage" target="_blank" rel="noreferrer">Follow the link</a></p>
+              <p><a :href="linkPage" target="_blank" rel="noopener">Follow the link</a></p>
             </div>
           </div>
         </div>
@@ -29,7 +29,7 @@
             <p><strong>Count:</strong> {{ wall.response.count }}</p>
             <p v-if="hasWallPosts">
               <strong>Start from the first post:</strong>
-              <a :href="linkWall" target="_blank" rel="noreferrer">Follow the link</a>
+              <a :href="linkWall" target="_blank" rel="noopener">Follow the link</a>
             </p>
           </div>
         </div>
@@ -45,6 +45,10 @@ export default {
   props: {
     mainConfig: {
       type: Object,
+      required: true
+    },
+    ownerId: {
+      type: String | null,
       required: true
     }
   },
@@ -77,21 +81,21 @@ export default {
      * |
      */
     async fetchGetWall () {
-      const res = await VK.fetchWallGet(this.mainConfig.owner_id, this.mainConfig.filter, 1, this.mainConfig.count.min - 1)
+      const res = await VK.fetchWallGet(this.ownerId, this.mainConfig.filter, 1, this.mainConfig.count.min - 1)
 
       if (res.ok) {
         this.wall = res.body
       }
     },
     async fetchGetUsersById () {
-      const res = await VK.fetchUsersGet(this.mainConfig.owner_id, 'photo_100')
+      const res = await VK.fetchUsersGet(this.ownerId, 'photo_100')
 
       if (res.ok && res.body.response) {
         this.page = res.body.response[0]
       }
     },
     async fetchGetGroupsById () {
-      const res = await VK.fetchGroupsGetById(this.mainConfig.owner_id.substr(1))
+      const res = await VK.fetchGroupsGetById(this.ownerId.substr(1))
 
       if (res.ok && res.body.response) {
         this.page = res.body.response[0]
@@ -105,7 +109,7 @@ export default {
      */
     sendRequest () {
       this.fetchGetWall()
-      this.isUser = this.mainConfig.owner_id[0] !== '-'
+      this.isUser = this.ownerId[0] !== '-'
 
       if (this.isUser) {
         this.fetchGetUsersById()

@@ -1,40 +1,44 @@
 <template>
   <div id="status">
-    <div class="block">
-      <h2>Настройки</h2>
+    <div class="main-config block">
+      <h2>{{ $t('vk.status.h2') }}</h2>
       <div class="block__attr">
-        <p>Community identifier in which the status will be set</p>
+        <p>{{ $t('vk.status.attr_1.p') }}</p>
         <at-input v-model="id" />
-        <small>Positive number. Null - Current User.</small>
+        <small>{{ $t('vk.status.attr_1.small') }}</small>
       </div>
       <div class="text-center">
-        <!--FIXME v-if global process-->
-        <at-button type="primary" @click="fetchGetStatus()">
-          Получить статус
+        <at-button type="primary" @click="fetchGetStatus()" :disabled="process">
+          {{ $t('vk.status.get_status') }}
         </at-button>
       </div>
     </div>
 
-    <hr>
-    <div class="block">
-      <div class="block__result">
-        <h2>Статус</h2>
-        <div class="status-text">
-          {{ status || 'none' }}
-          <a :href="link" target="_blank" rel="noreferrer"> - ссылка</a>
+    <template v-if="link">
+      <hr>
+      <div class="block">
+        <div class="block__result">
+          <h2>{{ $t('vk.status.current_status') }}</h2>
+          <a v-if="status" :href="link" class="status-text" target="_blank" rel="noopener">
+            {{ status }}
+          </a>
+          <a v-else :href="link" target="_blank" rel="noopener">
+            <at-alert :message="$t('vk.status.empty')" type="info" show-icon />
+          </a>
         </div>
       </div>
-    </div>
-    <hr>
+    </template>
 
-    <div class="block">
-      <div class="text-center">
-        <!--FIXME v-if global process-->
-        <at-button type="error" :disabled="!status" @click="fetchDeleteStatus()">
-          Очистить статус
-        </at-button>
+    <template v-if="status">
+      <hr>
+      <div class="block">
+        <div class="text-center">
+          <at-button type="error" :disabled="process" @click="fetchDeleteStatus()">
+            {{ $t('vk.status.clear_status') }}
+          </at-button>
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -55,43 +59,44 @@ export default {
   computed: {
     user () {
       return this.$store.state.vk.user
+    },
+    process () {
+      return this.$store.state.vk.process
     }
   },
   methods: {
     async fetchGetStatus () {
-      this.status = 'Loading..'
+      this.$store.commit('VK_SET_PROCESS')
       const result = await VK.fetchStatusGet(this.id ? '-' + this.id : this.user.id)
 
       if (result.ok && result.body.response) {
         this.status = result.body.response.text
-      } else {
-        this.status = 'Error'
+        this.link = this.id ? VK.getLinkGroup(this.id) : VK.getLinkUser()
       }
 
-      this.link = this.id ? VK.getLinkGroup(this.id) : VK.getLinkUser()
+      this.$store.commit('VK_SET_PROCESS', false)
     },
     async fetchDeleteStatus () {
-      let result
-
-      if (this.id) {
-        result = await VK.fetchStatusSet('', this.id)
-      } else {
-        result = await VK.fetchStatusSet('')
-      }
+      this.$store.commit('VK_SET_PROCESS')
+      let result = await VK.fetchStatusSet('', this.id || null)
 
       if (result.ok && result.body.response) {
         this.status = ''
       }
+
+      this.$store.commit('VK_SET_PROCESS', false)
+    }
+  },
+  watch: {
+    id () {
+      this.status = ''
+      this.link = ''
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-hr {
-  margin: 30px 0;
-}
-
 .block__result {
   margin: 25px 0;
   .status-text {
