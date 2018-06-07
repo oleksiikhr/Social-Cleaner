@@ -5,7 +5,7 @@
       <div class="block__attr">
         <p>ID сообщества.</p>
         <at-input v-model="main.owner_id" :disabled="process" />
-        <small>Positive number. Default - Current User.</small>
+        <small>Positive number. Empty - Current User.</small>
       </div>
       <div class="block__attr">
         <p>Количество документов (от и до), включительно</p>

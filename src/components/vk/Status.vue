@@ -71,9 +71,9 @@ export default {
 
       if (result.ok && result.body.response) {
         this.status = result.body.response.text
+        this.link = this.id ? VK.getLinkGroup(this.id) : VK.getLinkUser()
       }
 
-      this.link = this.id ? VK.getLinkGroup(this.id) : VK.getLinkUser()
       this.$store.commit('VK_SET_PROCESS', false)
     },
     async fetchDeleteStatus () {

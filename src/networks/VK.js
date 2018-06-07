@@ -55,7 +55,7 @@ const network = class VK {
    * @see https://vk.com/dev/wall.delete
    */
   static async fetchWallDelete (postId, ownerId = store.state.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
-    const result = await this.send('wall.get', {
+    const result = await this.send('wall.delete', {
       owner_id: ownerId,
       post_id: postId
     }, { min: sleepMin, max: sleepMax })
