@@ -2,8 +2,8 @@
   <div id="docs">
     <div class="main-config block">
       <h2>Основные настройки</h2>
-      <attr-basic-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
-      <attr-basic-count name="Количество документов (от и до), включительно" :model="main.count" />
+      <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
+      <attr-count name="Количество документов (от и до), включительно" :model="main.count" />
       <div class="block__attr">
         <p>Фильтр</p>
         <at-radio-group v-model="main.type">
@@ -17,11 +17,11 @@
     <hr>
     <div class="docs-config block">
       <h2>Настройки</h2>
-      <attribute-tag :obj="config.fromIds" name="ID авторов документов" :push="pushNumber" :link-tag="getLinkPage"
+      <attr-tag :obj="config.fromIds" name="ID авторов документов" :push="pushNumber" :link-tag="getLinkPage"
                  info="After filling, press enter to add to the list. Use a negative value to designate a community ID." />
-      <attribute-tag :obj="config.exts" name="Расширения документов" :push="pushString"
+      <attr-tag :obj="config.exts" name="Расширения документов" :push="pushString"
                  info="After filling, press enter to add to the list. Without a dot. Example: png, jpg" />
-      <attribute-tag :obj="config.texts" name="Фразы в названии" :push="pushString" compare
+      <attr-tag :obj="config.texts" name="Фразы в названии" :push="pushString" compare
                  info="After filling, press enter to add to the list." />
       <!--TODO Date-->
     </div>
@@ -29,14 +29,14 @@
 </template>
 
 <script>
-import AttrBasicInput from '../attributes/basic/Input'
-import AttrBasicCount from '../attributes/basic/Count'
-import AttributeTag from '../attributes/Tag'
+import AttrInput from '../attributes/Input'
+import AttrCount from '../attributes/Count'
+import AttrTag from '../attributes/Tag'
 import VK from '../../networks/VK'
 
 export default {
   components: {
-    AttributeTag, AttrBasicInput, AttrBasicCount
+    AttrTag, AttrInput, AttrCount
   },
   data () {
     return {

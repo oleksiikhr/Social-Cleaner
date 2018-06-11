@@ -4,11 +4,7 @@
   <div id="wall">
     <div class="main-config block">
       <h2>Основные настройки</h2>
-      <div class="block__attr">
-        <p>ID сообщества</p>
-        <at-input v-model="main.owner_id" :disabled="process" />
-        <small>Positive number. Empty - Current User.</small>
-      </div>
+      <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
       <div class="block__attr">
         <p>Фильтр записей</p>
         <at-select v-model="main.filter" :disabled="process" size="large">
@@ -17,13 +13,7 @@
           </at-option>
         </at-select>
       </div>
-      <div class="block__attr">
-        <p>Количество записей (от и до), включительно</p>
-        <div class="flex">
-          <at-input v-model="main.count.min" :disabled="process" placeholder="От" /> -
-          <at-input v-model="main.count.max" :disabled="process" placeholder="До" />
-        </div>
-      </div>
+      <attr-count name="Количество записей (от и до), включительно" :model="main.count" />
       <div class="block__attr">
         <p>Удалить записи или очистить комментарии</p>
         <at-radio-group v-model="main.isDeletePosts">
@@ -37,13 +27,13 @@
     <hr>
     <div class="wall-config block">
       <h2>Параметры стены</h2>
-      <attribute-tag :obj="wall.ids" name="ID записей" :push="pushNumber" :link-tag="getLinkPost"
+      <attr-tag :obj="wall.ids" name="ID записей" :push="pushNumber" :link-tag="getLinkPost"
                  info="After filling, press enter to add to the list." />
-      <attribute-tag :obj="wall.fromIds" name="ID авторов записей" :push="pushNumber" :link-tag="getLinkPage"
+      <attr-tag :obj="wall.fromIds" name="ID авторов записей" :push="pushNumber" :link-tag="getLinkPage"
                  info="After filling, press enter to add to the list. Use a negative value to designate a community ID." />
-      <attribute-tag :obj="wall.texts" name="Фразы в тексте" :push="pushString" compare
+      <attr-tag :obj="wall.texts" name="Фразы в тексте" :push="pushString" compare
                  info="After filling, press enter to add to the list." />
-      <attribute-check-box-group :obj="wall.attachments" name="Added media attachments" compare />
+      <attr-checkbox :obj="wall.attachments" name="Added media attachments" compare />
       <!--TODO Type content-->
       <div class="block__attr">
         <div class="top">
@@ -133,9 +123,11 @@
 </template>
 
 <script>
-import AttributeCheckBoxGroup from '../attributes/CheckBoxGroup'
+import AttrCheckbox from '../attributes/Checkbox'
 import ConfigResult from './parts/WallConfigResult'
-import AttributeTag from '../attributes/Tag'
+import AttrInput from '../attributes/Input'
+import AttrCount from '../attributes/Count'
+import AttrTag from '../attributes/Tag'
 import VK from '../../networks/VK'
 
 const SLEEP_DELETE_MIN = 1500
@@ -146,7 +138,7 @@ const SLEEP_GET_MAX = 1500
 
 export default {
   components: {
-    ConfigResult, AttributeTag, AttributeCheckBoxGroup
+    ConfigResult, AttrTag, AttrCheckbox, AttrCount, AttrInput
   },
   data () {
     return {
