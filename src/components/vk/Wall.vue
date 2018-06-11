@@ -43,20 +43,7 @@
                  info="After filling, press enter to add to the list. Use a negative value to designate a community ID." />
       <attribute-tag :obj="wall.texts" name="Фразы в тексте" :push="pushString" compare
                  info="After filling, press enter to add to the list." />
-      <!--TODO Type content-->
-      <div class="block__attr">
-        <div class="top">
-          <p :class="getStyleStatus(wall.attachments.items.length)">Added media attachments</p>
-          <a @click="wall.attachments.compareAll = !wall.attachments.compareAll" class="compare">
-            {{ wall.attachments.compareAll ? 'All' : 'One' }}
-          </a>
-        </div>
-        <at-checkbox-group v-model="wall.attachments.items">
-          <at-checkbox v-for="attachment in html.wall.attachments" :key="attachment.val" :label="attachment.val">
-            {{ attachment.name }}
-          </at-checkbox>
-        </at-checkbox-group>
-      </div>
+      <attribute-check-box-group :obj="wall.attachments" name="Added media attachments" compare />
       <!--TODO Type content-->
       <div class="block__attr">
         <div class="top">
@@ -146,6 +133,7 @@
 </template>
 
 <script>
+import AttributeCheckBoxGroup from '../attributes/CheckBoxGroup'
 import ConfigResult from './parts/WallConfigResult'
 import AttributeTag from '../attributes/Tag'
 import VK from '../../networks/VK'
@@ -158,7 +146,7 @@ const SLEEP_GET_MAX = 1500
 
 export default {
   components: {
-    ConfigResult, AttributeTag
+    ConfigResult, AttributeTag, AttributeCheckBoxGroup
   },
   data () {
     return {
@@ -189,7 +177,20 @@ export default {
         },
         attachments: {
           items: [],
-          compareAll: true
+          compareAll: true,
+          html: [
+            { name: 'Photo', val: 'photo' },
+            { name: 'Video', val: 'video' },
+            { name: 'Audio', val: 'audio' },
+            { name: 'Document', val: 'doc' },
+            { name: 'Link', val: 'link' },
+            { name: 'Note', val: 'note' },
+            { name: 'Poll', val: 'poll' },
+            { name: 'Wiki Page', val: 'page' },
+            { name: 'Photos List', val: 'photos_list' },
+            { name: 'Market Item', val: 'market' },
+            { name: 'Market Collection', val: 'market_album' }
+          ]
         },
         count: {
           items: {
@@ -234,19 +235,6 @@ export default {
           ]
         },
         wall: {
-          attachments: [
-            { name: 'Photo', val: 'photo' },
-            { name: 'Video', val: 'video' },
-            { name: 'Audio', val: 'audio' },
-            { name: 'Document', val: 'doc' },
-            { name: 'Link', val: 'link' },
-            { name: 'Note', val: 'note' },
-            { name: 'Poll', val: 'poll' },
-            { name: 'Wiki Page', val: 'page' },
-            { name: 'Photos List', val: 'photos_list' },
-            { name: 'Market Item', val: 'market' },
-            { name: 'Market Collection', val: 'market_album' }
-          ],
           count: [
             { name: 'Comments', attr: 'comments', icon: 'fa-comment-o' },
             { name: 'Likes', attr: 'likes', icon: 'fa-heart-o' },
