@@ -37,11 +37,11 @@
     <hr>
     <div class="wall-config block">
       <h2>Параметры стены</h2>
-      <attribute :obj="wall.ids" name="ID записей" :push="pushNumber" :link-tag="getLinkPost"
+      <attribute-tag :obj="wall.ids" name="ID записей" :push="pushNumber" :link-tag="getLinkPost"
                  info="After filling, press enter to add to the list." />
-      <attribute :obj="wall.fromIds" name="ID авторов записей" :push="pushNumber" :link-tag="getLinkPage"
+      <attribute-tag :obj="wall.fromIds" name="ID авторов записей" :push="pushNumber" :link-tag="getLinkPage"
                  info="After filling, press enter to add to the list. Use a negative value to designate a community ID." />
-      <attribute :obj="wall.texts" name="Фразы в тексты" :push="pushString" compare
+      <attribute-tag :obj="wall.texts" name="Фразы в тексте" :push="pushString" compare
                  info="After filling, press enter to add to the list." />
       <!--TODO Type content-->
       <div class="block__attr">
@@ -147,7 +147,7 @@
 
 <script>
 import ConfigResult from './parts/WallConfigResult'
-import Attribute from '../block/Attribute'
+import AttributeTag from '../attributes/Tag'
 import VK from '../../networks/VK'
 
 const SLEEP_DELETE_MIN = 1500
@@ -158,7 +158,7 @@ const SLEEP_GET_MAX = 1500
 
 export default {
   components: {
-    ConfigResult, Attribute
+    ConfigResult, AttributeTag
   },
   data () {
     return {

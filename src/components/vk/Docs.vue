@@ -3,7 +3,7 @@
     <div class="main-config block">
       <h2>Основные настройки</h2>
       <div class="block__attr">
-        <p>ID сообщества.</p>
+        <p>ID сообщества</p>
         <at-input v-model="main.owner_id" :disabled="process" />
         <small>Positive number. Empty - Current User.</small>
       </div>
@@ -27,11 +27,11 @@
     <hr>
     <div class="docs-config block">
       <h2>Настройки</h2>
-      <attribute :obj="config.fromIds" name="ID авторов документов" :push="pushNumber" :link-tag="getLinkPage"
+      <attribute-tag :obj="config.fromIds" name="ID авторов документов" :push="pushNumber" :link-tag="getLinkPage"
                  info="After filling, press enter to add to the list. Use a negative value to designate a community ID." />
-      <attribute :obj="config.exts" name="Расширения документов" :push="pushString"
+      <attribute-tag :obj="config.exts" name="Расширения документов" :push="pushString"
                  info="After filling, press enter to add to the list. Without a dot. Example: png, jpg" />
-      <attribute :obj="config.texts" name="Фразы в названии" :push="pushString" compare
+      <attribute-tag :obj="config.texts" name="Фразы в названии" :push="pushString" compare
                  info="After filling, press enter to add to the list." />
       <!--TODO Date-->
     </div>
@@ -39,12 +39,12 @@
 </template>
 
 <script>
-import Attribute from '../block/Attribute'
+import AttributeTag from '../attributes/Tag'
 import VK from '../../networks/VK'
 
 export default {
   components: {
-    Attribute
+    AttributeTag
   },
   data () {
     return {

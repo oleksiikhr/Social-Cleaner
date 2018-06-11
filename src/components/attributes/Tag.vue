@@ -1,11 +1,6 @@
 <template>
   <div class="block__attr">
-    <div class="top">
-      <p :class="getStyleStatus(obj.items.length)">{{ name }}</p>
-      <a class="compare" @click="obj.compareAll = !obj.compareAll" :disabled="!compare">
-        {{ obj.compareAll ? 'All' : 'One' }}
-      </a>
-    </div>
+    <top :obj="obj" :name="name" :compare="compare" />
     <at-input v-model="obj.input" :disabled="process" @keyup.enter.native="push(obj)" />
     <div class="block__attr-inner">
       <at-tag v-for="(text, index) in obj.items" :key="index" :name="index" :closable="!process"
@@ -19,7 +14,12 @@
 </template>
 
 <script>
+import Top from './Top'
+
 export default {
+  components: {
+    Top
+  },
   props: {
     obj: {
       type: Object,
