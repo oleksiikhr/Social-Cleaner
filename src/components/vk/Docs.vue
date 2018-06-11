@@ -4,7 +4,7 @@
       <h2>Основные настройки</h2>
       <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
       <attr-count name="Количество документов (от и до), включительно" :model="main.count" />
-      <attr-radio name="Фильтр" :model.sync="main.type" :html="html.main.types" />
+      <attr-radio name="Фильтр" :model.sync="main.type" :html="html.types" />
     </div>
 
     <hr>
@@ -60,25 +60,29 @@ export default {
         }
       },
       html: {
-        main: {
-          types: [
-            { name: 'Все', val: 0 },
-            { name: 'Текстовые документы', val: 1 },
-            { name: 'Архивы', val: 2 },
-            { name: 'Gif', val: 3 },
-            { name: 'Изображения', val: 4 },
-            { name: 'Аудио', val: 5 },
-            { name: 'Видео', val: 6 },
-            { name: 'Электронные книги', val: 7 },
-            { name: 'Неизвестно', val: 8 }
-          ]
-        }
+        types: [
+          { name: 'Все', val: 0 },
+          { name: 'Текстовые документы', val: 1 },
+          { name: 'Архивы', val: 2 },
+          { name: 'Gif', val: 3 },
+          { name: 'Изображения', val: 4 },
+          { name: 'Аудио', val: 5 },
+          { name: 'Видео', val: 6 },
+          { name: 'Электронные книги', val: 7 },
+          { name: 'Неизвестно', val: 8 }
+        ]
       }
     }
   },
   computed: {
+    user () {
+      return this.$store.state.vk.user
+    },
     process () {
       return this.$store.state.vk.process
+    },
+    ownerId () {
+      return this.main.owner_id ? '-' + this.main.owner_id : this.user.id
     }
   },
   methods: {
@@ -87,6 +91,16 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
+    async fetchGet (count = VK.prototype.COUNT_DOCS, offset = this.main.count.min - 1, sleepMin = 0, sleepMax = sleepMin) {
+      const res = await VK.fetchDocsGet(count, offset, this.main.type, this.ownerId, sleepMin, sleepMax)
+
+      return res
+    },
+    async fetchDelete (docId, sleepMin = 0, sleepMax = sleepMin) {
+      const res = await VK.fetchDocsDelete(docId, this.ownerId, sleepMin, sleepMax)
+
+      return res
+    },
 
     /* | -----------------------------------------------------------------------------
      * | Links

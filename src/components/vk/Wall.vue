@@ -5,7 +5,7 @@
     <div class="main-config block">
       <h2>Основные настройки</h2>
       <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
-      <attr-select name="Фильтр записей" :html="html.main.filters" :model.sync="main.filter" size="large" />
+      <attr-select name="Фильтр записей" :html="html.filters" :model.sync="main.filter" size="large" />
       <attr-count name="Количество записей (от и до), включительно" :model="main.count" />
       <!--TODO radioButton Attribute-->
       <div class="block__attr">
@@ -15,7 +15,7 @@
           <at-radio-button :label="1" disabled>Комментарии</at-radio-button>
         </at-radio-group>
       </div>
-      <config-result v-if="!process" :main-config="main" :owner-id="configOwnerId" />
+      <config-result v-if="!process" :main-config="main" :owner-id="ownerId" />
     </div>
 
     <hr>
@@ -37,7 +37,7 @@
           </a>
         </div>
         <div class="counts">
-          <div :class="`count-${item.attr} count`" v-for="item in html.wall.count" :key="item.attr">
+          <div :class="`count-${item.attr} count`" v-for="item in html.count" :key="item.attr">
             <div class="flex">
               <i :class="`fa fa-${item.icon}`" aria-hidden="true"></i>
               <p>{{ item.name }}</p>
@@ -212,23 +212,19 @@ export default {
         loading: false
       },
       html: {
-        main: {
-          filters: [
-            { name: 'Все', val: 'all' },
-            { name: 'Предложенные записи на стене сообщества', val: 'suggests' },
-            { name: 'Отложенные записи', val: 'postponed' },
-            { name: 'Записи владельца стены', val: 'owner' },
-            { name: 'Записи не от владельца стены', val: 'others' }
-          ]
-        },
-        wall: {
-          count: [
-            { name: 'Comments', attr: 'comments', icon: 'fa-comment-o' },
-            { name: 'Likes', attr: 'likes', icon: 'fa-heart-o' },
-            { name: 'Reposts', attr: 'reposts', icon: 'fa-bullhorn' },
-            { name: 'Views', attr: 'views', icon: 'fa-eye' }
-          ]
-        }
+        filters: [
+          { name: 'Все', val: 'all' },
+          { name: 'Предложенные записи на стене сообщества', val: 'suggests' },
+          { name: 'Отложенные записи', val: 'postponed' },
+          { name: 'Записи владельца стены', val: 'owner' },
+          { name: 'Записи не от владельца стены', val: 'others' }
+        ],
+        count: [
+          { name: 'Comments', attr: 'comments', icon: 'fa-comment-o' },
+          { name: 'Likes', attr: 'likes', icon: 'fa-heart-o' },
+          { name: 'Reposts', attr: 'reposts', icon: 'fa-bullhorn' },
+          { name: 'Views', attr: 'views', icon: 'fa-eye' }
+        ]
       }
     }
   },
@@ -239,7 +235,7 @@ export default {
     process () {
       return this.$store.state.vk.process
     },
-    configOwnerId () {
+    ownerId () {
       return this.main.owner_id ? '-' + this.main.owner_id : this.user.id
     },
     /**
@@ -303,7 +299,7 @@ export default {
      */
     async fetchGetWall (count = VK.prototype.COUNT_WALL, offset = this.main.count.min - 1) {
       const res = await VK.fetchWallGet(
-        this.configOwnerId,
+        this.ownerId,
         this.main.filter,
         count,
         offset,
@@ -314,7 +310,7 @@ export default {
       return res
     },
     async fetchDeletePost (id) {
-      const res = await VK.fetchWallDelete(id, this.configOwnerId, SLEEP_DELETE_MIN, SLEEP_DELETE_MAX)
+      const res = await VK.fetchWallDelete(id, this.ownerId, SLEEP_DELETE_MIN, SLEEP_DELETE_MAX)
 
       return res
     },
@@ -564,7 +560,7 @@ export default {
      * |
      */
     getLinkPost (id) {
-      return VK.getLinkWall({ from_id: this.configOwnerId, id: id })
+      return VK.getLinkWall({ from_id: this.ownerId, id: id })
     },
     getLinkPage (id) {
       return VK.getLinkPage(id)
