@@ -20,9 +20,14 @@ export default {
   },
   data () {
     return {
-      networks,
+      networks: [],
       search: ''
     }
+  },
+  created () {
+    this.networks = networks.filter(network => {
+      return !network.off
+    })
   },
   activated () {
     this.$store.commit('CLEAR_SOCIAL_NETWORK')
@@ -35,12 +40,12 @@ export default {
       let search = this.search
 
       if (!search) {
-        return networks
+        return this.networks
       }
 
       search = search.toLocaleLowerCase().trim()
 
-      return networks.filter(n => {
+      return this.networks.filter(n => {
         if (n.name.toLowerCase().indexOf(search) !== -1 || n.domain.indexOf(search) !== -1) {
           return n
         }

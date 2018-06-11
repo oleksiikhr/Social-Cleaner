@@ -141,52 +141,21 @@ const network = class VK {
   static getLinkGroup (id) {
     return `${this.prototype.url}public${id}`
   }
-
-  /* | -----------------------------------------------------------------------------
-   * | Other
-   * | -----------------------------------------------------------------------------
-   * |
-   */
-  static logs (req, next) {
-    const urlSplit = req.url.split('/')
-    const method = urlSplit[urlSplit.length - 1]
-
-    // Hide params from logs
-    const params = []
-    Object.keys(req.params).forEach(key => {
-      const param = req.params[key]
-      switch (key) {
-        case 'access_token':
-          params.push({ key: key, value: param.substr(0, 3) + '***' + param.substr(-3) })
-          break
-        case 'method':
-          break
-        default:
-          params.push({ key: key, value: param })
-      }
-    })
-
-    addLog(this, method, { method: method, params: params }, colors.INFO)
-
-    next(res => {
-      if (res.status >= 200 && res.status < 300) {
-        addLog(this, method, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
-        if (res.body.error) {
-          Vue.prototype.$Notify.error({ title: res.body.error.error_msg || 'Error', message: method })
-        }
-      } else {
-        addLog(this, method, 'Server error', colors.ERROR)
-        Vue.prototype.$Notify.error({ title: 'Server error', message: method })
-      }
-    })
-  }
 }
 
-// Basic, important information about the class
+/* | -----------------------------------------------------------------------------
+ * | Important properties
+ * | -----------------------------------------------------------------------------
+ * |
+ */
+network.prototype.off = false
+network.prototype.disabled = false
 network.prototype.name = 'Vkontakte'
 network.prototype.to = '/vk'
 network.prototype.domain = 'vk.com'
 network.prototype.icon = 'fa-vk'
+network.prototype.url = 'https://vk.com/'
+network.prototype.urlApi = 'https://api.vk.com/method/'
 network.prototype.sections = [
   { name: 'vk.sections.token', to: 'vk-token', icon: icons.TOKEN },
   { name: 'vk.sections.wall', val: 'wall', to: 'vk-wall', icon: icons.WALL },
@@ -194,15 +163,54 @@ network.prototype.sections = [
   { name: 'vk.sections.docs', val: 'docs', to: 'vk-docs', icon: icons.DOCS }
 ]
 
-// URL
-network.prototype.url = 'https://vk.com/'
-network.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
-network.prototype.urlApi = 'https://api.vk.com/method/'
-network.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
+/* | -----------------------------------------------------------------------------
+ * | Important methods
+ * | -----------------------------------------------------------------------------
+ * |
+ */
+network.prototype.logs = (req, next) => {
+  const urlSplit = req.url.split('/')
+  const method = urlSplit[urlSplit.length - 1]
 
+  // Hide params from logs
+  const params = []
+  Object.keys(req.params).forEach(key => {
+    const param = req.params[key]
+    switch (key) {
+      case 'access_token':
+        params.push({ key: key, value: param.substr(0, 3) + '***' + param.substr(-3) })
+        break
+      case 'method':
+        break
+      default:
+        params.push({ key: key, value: param })
+    }
+  })
+
+  addLog(this.default, method, { method: method, params: params }, colors.INFO)
+
+  next(res => {
+    if (res.status >= 200 && res.status < 300) {
+      addLog(this.default, method, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
+      if (res.body.error) {
+        Vue.prototype.$Notify.error({ title: res.body.error.error_msg || 'Error', message: method })
+      }
+    } else {
+      addLog(this.default, method, 'Server error', colors.ERROR)
+      Vue.prototype.$Notify.error({ title: 'Server error', message: method })
+    }
+  })
+}
+
+/* | -----------------------------------------------------------------------------
+ * | Other
+ * | -----------------------------------------------------------------------------
+ * |
+ */
 // API params
 network.prototype.clientId = 6244330
 network.prototype.version = '5.76'
+network.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
 
 // Information about methods
 network.prototype.COUNT_WALL_POSTS = 100
