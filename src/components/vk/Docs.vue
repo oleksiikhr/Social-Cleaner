@@ -2,18 +2,8 @@
   <div id="docs">
     <div class="main-config block">
       <h2>Основные настройки</h2>
-      <div class="block__attr">
-        <p>ID сообщества</p>
-        <at-input v-model="main.owner_id" :disabled="process" />
-        <small>Positive number. Empty - Current User.</small>
-      </div>
-      <div class="block__attr">
-        <p>Количество документов (от и до), включительно</p>
-        <div class="flex">
-          <at-input v-model="main.count.min" :disabled="process" placeholder="От" /> -
-          <at-input v-model="main.count.max" :disabled="process" placeholder="До" />
-        </div>
-      </div>
+      <attr-basic-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
+      <attr-basic-count name="Количество документов (от и до), включительно" :model="main.count" />
       <div class="block__attr">
         <p>Фильтр</p>
         <at-radio-group v-model="main.type">
@@ -39,12 +29,14 @@
 </template>
 
 <script>
+import AttrBasicInput from '../attributes/basic/Input'
+import AttrBasicCount from '../attributes/basic/Count'
 import AttributeTag from '../attributes/Tag'
 import VK from '../../networks/VK'
 
 export default {
   components: {
-    AttributeTag
+    AttributeTag, AttrBasicInput, AttrBasicCount
   },
   data () {
     return {
