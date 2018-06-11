@@ -4,14 +4,7 @@
       <h2>Основные настройки</h2>
       <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
       <attr-count name="Количество документов (от и до), включительно" :model="main.count" />
-      <div class="block__attr">
-        <p>Фильтр</p>
-        <at-radio-group v-model="main.type">
-          <at-radio v-for="type in html.main.types" :key="type.val" :label="type.val" :disabled="process">
-            {{ type.name }}
-          </at-radio>
-        </at-radio-group>
-      </div>
+      <attr-radio name="Фильтр" :model.sync="main.type" :html="html.main.types" />
     </div>
 
     <hr>
@@ -31,12 +24,13 @@
 <script>
 import AttrInput from '../attributes/Input'
 import AttrCount from '../attributes/Count'
+import AttrRadio from '../attributes/Radio'
 import AttrTag from '../attributes/Tag'
 import VK from '../../networks/VK'
 
 export default {
   components: {
-    AttrTag, AttrInput, AttrCount
+    AttrTag, AttrInput, AttrRadio, AttrCount
   },
   data () {
     return {
@@ -88,6 +82,17 @@ export default {
     }
   },
   methods: {
+    /* | -----------------------------------------------------------------------------
+     * | API
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+
+    /* | -----------------------------------------------------------------------------
+     * | Links
+     * | -----------------------------------------------------------------------------
+     * |
+     */
     getLinkPage (id) {
       return VK.getLinkPage(id)
     }
