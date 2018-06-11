@@ -37,7 +37,7 @@ const network = class VK {
   static async fetchWallGet (
     ownerId = store.state.vk.user.id,
     filter = 'all',
-    count = this.prototype.COUNT_WALL_POSTS,
+    count = this.prototype.COUNT_WALL,
     offset = 0,
     sleepMin = 0,
     sleepMax = sleepMin
@@ -97,10 +97,41 @@ const network = class VK {
   /**
    * @see https://vk.com/dev/status.set
    */
-  static async fetchStatusSet (text = '', group_id = null, sleepMin = 0, sleepMax = sleepMin) {
+  static async fetchStatusSet (text = '', groupId = null, sleepMin = 0, sleepMax = sleepMin) {
     const result = await this.send('status.set', {
       text: text,
-      group_id: group_id
+      group_id: groupId
+    }, { min: sleepMin, max: sleepMax })
+
+    return result
+  }
+  /**
+   * @see https://vk.com/dev/docs.get
+   */
+  static async fetchDocsGet (
+    count = this.prototype.COUNT_DOCS,
+    offset = 0,
+    type = 0,
+    ownerId = store.state.vk.user.id,
+    sleepMin = 0,
+    sleepMax = sleepMin
+  ) {
+    const result = await this.send('docs.get', {
+      owner_id: ownerId,
+      count: count,
+      offset: offset,
+      type: type
+    }, { min: sleepMin, max: sleepMax })
+
+    return result
+  }
+  /**
+   * @see https://vk.com/dev/docs.delete
+   */
+  static async fetchDocsDelete (docId, ownerId = store.state.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
+    const result = await this.send('docs.delete', {
+      owner_id: ownerId,
+      doc_id: docId
     }, { min: sleepMin, max: sleepMax })
 
     return result
@@ -213,6 +244,7 @@ network.prototype.version = '5.76'
 network.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
 
 // Information about methods
-network.prototype.COUNT_WALL_POSTS = 100
+network.prototype.COUNT_WALL = 100
+network.prototype.COUNT_DOCS = 2000
 
 export default network

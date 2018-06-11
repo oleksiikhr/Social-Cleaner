@@ -301,7 +301,7 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    async fetchGetWall (count = VK.prototype.COUNT_WALL_POSTS, offset = this.main.count.min - 1) {
+    async fetchGetWall (count = VK.prototype.COUNT_WALL, offset = this.main.count.min - 1) {
       const res = await VK.fetchWallGet(
         this.configOwnerId,
         this.main.filter,
@@ -382,7 +382,7 @@ export default {
           return this.stopAction()
         }
 
-        const offset = i * VK.prototype.COUNT_WALL_POSTS
+        const offset = i * VK.prototype.COUNT_WALL
         const res = await this.fetchGetWall(this.getCountDeletePosts() - offset, offset)
 
         if (res.ok && res.body.response && res.body.response.items.length) {
@@ -581,7 +581,7 @@ export default {
      * @return number
      */
     getCountLoop () {
-      return Math.ceil((this.main.count.max - this.main.count.min + 1) / VK.prototype.COUNT_WALL_POSTS)
+      return Math.ceil((this.main.count.max - this.main.count.min + 1) / VK.prototype.COUNT_WALL)
     },
     /**
      * How many posts you need to delete.
