@@ -1,9 +1,11 @@
 import { sleep, randomInteger } from '../heplers/methods'
 import * as colors from '../heplers/colors'
-import * as icons from '../heplers/icons'
 import { addLog } from '../heplers/logs'
+import router from '../router'
 import store from '../store'
 import Vue from 'vue'
+
+const ROUTE_INDEX = 3
 
 const network = class VK {
   /* | -----------------------------------------------------------------------------
@@ -181,18 +183,15 @@ const network = class VK {
  */
 network.prototype.off = false
 network.prototype.disabled = false
-network.prototype.name = 'Vkontakte'
+network.prototype.name = 'VK'
 network.prototype.to = '/vk'
 network.prototype.domain = 'vk.com'
 network.prototype.icon = 'fa-vk'
 network.prototype.url = 'https://vk.com/'
 network.prototype.urlApi = 'https://api.vk.com/method/'
-network.prototype.sections = [
-  { name: 'vk.sections.token', to: 'vk-token', icon: icons.TOKEN },
-  { name: 'vk.sections.wall', val: 'wall', to: 'vk-wall', icon: icons.WALL },
-  { name: 'vk.sections.status', val: 'status', to: 'vk-status', icon: icons.STATUS },
-  { name: 'vk.sections.docs', val: 'docs', to: 'vk-docs', icon: icons.DOCS }
-]
+network.prototype.sections = router.options.routes[ROUTE_INDEX].children.map(route => {
+  return { title: route.meta.name, name: route.name, icon: route.meta.icon, path: route.path }
+})
 
 /* | -----------------------------------------------------------------------------
  * | Important methods

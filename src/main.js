@@ -29,7 +29,7 @@ Vue.http.interceptors.push((req, next) => {
 
 router.beforeEach((to, from, next) => {
   if (to.meta.vk && !store.state.vk.user.id) {
-    next({ name: 'vk-token' })
+    next({ name: 'vk' })
   } else {
     next()
   }
