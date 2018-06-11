@@ -5,15 +5,9 @@
     <div class="main-config block">
       <h2>Основные настройки</h2>
       <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
-      <div class="block__attr">
-        <p>Фильтр записей</p>
-        <at-select v-model="main.filter" :disabled="process" size="large">
-          <at-option v-for="filter in html.main.filters" :key="filter.val" :value="filter.val">
-            {{ filter.name }}
-          </at-option>
-        </at-select>
-      </div>
+      <attr-select name="Фильтр записей" :html="html.main.filters" :model.sync="main.filter" size="large" />
       <attr-count name="Количество записей (от и до), включительно" :model="main.count" />
+      <!--TODO radioButton Attribute-->
       <div class="block__attr">
         <p>Удалить записи или очистить комментарии</p>
         <at-radio-group v-model="main.isDeletePosts">
@@ -55,8 +49,8 @@
               <at-radio-button :label="1">Больше</at-radio-button>
             </at-radio-group>
           </div>
-          <!--TODO Date-->
         </div>
+        <!--TODO Date-->
       </div>
     </div>
 
@@ -125,6 +119,7 @@
 <script>
 import AttrCheckbox from '../attributes/Checkbox'
 import ConfigResult from './parts/WallConfigResult'
+import AttrSelect from '../attributes/Select'
 import AttrInput from '../attributes/Input'
 import AttrCount from '../attributes/Count'
 import AttrTag from '../attributes/Tag'
@@ -138,7 +133,7 @@ const SLEEP_GET_MAX = 1500
 
 export default {
   components: {
-    ConfigResult, AttrTag, AttrCheckbox, AttrCount, AttrInput
+    ConfigResult, AttrTag, AttrCheckbox, AttrCount, AttrInput, AttrSelect
   },
   data () {
     return {
@@ -219,11 +214,11 @@ export default {
       html: {
         main: {
           filters: [
+            { name: 'Все', val: 'all' },
             { name: 'Предложенные записи на стене сообщества', val: 'suggests' },
             { name: 'Отложенные записи', val: 'postponed' },
             { name: 'Записи владельца стены', val: 'owner' },
-            { name: 'Записи не от владельца стены', val: 'others' },
-            { name: 'Все', val: 'all' }
+            { name: 'Записи не от владельца стены', val: 'others' }
           ]
         },
         wall: {
