@@ -1,11 +1,11 @@
 <template>
   <footer>
     <div class="footer__inner">
-      <locale class="fixed" />
+      <locale class="mw-200" />
       <router-link class="home-link" to="/">
         <i class="fa fa-home" aria-hidden="true"></i>
       </router-link>
-      <github class="fixed" />
+      <github class="mw-200" />
     </div>
   </footer>
 </template>
@@ -28,7 +28,7 @@ footer {
     display: flex;
     align-items: center;
     margin: 0 20px;
-    height: 40px;
+    min-height: 42px;
     justify-content: space-between;
     color: #a0a0a0;
     a {
@@ -43,10 +43,30 @@ footer {
       line-height: 0;
       font-size: 1.3rem;
     }
+    .mw-200 {
+      min-width: 200px;
+    }
   }
 }
 
-.fixed {
-  min-width: 200px;
+@media screen and (max-width: 600px) {
+  .mw-200 {
+    min-width: unset !important;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .home-link {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .footer__inner {
+    flex-direction: column;
+  }
+  .mw-200 {
+    padding: 8px;
+  }
 }
 </style>
