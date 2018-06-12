@@ -12,7 +12,7 @@
           <div class="github__dot"></div>
           <span class="github__forks">{{ forks }} Forks</span>
         </template>
-    </div>
+      </div>
     </div>
   </a>
 </template>
@@ -75,7 +75,7 @@ export default {
 .github {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .github__icon {
