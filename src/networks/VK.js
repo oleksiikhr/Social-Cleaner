@@ -240,6 +240,7 @@ network.prototype.logs = (req, next) => {
 // API params
 network.prototype.clientId = 6244330
 network.prototype.version = '5.76'
+network.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
 network.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
 
 // Information about methods
