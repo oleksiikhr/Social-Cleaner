@@ -1,27 +1,23 @@
 <template>
   <div id="home">
-    <!--TODO-->
     <header>
       <div class="header__inner">
         <h1 class="header__name">Social Cleaner <span class="header__version">{{ version }}</span></h1>
-        <p class="header__description">
-          Сервис для очистки данных с различных социальный сетей.
-        </p>
-        <router-link :to="{ name: 'explore' }" class="header__button">Explore</router-link>
+        <p class="header__description">{{ $t('app.home.header.description') }}</p>
+        <router-link :to="{ name: 'explore' }" class="header__button">{{ $t('app.home.header.button') }}</router-link>
       </div>
     </header>
-    <!--TODO-->
     <section class="section section-works">
       <div class="section__inner">
-        <h3 class="section__title">Как это работает</h3>
+        <h3 class="section__title">{{ $t('app.home.works.title') }}</h3>
         <div class="list-works">
-          <div class="work" v-for="work in works" :key="work.icon">
+          <div class="work" v-for="(work, index) in works" :key="index">
             <div class="work__inner">
               <div class="work__icon">
                 <i :class="`fa fa-${work.icon}`" aria-hidden="true"></i>
               </div>
-              <div class="work__name">{{ work.name }}</div>
-              <div class="work__description">{{ work.description }}</div>
+              <div class="work__name">{{ $t(`app.home.works.items[${index}].name`) }}</div>
+              <div class="work__description">{{ $t(`app.home.works.items[${index}].description`) }}</div>
             </div>
             <div v-if="work.dot" class="work__dot">
               <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
@@ -32,22 +28,22 @@
     </section>
     <section class="section section-benefits">
       <div class="section__inner">
-        <h3 class="section__title">Преимущества</h3>
+        <h3 class="section__title">{{ $t('app.home.benefits.title') }}</h3>
         <div class="list-benefits">
-          <div class="benefit" v-for="benefit in benefits" :key="benefit.icon">
+          <div class="benefit" v-for="(benefit, index) in benefits" :key="index">
             <span class="benefit__title">
-              <i :class="`fa fa-${benefit.icon}`" aria-hidden="true"></i>
-              <span>{{ benefit.name }}</span>
+              <i :class="`fa fa-${benefit}`" aria-hidden="true"></i>
+              <span>{{ $t(`app.home.benefits.items[${index}].name`) }}</span>
             </span>
-            <p>{{ benefit.description }}</p>
+            <p>{{ $t(`app.home.benefits.items[${index}].description`) }}</p>
           </div>
         </div>
       </div>
     </section>
     <section class="section section-action">
       <div class="section__inner">
-        <span class="section__name">Список социальных сетей</span>
-        <router-link class="section__link" :to="{ name: 'explore' }">Перейти</router-link>
+        <span class="section__name">{{ $t('app.home.action.name') }}</span>
+        <router-link class="section__link" :to="{ name: 'explore' }">{{ $t('app.home.action.button') }}</router-link>
       </div>
     </section>
   </div>
@@ -61,20 +57,12 @@ export default {
     return {
       version,
       works: [
-        { name: 'Получение токена', icon: 'key', description: 'Получите токен для своего аккаунта в нужной социальной сети.', dot: true },
-        { name: 'Настройка аккаунта', icon: 'cogs', description: 'Выберите раздел для очистки и настраиваете нужные параметры.', dot: true },
-        { name: 'Ожидание очистки', icon: 'spinner', description: 'Запустите процесс очистки и ожидайте завершение процесса.' }
+        { icon: 'key', dot: true },
+        { icon: 'cogs', dot: true },
+        { icon: 'spinner' }
       ],
       benefits: [
-        { name: 'Бесплатно', icon: 'bomb', description: 'Серьезно, никакой оплаты, все возможности доступны каждому.' },
-        { name: 'Open Source', icon: 'github', description: 'Весь исходный код доступен в Github.' },
-        { name: 'Очистка данных', icon: 'database', description: 'Все ваши данные на сайте удалятся даже после перезагрузки страницы.' },
-        { name: 'Проверка перед удалением', icon: 'filter', description: 'Вы получите список удаляемых постов, в зависимости от ваших настроек.' },
-        { name: 'Локализация', icon: 'language', description: 'Сервис доступен на различных языках.' },
-        { name: 'Гибкая настройка', icon: 'cogs', description: 'Глубокая настройка удаляемых записей, которые не предоставляют сервисы.' },
-        { name: 'Никакой аналитики', icon: 'eye-slash', description: 'Внутренней или внешней (Google analytics) - никто не собирает данные о вас.' },
-        { name: 'SSL - шифрование', icon: 'shield', description: 'Все запросы к сервису зашифрованы по протоколу https.' },
-        { name: 'Журнал запросов', icon: 'folder-open-o', description: 'Получение информации о всех запросах / ответах от социальных сетей.' }
+        'bomb', 'github', 'database', 'filter', 'language', 'cogs', 'eye-slash', 'shield', 'folder-open-o'
       ]
     }
   },
