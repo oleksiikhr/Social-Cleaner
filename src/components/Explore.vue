@@ -1,4 +1,5 @@
 <template>
+  <!--TODO Design-->
   <div id="dashboard">
     <div class="header">
       <h1>Choose a Social Network</h1>

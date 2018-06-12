@@ -122,7 +122,10 @@ hr {
   }
 }
 
+// Home page
 #app.landing-page {
+  min-height: 100%;
+  background: linear-gradient(to left, #525252, #3d72b4);
   max-width: none !important;
   > .content {
     padding: 0;
@@ -130,9 +133,23 @@ hr {
   > header {
     display: none;
   }
+  > footer {
+    border: none;
+    padding: 10px 0;
+  }
   .footer__inner {
     margin: 0 auto;
     max-width: 1600px;
+    padding: 0 20px;
+    a, span, .github__name, .language__name {
+      color: rgba(255, 255, 255, .9);
+    }
+    .github__start, .github__forks, .language__current {
+      color: rgba(255, 255, 255, .7);
+    }
+    .lang-item {
+      color: #868686;
+    }
   }
 }
 </style>
