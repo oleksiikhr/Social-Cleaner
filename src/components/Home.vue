@@ -44,6 +44,12 @@
         </div>
       </div>
     </section>
+    <section class="section section-action">
+      <div class="section__inner">
+        <span class="section__name">Список социальных сетей</span>
+        <router-link class="section__link" :to="{ name: 'explore' }">Перейти</router-link>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -61,7 +67,7 @@ export default {
       ],
       benefits: [
         { name: 'Бесплатно', icon: 'bomb', description: 'Серьезно, никакой оплаты, все возможности доступны каждому.' },
-        { name: 'Open-source', icon: 'github', description: 'Весь исходный код доступен в Github.' },
+        { name: 'Open Source', icon: 'github', description: 'Весь исходный код доступен в Github.' },
         { name: 'Очистка данных', icon: 'database', description: 'Все ваши данные на сайте удалятся даже после перезагрузки страницы.' },
         { name: 'Проверка перед удалением', icon: 'filter', description: 'Вы получите список удаляемых постов, в зависимости от ваших настроек.' },
         { name: 'Локализация', icon: 'language', description: 'Сервис доступен на различных языках.' },
@@ -131,7 +137,7 @@ header {
 }
 
 .section {
-  padding: 80px 0;
+  padding-bottom: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -216,6 +222,40 @@ header {
     .benefit__title {
       > i {
         margin-right: 5px;
+      }
+    }
+  }
+}
+
+/*
+ * Action
+ */
+
+.section-action {
+  max-width: 1000px;
+  margin: 0 auto;
+  .section__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px;
+    background: rgba(0,0,0,.1);
+    box-shadow: $shadow;
+    > .section__name {
+      font-size: 1.4rem;
+      color: rgba(255, 255, 255, .87);
+      margin-right: 15px;
+    }
+    > .section__link {
+      padding: 10px 30px;
+      color: rgba(255, 255, 255, .87);
+      border: 1px solid transparent;
+      background: rgba(0, 0, 0, .3);
+      min-width: 200px;
+      text-align: center;
+      transition: .2s;
+      &:hover {
+        background: rgba(0, 0, 0, .4);
       }
     }
   }
