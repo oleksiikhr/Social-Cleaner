@@ -1,8 +1,7 @@
 import 'font-awesome/scss/font-awesome.scss'
 import VueResource from 'vue-resource'
-import Github from './networks/Github'
+import networks from './networks'
 import AtComponents from 'at-ui'
-import VK from './networks/VK'
 import router from './router'
 import i18n from './locale'
 import store from './store'
@@ -16,18 +15,21 @@ Vue.use(VueResource)
 Vue.config.productionTip = false
 
 Vue.http.interceptors.push((req, next) => {
-  if (req.url.indexOf(VK.prototype.urlApi) !== -1) {
-    VK.logs(req, next)
-  } else if (req.url.indexOf(Github.prototype.urlApi) !== -1) {
-    Github.logs(req, next)
-  } else {
-    Vue.prototype.$Notify.warning({ title: 'API', message: req.url })
+  const isFind = networks.some(network => {
+    if (req.url.indexOf(network.urlApi) !== -1) {
+      network.logs(req, next)
+      return true
+    }
+  })
+
+  if (!isFind) {
+    Vue.prototype.$Notify.warning({ title: 'Undefined API', message: req.url })
   }
 })
 
 router.beforeEach((to, from, next) => {
   if (to.meta.vk && !store.state.vk.user.id) {
-    next({ name: 'vk-token' })
+    next({ name: 'vk' })
   } else {
     next()
   }

@@ -20,26 +20,40 @@ const network = class Github {
 
     return result
   }
-
-  /* | -----------------------------------------------------------------------------
-   * | Other
-   * | -----------------------------------------------------------------------------
-   * |
-   */
-  static logs (req, next) {
-    const method = req.url.substr(this.prototype.urlApi.length)
-    addLog(this, method, { method: method, params: req.params }, colors.INFO)
-
-    next(res => {
-      // TODO Error type, response code*
-    })
-  }
 }
 
-network.prototype.isOff = true
+/* | -----------------------------------------------------------------------------
+ * | Important properties
+ * | -----------------------------------------------------------------------------
+ * |
+ */
+network.prototype.off = true
+network.prototype.disabled = false
+network.prototype.name = 'Github'
+network.prototype.to = '/github'
 network.prototype.domain = 'github.com'
 network.prototype.icon = 'fa-github'
 network.prototype.url = 'https://github.com/'
 network.prototype.urlApi = 'https://api.github.com/'
+network.prototype.sections = []
 
+/* | -----------------------------------------------------------------------------
+ * | Important methods
+ * | -----------------------------------------------------------------------------
+ * |
+ */
+network.prototype.logs = (req, next) => {
+  const method = req.url.substr(this.default.prototype.urlApi.length)
+  addLog(this.default, method, { method: method, params: req.params }, colors.INFO)
+
+  next(res => {
+    // TODO Error type, response code*
+  })
+}
+
+/* | -----------------------------------------------------------------------------
+ * | Other
+ * | -----------------------------------------------------------------------------
+ * |
+ */
 export default network

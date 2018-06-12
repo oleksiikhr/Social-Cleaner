@@ -1,3 +1,3 @@
 export default {
-  no_logs: 'No logs'
+  query_history: 'Query history'
 }

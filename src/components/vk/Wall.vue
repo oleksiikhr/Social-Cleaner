@@ -4,26 +4,10 @@
   <div id="wall">
     <div class="main-config block">
       <h2>Основные настройки</h2>
-      <div class="block__attr">
-        <p>ID сообщества</p>
-        <at-input v-model="main.owner_id" :disabled="process" />
-        <small>Positive number. Empty - Current User.</small>
-      </div>
-      <div class="block__attr">
-        <p>Фильтр записей</p>
-        <at-select v-model="main.filter" :disabled="process" size="large">
-          <at-option v-for="filter in html.main.filters" :key="filter.val" :value="filter.val">
-            {{ filter.name }}
-          </at-option>
-        </at-select>
-      </div>
-      <div class="block__attr">
-        <p>Количество записей (от и до), включительно</p>
-        <div class="flex">
-          <at-input v-model="main.count.min" :disabled="process" placeholder="От" /> -
-          <at-input v-model="main.count.max" :disabled="process" placeholder="До" />
-        </div>
-      </div>
+      <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
+      <attr-select name="Фильтр записей" :html="html.filters" :model.sync="main.filter" size="large" />
+      <attr-count name="Количество записей (от и до), включительно" :model="main.count" />
+      <!--TODO radioButton Attribute-->
       <div class="block__attr">
         <p>Удалить записи или очистить комментарии</p>
         <at-radio-group v-model="main.isDeletePosts">
@@ -31,32 +15,19 @@
           <at-radio-button :label="1" disabled>Комментарии</at-radio-button>
         </at-radio-group>
       </div>
-      <config-result v-if="!process" :main-config="main" :owner-id="configOwnerId" />
+      <config-result v-if="!process" :main-config="main" :owner-id="ownerId" />
     </div>
 
     <hr>
     <div class="wall-config block">
       <h2>Параметры стены</h2>
-      <attribute :obj="wall.ids" name="ID записей" :push="pushNumber" :link-tag="getLinkPost"
+      <attr-tag :obj="wall.ids" name="ID записей" :push="pushNumber" :link-tag="getLinkPost"
                  info="After filling, press enter to add to the list." />
-      <attribute :obj="wall.fromIds" name="ID авторов записей" :push="pushNumber" :link-tag="getLinkPage"
+      <attr-tag :obj="wall.fromIds" name="ID авторов записей" :push="pushNumber" :link-tag="getLinkPage"
                  info="After filling, press enter to add to the list. Use a negative value to designate a community ID." />
-      <attribute :obj="wall.texts" name="Фразы в тексты" :push="pushString" compare
+      <attr-tag :obj="wall.texts" name="Фразы в тексте" :push="pushString" compare
                  info="After filling, press enter to add to the list." />
-      <!--TODO Type content-->
-      <div class="block__attr">
-        <div class="top">
-          <p :class="getStyleStatus(wall.attachments.items.length)">Added media attachments</p>
-          <a @click="wall.attachments.compareAll = !wall.attachments.compareAll" class="compare">
-            {{ wall.attachments.compareAll ? 'All' : 'One' }}
-          </a>
-        </div>
-        <at-checkbox-group v-model="wall.attachments.items">
-          <at-checkbox v-for="attachment in html.wall.attachments" :key="attachment.val" :label="attachment.val">
-            {{ attachment.name }}
-          </at-checkbox>
-        </at-checkbox-group>
-      </div>
+      <attr-checkbox :obj="wall.attachments" name="Added media attachments" compare />
       <!--TODO Type content-->
       <div class="block__attr">
         <div class="top">
@@ -66,7 +37,7 @@
           </a>
         </div>
         <div class="counts">
-          <div :class="`count-${item.attr} count`" v-for="item in html.wall.count" :key="item.attr">
+          <div :class="`count-${item.attr} count`" v-for="item in html.count" :key="item.attr">
             <div class="flex">
               <i :class="`fa fa-${item.icon}`" aria-hidden="true"></i>
               <p>{{ item.name }}</p>
@@ -78,8 +49,8 @@
               <at-radio-button :label="1">Больше</at-radio-button>
             </at-radio-group>
           </div>
-          <!--TODO Date-->
         </div>
+        <!--TODO Date-->
       </div>
     </div>
 
@@ -146,8 +117,12 @@
 </template>
 
 <script>
+import AttrCheckbox from '../attributes/Checkbox'
 import ConfigResult from './parts/WallConfigResult'
-import Attribute from '../block/Attribute'
+import AttrSelect from '../attributes/Select'
+import AttrInput from '../attributes/Input'
+import AttrCount from '../attributes/Count'
+import AttrTag from '../attributes/Tag'
 import VK from '../../networks/VK'
 
 const SLEEP_DELETE_MIN = 1500
@@ -158,7 +133,7 @@ const SLEEP_GET_MAX = 1500
 
 export default {
   components: {
-    ConfigResult, Attribute
+    ConfigResult, AttrTag, AttrCheckbox, AttrCount, AttrInput, AttrSelect
   },
   data () {
     return {
@@ -189,7 +164,20 @@ export default {
         },
         attachments: {
           items: [],
-          compareAll: true
+          compareAll: true,
+          html: [
+            { name: 'Photo', val: 'photo' },
+            { name: 'Video', val: 'video' },
+            { name: 'Audio', val: 'audio' },
+            { name: 'Document', val: 'doc' },
+            { name: 'Link', val: 'link' },
+            { name: 'Note', val: 'note' },
+            { name: 'Poll', val: 'poll' },
+            { name: 'Wiki Page', val: 'page' },
+            { name: 'Photos List', val: 'photos_list' },
+            { name: 'Market Item', val: 'market' },
+            { name: 'Market Collection', val: 'market_album' }
+          ]
         },
         count: {
           items: {
@@ -224,36 +212,19 @@ export default {
         loading: false
       },
       html: {
-        main: {
-          filters: [
-            { name: 'Предложенные записи на стене сообщества', val: 'suggests' },
-            { name: 'Отложенные записи', val: 'postponed' },
-            { name: 'Записи владельца стены', val: 'owner' },
-            { name: 'Записи не от владельца стены', val: 'others' },
-            { name: 'Все', val: 'all' }
-          ]
-        },
-        wall: {
-          attachments: [
-            { name: 'Photo', val: 'photo' },
-            { name: 'Video', val: 'video' },
-            { name: 'Audio', val: 'audio' },
-            { name: 'Document', val: 'doc' },
-            { name: 'Link', val: 'link' },
-            { name: 'Note', val: 'note' },
-            { name: 'Poll', val: 'poll' },
-            { name: 'Wiki Page', val: 'page' },
-            { name: 'Photos List', val: 'photos_list' },
-            { name: 'Market Item', val: 'market' },
-            { name: 'Market Collection', val: 'market_album' }
-          ],
-          count: [
-            { name: 'Comments', attr: 'comments', icon: 'fa-comment-o' },
-            { name: 'Likes', attr: 'likes', icon: 'fa-heart-o' },
-            { name: 'Reposts', attr: 'reposts', icon: 'fa-bullhorn' },
-            { name: 'Views', attr: 'views', icon: 'fa-eye' }
-          ]
-        }
+        filters: [
+          { name: 'Все', val: 'all' },
+          { name: 'Предложенные записи на стене сообщества', val: 'suggests' },
+          { name: 'Отложенные записи', val: 'postponed' },
+          { name: 'Записи владельца стены', val: 'owner' },
+          { name: 'Записи не от владельца стены', val: 'others' }
+        ],
+        count: [
+          { name: 'Comments', attr: 'comments', icon: 'fa-comment-o' },
+          { name: 'Likes', attr: 'likes', icon: 'fa-heart-o' },
+          { name: 'Reposts', attr: 'reposts', icon: 'fa-bullhorn' },
+          { name: 'Views', attr: 'views', icon: 'fa-eye' }
+        ]
       }
     }
   },
@@ -264,7 +235,7 @@ export default {
     process () {
       return this.$store.state.vk.process
     },
-    configOwnerId () {
+    ownerId () {
       return this.main.owner_id ? '-' + this.main.owner_id : this.user.id
     },
     /**
@@ -326,9 +297,9 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    async fetchGetWall (count = VK.prototype.COUNT_WALL_POSTS, offset = this.main.count.min - 1) {
+    async fetchGetWall (count = VK.prototype.COUNT_WALL, offset = this.main.count.min - 1) {
       const res = await VK.fetchWallGet(
-        this.configOwnerId,
+        this.ownerId,
         this.main.filter,
         count,
         offset,
@@ -339,7 +310,7 @@ export default {
       return res
     },
     async fetchDeletePost (id) {
-      const res = await VK.fetchWallDelete(id, this.configOwnerId, SLEEP_DELETE_MIN, SLEEP_DELETE_MAX)
+      const res = await VK.fetchWallDelete(id, this.ownerId, SLEEP_DELETE_MIN, SLEEP_DELETE_MAX)
 
       return res
     },
@@ -407,7 +378,7 @@ export default {
           return this.stopAction()
         }
 
-        const offset = i * VK.prototype.COUNT_WALL_POSTS
+        const offset = i * VK.prototype.COUNT_WALL
         const res = await this.fetchGetWall(this.getCountDeletePosts() - offset, offset)
 
         if (res.ok && res.body.response && res.body.response.items.length) {
@@ -589,7 +560,7 @@ export default {
      * |
      */
     getLinkPost (id) {
-      return VK.getLinkWall({ from_id: this.configOwnerId, id: id })
+      return VK.getLinkWall({ from_id: this.ownerId, id: id })
     },
     getLinkPage (id) {
       return VK.getLinkPage(id)
@@ -606,7 +577,7 @@ export default {
      * @return number
      */
     getCountLoop () {
-      return Math.ceil((this.main.count.max - this.main.count.min + 1) / VK.prototype.COUNT_WALL_POSTS)
+      return Math.ceil((this.main.count.max - this.main.count.min + 1) / VK.prototype.COUNT_WALL)
     },
     /**
      * How many posts you need to delete.

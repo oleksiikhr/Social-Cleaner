@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <div id="app" :class="appClass">
     <header>
-      <router-link to="/" class="brand">
+      <router-link :to="{ name: 'explore' }" class="brand">
         Social Cleaner
         <span>{{ version }}</span>
       </router-link>
@@ -10,7 +10,7 @@
         <template v-if="firstLog">
           <span :class="firstLog.color">{{ firstLog.method }}</span>
         </template>
-        <span v-else>{{ $t('app.no_logs') }}</span>
+        <span v-else>{{ $t('app.query_history') }}</span>
       </router-link>
     </header>
     <div class="content">
@@ -41,6 +41,9 @@ export default {
     },
     firstLog () {
       return this.$store.state.logs.storage[0]
+    },
+    appClass () {
+      return this.$store.state.template.appClass
     }
   }
 }
@@ -115,6 +118,37 @@ hr {
       > .at-radio__label {
         font-size: 13px;
       }
+    }
+  }
+}
+
+// Home page
+#app.landing-page {
+  min-height: 100%;
+  background: linear-gradient(to left, #525252, #3d72b4);
+  max-width: none !important;
+  > .content {
+    padding: 0;
+  }
+  > header {
+    display: none;
+  }
+  > footer {
+    border: none;
+    padding: 10px 0;
+  }
+  .footer__inner {
+    margin: 0 auto;
+    max-width: 1600px;
+    padding: 0 20px;
+    a, span, .github__name, .language__name {
+      color: rgba(255, 255, 255, .9);
+    }
+    .github__start, .github__forks, .language__current {
+      color: rgba(255, 255, 255, .7);
+    }
+    .lang-item {
+      color: #868686;
     }
   }
 }

@@ -1,4 +1,5 @@
 <template>
+  <!--TODO Design-->
   <div id="dashboard">
     <div class="header">
       <h1>Choose a Social Network</h1>
@@ -20,12 +21,14 @@ export default {
   },
   data () {
     return {
-      networks,
+      networks: [],
       search: ''
     }
   },
-  activated () {
-    this.$store.commit('CLEAR_SOCIAL_NETWORK')
+  created () {
+    this.networks = networks.filter(network => {
+      return !network.off
+    })
   },
   deactivated () {
     this.search = ''
@@ -35,12 +38,12 @@ export default {
       let search = this.search
 
       if (!search) {
-        return networks
+        return this.networks
       }
 
       search = search.toLocaleLowerCase().trim()
 
-      return networks.filter(n => {
+      return this.networks.filter(n => {
         if (n.name.toLowerCase().indexOf(search) !== -1 || n.domain.indexOf(search) !== -1) {
           return n
         }

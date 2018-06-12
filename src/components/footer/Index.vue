@@ -1,8 +1,11 @@
 <template>
   <footer>
     <div class="footer__inner">
-      <locale />
-      <github />
+      <locale class="fixed" />
+      <router-link class="home-link" to="/">
+        <i class="fa fa-home" aria-hidden="true"></i>
+      </router-link>
+      <github class="fixed" />
     </div>
   </footer>
 </template>
@@ -36,6 +39,14 @@ footer {
         color: #333;
       }
     }
+    .home-link {
+      line-height: 0;
+      font-size: 1.3rem;
+    }
   }
+}
+
+.fixed {
+  min-width: 200px;
 }
 </style>

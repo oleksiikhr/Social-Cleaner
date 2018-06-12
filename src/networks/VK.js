@@ -1,9 +1,11 @@
 import { sleep, randomInteger } from '../heplers/methods'
 import * as colors from '../heplers/colors'
-import * as icons from '../heplers/icons'
 import { addLog } from '../heplers/logs'
+import router from '../router'
 import store from '../store'
 import Vue from 'vue'
+
+const ROUTE_INDEX = 3
 
 const network = class VK {
   /* | -----------------------------------------------------------------------------
@@ -37,7 +39,7 @@ const network = class VK {
   static async fetchWallGet (
     ownerId = store.state.vk.user.id,
     filter = 'all',
-    count = this.prototype.COUNT_WALL_POSTS,
+    count = this.prototype.COUNT_WALL,
     offset = 0,
     sleepMin = 0,
     sleepMax = sleepMin
@@ -97,10 +99,41 @@ const network = class VK {
   /**
    * @see https://vk.com/dev/status.set
    */
-  static async fetchStatusSet (text = '', group_id = null, sleepMin = 0, sleepMax = sleepMin) {
+  static async fetchStatusSet (text = '', groupId = null, sleepMin = 0, sleepMax = sleepMin) {
     const result = await this.send('status.set', {
       text: text,
-      group_id: group_id
+      group_id: groupId
+    }, { min: sleepMin, max: sleepMax })
+
+    return result
+  }
+  /**
+   * @see https://vk.com/dev/docs.get
+   */
+  static async fetchDocsGet (
+    count = this.prototype.COUNT_DOCS,
+    offset = 0,
+    type = 0,
+    ownerId = store.state.vk.user.id,
+    sleepMin = 0,
+    sleepMax = sleepMin
+  ) {
+    const result = await this.send('docs.get', {
+      owner_id: ownerId,
+      count: count,
+      offset: offset,
+      type: type
+    }, { min: sleepMin, max: sleepMax })
+
+    return result
+  }
+  /**
+   * @see https://vk.com/dev/docs.delete
+   */
+  static async fetchDocsDelete (docId, ownerId = store.state.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
+    const result = await this.send('docs.delete', {
+      owner_id: ownerId,
+      doc_id: docId
     }, { min: sleepMin, max: sleepMax })
 
     return result
@@ -141,70 +174,77 @@ const network = class VK {
   static getLinkGroup (id) {
     return `${this.prototype.url}public${id}`
   }
-
-  /* | -----------------------------------------------------------------------------
-   * | Other
-   * | -----------------------------------------------------------------------------
-   * |
-   */
-  static logs (req, next) {
-    const urlSplit = req.url.split('/')
-    const method = urlSplit[urlSplit.length - 1]
-
-    // Hide params from logs
-    const params = []
-    Object.keys(req.params).forEach(key => {
-      const param = req.params[key]
-      switch (key) {
-        case 'access_token':
-          params.push({ key: key, value: param.substr(0, 3) + '***' + param.substr(-3) })
-          break
-        case 'method':
-          break
-        default:
-          params.push({ key: key, value: param })
-      }
-    })
-
-    addLog(this, method, { method: method, params: params }, colors.INFO)
-
-    next(res => {
-      if (res.status >= 200 && res.status < 300) {
-        addLog(this, method, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
-        if (res.body.error) {
-          Vue.prototype.$Notify.error({ title: res.body.error.error_msg || 'Error', message: method })
-        }
-      } else {
-        addLog(this, method, 'Server error', colors.ERROR)
-        Vue.prototype.$Notify.error({ title: 'Server error', message: method })
-      }
-    })
-  }
 }
 
-// Basic, important information about the class
-network.prototype.name = 'Vkontakte'
+/* | -----------------------------------------------------------------------------
+ * | Important properties
+ * | -----------------------------------------------------------------------------
+ * |
+ */
+network.prototype.off = false
+network.prototype.disabled = false
+network.prototype.name = 'VK'
 network.prototype.to = '/vk'
 network.prototype.domain = 'vk.com'
 network.prototype.icon = 'fa-vk'
-network.prototype.sections = [
-  { name: 'vk.sections.token', to: 'vk-token', icon: icons.TOKEN },
-  { name: 'vk.sections.wall', val: 'wall', to: 'vk-wall', icon: icons.WALL },
-  { name: 'vk.sections.status', val: 'status', to: 'vk-status', icon: icons.STATUS },
-  { name: 'vk.sections.docs', val: 'docs', to: 'vk-docs', icon: icons.DOCS }
-]
-
-// URL
 network.prototype.url = 'https://vk.com/'
-network.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
 network.prototype.urlApi = 'https://api.vk.com/method/'
-network.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
+network.prototype.sections = router.options.routes[ROUTE_INDEX].children.map(route => {
+  return { title: route.meta.name, name: route.name, icon: route.meta.icon, path: route.path }
+})
 
+/* | -----------------------------------------------------------------------------
+ * | Important methods
+ * | -----------------------------------------------------------------------------
+ * |
+ */
+network.prototype.logs = (req, next) => {
+  const urlSplit = req.url.split('/')
+  const method = urlSplit[urlSplit.length - 1]
+
+  // Hide params from logs
+  const params = []
+  Object.keys(req.params).forEach(key => {
+    const param = req.params[key]
+    switch (key) {
+      case 'access_token':
+        params.push({ key: key, value: param.substr(0, 3) + '***' + param.substr(-3) })
+        break
+      case 'method':
+        break
+      default:
+        params.push({ key: key, value: param })
+    }
+  })
+
+  addLog(this.default, method, { method: method, params: params }, colors.INFO)
+
+  next(res => {
+    if (res.status >= 200 && res.status < 300) {
+      addLog(this.default, method, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
+      if (res.body.error) {
+        Vue.prototype.$Notify.error({ title: res.body.error.error_msg || 'Error', message: method })
+      }
+    } else {
+      addLog(this.default, method, 'Server error', colors.ERROR)
+      Vue.prototype.$Notify.error({ title: 'Server error', message: method })
+    }
+  })
+}
+
+/* | -----------------------------------------------------------------------------
+ * | Other
+ * | -----------------------------------------------------------------------------
+ * |
+ */
 // API params
 network.prototype.clientId = 6244330
 network.prototype.version = '5.76'
+network.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
+network.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
 
 // Information about methods
-network.prototype.COUNT_WALL_POSTS = 100
+network.prototype.COUNT_WALL = 100
+network.prototype.COUNT_DOCS = 2000
 
 export default network
