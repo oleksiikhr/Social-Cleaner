@@ -24,6 +24,9 @@ export default {
   activated () {
     this.$store.commit('SET_SOCIAL_NETWORK', VK)
   },
+  deactivated () {
+    this.$store.commit('CLEAR_SOCIAL_NETWORK')
+  },
   computed: {
     user () {
       return this.$store.state.vk.user

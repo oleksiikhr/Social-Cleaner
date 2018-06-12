@@ -1,3 +1,3 @@
 export default {
-  no_logs: 'Логи отсутствуют'
+  query_history: 'Журнал запросов'
 }

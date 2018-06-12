@@ -29,9 +29,6 @@ export default {
       return !network.off
     })
   },
-  activated () {
-    this.$store.commit('CLEAR_SOCIAL_NETWORK')
-  },
   deactivated () {
     this.search = ''
   },

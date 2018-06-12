@@ -52,9 +52,6 @@ export default {
     }
   },
   // TODO Update time every 10sec (destroy on deactivated*)
-  activated () {
-    this.$store.commit('CLEAR_SOCIAL_NETWORK')
-  },
   computed: {
     logs () {
       return this.$store.state.logs.storage
