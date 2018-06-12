@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <div id="app" :class="appClass">
     <header>
-      <router-link to="/" class="brand">
+      <router-link :to="{ name: 'explore' }" class="brand">
         Social Cleaner
         <span>{{ version }}</span>
       </router-link>
@@ -10,7 +10,7 @@
         <template v-if="firstLog">
           <span :class="firstLog.color">{{ firstLog.method }}</span>
         </template>
-        <span v-else>{{ $t('app.no_logs') }}</span>
+        <span v-else>{{ $t('app.query_history') }}</span>
       </router-link>
     </header>
     <div class="content">
@@ -41,6 +41,9 @@ export default {
     },
     firstLog () {
       return this.$store.state.logs.storage[0]
+    },
+    appClass () {
+      return this.$store.state.template.appClass
     }
   }
 }
@@ -116,6 +119,20 @@ hr {
         font-size: 13px;
       }
     }
+  }
+}
+
+#app.landing-page {
+  max-width: none !important;
+  > .content {
+    padding: 0;
+  }
+  > header {
+    display: none;
+  }
+  .footer__inner {
+    margin: 0 auto;
+    max-width: 1600px;
   }
 }
 </style>
