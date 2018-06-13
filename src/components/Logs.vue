@@ -35,6 +35,8 @@
         </div>
       </a>
     </div>
+
+    <!--TODO Pagination-->
   </div>
 </template>
 
@@ -89,25 +91,24 @@ export default {
 <style lang="scss" scoped>
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-around;
   margin: 0 auto 30px;
   background: #fbfbfb;
-  padding: 20px;
+  padding: 20px 20px 0;
   border: 1px solid #e7e7e7;
+  > * {
+    margin: 0 20px 20px 0;
+  }
   > h1 {
     text-align: center;
     color: rgba(0, 0, 0, .6);
     font-size: 1.2rem;
-    margin-right: 20px;
   }
   > .at-input {
-    margin-right: 20px;
     flex-grow: 1;
-    max-width: 600px;
   }
   > .at-select {
-    margin-right: 20px;
     max-width: 150px;
     &:last-child {
       margin-right: 0;
