@@ -26,7 +26,7 @@ import AttrInput from '../attributes/Input'
 import AttrCount from '../attributes/Count'
 import AttrRadio from '../attributes/Radio'
 import AttrTag from '../attributes/Tag'
-import VK from '../../networks/VK'
+import VK from '../../media/VK'
 
 export default {
   components: {

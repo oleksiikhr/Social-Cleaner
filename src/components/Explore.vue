@@ -1,7 +1,7 @@
 <template>
   <div id="dashboard">
     <div class="header">
-      <h1>Social Networks</h1>
+      <h1>Social Media</h1>
       <at-input v-model="search" placeholder="Search" icon="search" title="Search" />
     </div>
     <div class="result">
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import networks from '../networks'
+import networks from '../media'
 import Card from './parts/Card'
 
 export default {

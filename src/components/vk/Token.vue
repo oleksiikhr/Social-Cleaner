@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import VK from '../../networks/VK'
+import VK from '../../media/VK'
 
 export default {
   data () {

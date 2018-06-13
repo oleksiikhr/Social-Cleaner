@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import networks from '../networks'
+import networks from '../media'
 import moment from 'moment'
 
 export default {

@@ -123,7 +123,7 @@ import AttrSelect from '../attributes/Select'
 import AttrInput from '../attributes/Input'
 import AttrCount from '../attributes/Count'
 import AttrTag from '../attributes/Tag'
-import VK from '../../networks/VK'
+import VK from '../../media/VK'
 
 const SLEEP_DELETE_MIN = 1500
 const SLEEP_DELETE_MAX = 2500

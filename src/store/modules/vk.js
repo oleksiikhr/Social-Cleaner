@@ -1,6 +1,6 @@
 import router from '../../router/index'
 import store from '../../store/index'
-import VK from '../../networks/VK'
+import VK from '../../media/VK'
 import Vue from 'vue'
 
 const state = {

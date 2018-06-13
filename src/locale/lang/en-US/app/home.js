@@ -1,12 +1,12 @@
 export default {
   header: {
-    description: 'Service for cleaning data from various Social Networks',
+    description: 'Service for cleaning data from various Social Media',
     button: 'Explore'
   },
   works: {
     title: 'How it works',
     items: [
-      { name: 'Receiving a token', description: 'Get a token for your account in the desired social network.' },
+      { name: 'Receiving a token', description: 'Get a token for your account in the desired social media.' },
       { name: 'Account setup', description: 'Select the partition to be cleaned and configure the required settings.' },
       { name: 'Waiting for cleaning', description: 'Start the cleaning process and wait for the process to complete.' }
     ]
@@ -22,11 +22,11 @@ export default {
       { name: 'Flexible setup', description: 'Deep customization of deleted records that do not provide services.' },
       { name: 'No analysts', description: 'Internal or external (Google analytics) - no one collects data about you.' },
       { name: 'SSL - Encryption', description: 'All requests to the service are encrypted using the https protocol.' },
-      { name: 'Query log', description: 'Getting information about all requests / responses from social networks.' }
+      { name: 'Query log', description: 'Getting information about all requests / responses from social media.' }
     ]
   },
   action: {
-    name: 'List of social networks',
+    name: 'List of social media',
     button: 'Go to'
   }
 }
