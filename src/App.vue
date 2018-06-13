@@ -2,18 +2,24 @@
   <div id="app" :class="appClass">
     <header>
       <router-link :to="{ name: 'explore' }" class="brand">
-        Social Cleaner
-        <span>{{ version }}</span>
+        <span class="brand__name brand__full">Social Cleaner</span>
+        <span class="brand__name brand__short">SC</span>
+        <span class="brand__version">{{ version }}</span>
       </router-link>
       <i v-if="socialNetwork.icon" :class="'current fa ' + socialNetwork.icon" aria-hidden="true"></i>
       <router-link to="/logs" class="logs">
-        <template v-if="firstLog">
-          <span :class="firstLog.color">{{ firstLog.method }}</span>
-        </template>
-        <span v-else>{{ $t('app.query_history') }}</span>
+        <div class="logs__full">
+          <template v-if="firstLog">
+            <span :class="firstLog.color">{{ firstLog.method }}</span>
+          </template>
+          <span v-else>{{ $t('app.query_history') }}</span>
+        </div>
+        <div class="logs__short">
+          <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+        </div>
       </router-link>
     </header>
-    <div class="content">
+    <div id="content">
       <keep-alive>
         <router-view />
       </keep-alive>
@@ -50,10 +56,37 @@ export default {
 </script>
 
 <style lang="scss">
+body {
+  background: #fbfbfb;
+  min-height: 100%;
+}
+
 hr {
   margin: 30px;
   border: none;
   border-bottom: 1px solid #e0e0e0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  min-height: 100%;
+  border: 1px solid #e7e7e7;
+  border-top: none;
+  border-bottom: none;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#content {
+  flex-grow: 1;
+  padding: 30px 20px;
+  #vk {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+  }
 }
 
 // Component (Block)
@@ -127,7 +160,8 @@ hr {
   min-height: 100%;
   background: linear-gradient(to left, #525252, #3d72b4);
   max-width: none !important;
-  > .content {
+  border: none;
+  > #content {
     padding: 0;
   }
   > header {
@@ -155,17 +189,13 @@ hr {
 </style>
 
 <style lang="scss" scoped>
-body, #app {
-  min-height: 100%;
-}
-
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 40px;
+  min-height: 42px;
   overflow: hidden;
-  .brand, .logs {
+  > a {
     width: 280px;
     color: #333;
     transition: .2s;
@@ -174,15 +204,18 @@ header {
     &:hover {
       opacity: 1;
     }
-  }
-  .brand {
-    font-weight: bold;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    > span {
-      font-size: 0.7rem;
-      vertical-align: top;
-      opacity: 0.5;
+    &.brand {
+      font-weight: bold;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      .brand__version {
+        font-size: 0.7rem;
+        vertical-align: top;
+        opacity: 0.5;
+      }
+      .brand__short {
+        display: none;
+      }
     }
   }
   .current {
@@ -195,7 +228,11 @@ header {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: .8rem;
-    > span {
+    > .logs__short {
+      display: none;
+      font-size: 1.2rem;
+    }
+    span {
       display: block;
       padding: 2px 10px;
       font-weight: bold;
@@ -215,20 +252,28 @@ header {
   }
 }
 
-#app {
-  display: flex;
-  flex-direction: column;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.content {
-  flex-grow: 1;
-  padding: 30px 20px;
-  #vk {
-    max-width: 800px;
-    width: 100%;
-    margin: 0 auto;
+@media screen and (max-width: 550px) {
+  header {
+    margin: 0 10px 10px;
+    > a {
+      width: 70px;
+      &.brand {
+        > .brand__full {
+          display: none;
+        }
+        > .brand__short {
+          display: inline-block;
+        }
+      }
+      &.logs {
+        > .logs__full {
+          display: none;
+        }
+        > .logs__short {
+          display: inline-block;
+        }
+      }
+    }
   }
 }
 </style>

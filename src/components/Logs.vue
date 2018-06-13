@@ -1,8 +1,8 @@
 <template>
   <!--TODO Global color styles-->
   <div id="logs">
-    <h1>API logs</h1>
     <div class="header">
+      <h1>Query History</h1>
       <at-input v-model="search" placeholder="Method" icon="search" />
       <at-select v-model="networkName" placeholder="Social Network" clearable>
         <at-option v-for="network in networks" :key="network.to" :value="network.name">
@@ -87,24 +87,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h1 {
-  text-align: center;
-  margin-bottom: 25px;
-  text-transform: uppercase;
-}
-
 .header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  max-width: 600px;
-  margin: 0 auto 20px;
+  justify-content: space-around;
+  margin: 0 auto 30px;
+  background: #fbfbfb;
+  padding: 20px;
+  border: 1px solid #e7e7e7;
+  > h1 {
+    text-align: center;
+    color: rgba(0, 0, 0, .6);
+    font-size: 1.2rem;
+    margin-right: 20px;
+  }
   > .at-input {
     margin-right: 20px;
     flex-grow: 1;
+    max-width: 600px;
   }
   > .at-select {
+    margin-right: 20px;
     max-width: 150px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }
 

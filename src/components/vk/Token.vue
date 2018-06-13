@@ -127,6 +127,9 @@ button {
     font-weight: bold;
     margin-bottom: 10px;
   }
+  > p {
+    word-wrap: break-word;
+  }
 }
 
 .exists {
@@ -140,6 +143,15 @@ button {
     text-align: center;
     > button {
       margin-top: 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .flex {
+    flex-direction: column;
+    > .at-popover {
+      margin-bottom: 20px;
     }
   }
 }
