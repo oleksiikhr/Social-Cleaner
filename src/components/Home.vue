@@ -86,6 +86,7 @@ header {
   text-align: center;
   height: 450px;
   .header__inner {
+    padding: 0 15px;
     max-width: 800px;
     > .header__name {
       color: rgba(255, 255, 255, .9);
@@ -193,7 +194,7 @@ header {
   flex-wrap: wrap;
   > .benefit {
     flex: 1;
-    min-width: 30%;
+    min-width: 31%;
     padding: 30px;
     box-shadow: $shadow;
     background: rgba(0, 0, 0, .1);
@@ -238,13 +239,48 @@ header {
       padding: 10px 30px;
       color: rgba(255, 255, 255, .87);
       border: 1px solid transparent;
-      background: rgba(0, 0, 0, .3);
+      background: rgba(0, 0, 0, .2);
       min-width: 200px;
       text-align: center;
       transition: .2s;
       &:hover {
-        background: rgba(0, 0, 0, .4);
+        background: rgba(0, 0, 0, .3);
       }
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .section {
+    padding-bottom: 40px;
+    .section__title {
+      text-align: center;
+    }
+  }
+  .list-works {
+    flex-direction: column;
+    .work {
+      flex-direction: column;
+      .work__dot {
+        transform: rotate(90deg);
+        margin: 30px 0;
+      }
+    }
+  }
+  .header__version {
+    display: block;
+    position: inherit !important;
+    vertical-align: unset !important;
+  }
+  .list-benefits > .benefit {
+    min-width: 100%;
+    margin: 10px 0;
+  }
+  .section-action .section__inner {
+    flex-direction: column;
+    > .section__name {
+      text-align: center;
+      margin: 0 0 20px;
     }
   }
 }
