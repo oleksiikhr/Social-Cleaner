@@ -1,7 +1,7 @@
 export default {
   header: {
     description: 'Service for cleaning data from various Social Media',
-    button: 'Explore'
+    button: 'Start'
   },
   works: {
     title: 'How it works',

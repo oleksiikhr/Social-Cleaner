@@ -2,7 +2,7 @@
   <div class="top">
     <p :class="getStyleStatus(obj.items.length)">{{ name }}</p>
     <a class="compare" @click="obj.compareAll = !obj.compareAll" :disabled="!compare">
-      {{ obj.compareAll ? 'All' : 'One' }}
+      {{ obj.compareAll ? 'And' : 'Or' }}
     </a>
   </div>
 </template>
