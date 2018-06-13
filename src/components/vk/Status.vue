@@ -61,12 +61,12 @@ export default {
       return this.$store.state.vk.user
     },
     process () {
-      return this.$store.state.vk.process
+      return this.$store.state.media.list.vk.process
     }
   },
   methods: {
     async fetchGetStatus () {
-      this.$store.commit('VK_SET_PROCESS')
+      this.$store.commit('SET_PROCESS', 'vk')
       const result = await VK.fetchStatusGet(this.id ? '-' + this.id : this.user.id)
 
       if (result.ok && result.body.response) {
@@ -74,17 +74,17 @@ export default {
         this.link = this.id ? VK.getLinkGroup(this.id) : VK.getLinkUser()
       }
 
-      this.$store.commit('VK_SET_PROCESS', false)
+      this.$store.commit('CLEAR_PROCESS', 'vk')
     },
     async fetchDeleteStatus () {
-      this.$store.commit('VK_SET_PROCESS')
+      this.$store.commit('SET_PROCESS', 'vk')
       let result = await VK.fetchStatusSet('', this.id || null)
 
       if (result.ok && result.body.response) {
         this.status = ''
       }
 
-      this.$store.commit('VK_SET_PROCESS', false)
+      this.$store.commit('CLEAR_PROCESS', 'vk')
     }
   },
   watch: {
