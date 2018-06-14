@@ -17,6 +17,13 @@ const network = class VK {
    * Send request to VK.
    */
   static async send (method, params = [], rnd = { min: 0, max: 0 }) {
+    // Delete unused attributes from object
+    Object.keys(params).forEach(key => {
+      if (params[key] === null) {
+        delete params[key]
+      }
+    })
+
     params.v = this.prototype.version
 
     if (!params.access_token) {
@@ -26,10 +33,23 @@ const network = class VK {
     const result = await Vue.http.jsonp(this.prototype.urlApi + method, {
       params: params
     })
+      .then(res => { return res })
+      .catch(err => { return err })
 
+    // Bypass the limit of exceeding requests to the API
     if (rnd.max > 0 && rnd.min <= rnd.max) {
       await sleep(randomInteger(rnd.min, rnd.max))
     }
+
+    return result
+  }
+  /**
+   * @see https://vk.com/dev/account.getAppPermissions
+   */
+  static async fetchAccountGetAppPermissions (token) {
+    const result = await this.send('account.getAppPermissions', {
+      access_token: token
+    })
 
     return result
   }

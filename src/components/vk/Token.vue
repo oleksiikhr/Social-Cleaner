@@ -72,11 +72,11 @@ export default {
   },
   methods: {
     installToken () {
-      this.$store.dispatch('vkInit', this.token)
+      this.$store.dispatch('vkLogIn', this.token)
     },
     deleteToken () {
       this.token = ''
-      this.$store.dispatch('vkExit')
+      this.$store.dispatch('vkLogOut')
     },
     goGetToken () {
       window.open(`${VK.prototype.urlOauth}?client_id=${this.appId}&display=page&redirect_uri=${VK.prototype.urlRedirect}

@@ -84,29 +84,27 @@ const mutations = {
 }
 
 const actions = {
-  // TODO Rewrite to class
-  vkInit ({commit}, token) {
-    VK.send('account.getAppPermissions', {
-      access_token: token
-    })
-      .then(res => {
-        if (res.body.response) {
-          store.commit('VK_SET_PERMISSIONS', res.body.response)
-          store.commit('VK_SET_TOKEN', token)
-          Vue.prototype.$Message.success('VK - Log In')
+  /* | -----------------------------------------------------------------------------
+   * | VK
+   * | -----------------------------------------------------------------------------
+   * |
+   */
+  async vkLogIn ({commit}, token) {
+    let res = await VK.fetchAccountGetAppPermissions(token)
 
-          VK.send('users.get', {
-            fields: 'has_photo,photo_100,counters'
-          })
-            .then(res => {
-              if (res.body.response) {
-                store.commit('VK_SET_USER', res.body.response[0])
-              }
-            })
-        }
-      })
+    if (res.ok && res.body.response) {
+      store.commit('VK_SET_PERMISSIONS', res.body.response)
+      store.commit('VK_SET_TOKEN', token)
+      Vue.prototype.$Message.success('VK - Log In')
+
+      res = await VK.fetchUsersGet(null, 'has_photo,photo_100,counters', 500)
+
+      if (res.ok && res.body.response) {
+        store.commit('VK_SET_USER', res.body.response[0])
+      }
+    }
   },
-  vkExit ({commit}) {
+  vkLogOut ({commit}) {
     commit('VK_CLEAR_TOKEN')
     commit('VK_CLEAR_USER')
     commit('VK_CLEAR_PERMISSIONS')
