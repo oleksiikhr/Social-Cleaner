@@ -53,25 +53,27 @@ export default {
       type: Boolean,
       required: false
     },
+    // From store
     process: {
       type: Boolean,
       required: true
+    },
+    loading: {
+      type: Boolean,
+      required: false
     }
   },
   data () {
     return {
-      loading: false,
       modal: false
     }
   },
   methods: {
     emitStart () {
       this.modal = false
-      this.loading = true
       this.$emit('start', true)
     },
     emitPreview () {
-      this.loading = true
       this.$emit('preview', true)
     }
   }

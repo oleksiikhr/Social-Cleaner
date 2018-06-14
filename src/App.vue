@@ -159,4 +159,9 @@ hr {
     }
   }
 }
+
+// Help css
+.text-center {
+  text-align: center;
+}
 </style>

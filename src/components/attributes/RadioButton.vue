@@ -1,7 +1,6 @@
 <template>
   <div class="block__attr">
     <p>{{ name }}</p>
-    {{ input }}
     <at-radio-group v-model="input">
       <at-radio-button v-for="item in html" :key="item.val" :label="item.val" :disabled="process">
         {{ item.name }}

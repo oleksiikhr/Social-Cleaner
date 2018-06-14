@@ -2,11 +2,8 @@
   <div id="status">
     <div class="main-config block">
       <h2>{{ $t('vk.status.h2') }}</h2>
-      <div class="block__attr">
-        <p>{{ $t('vk.status.attr_1.p') }}</p>
-        <at-input v-model="id" />
-        <small>{{ $t('vk.status.attr_1.small') }}</small>
-      </div>
+      <attr-input :name="$t('vk.status.attr_1.p')" :info="$t('vk.status.attr_1.small')" :model.sync="id"
+                  :process="process" />
       <div class="text-center">
         <at-button type="primary" @click="fetchGetStatus()" :disabled="process">
           {{ $t('vk.status.get_status') }}
@@ -29,32 +26,32 @@
       </div>
     </template>
 
-    <template v-if="status">
-      <hr>
-      <div class="block">
-        <div class="text-center">
-          <at-button type="error" :disabled="process" @click="fetchDeleteStatus()">
-            {{ $t('vk.status.clear_status') }}
-          </at-button>
-        </div>
-      </div>
-    </template>
+    <hr>
+    <attr-action :process="process" :loading="loading" @start="fetchDeleteStatus" />
   </div>
 </template>
 
 <script>
+import AttrAction from '../attributes/Action'
+import AttrInput from '../attributes/Input'
 import VK from '../../media/VK'
 
 export default {
+  components: {
+    AttrInput, AttrAction
+  },
   data () {
     return {
       id: '',
       link: '',
-      status: ''
+      status: '',
+      loading: false
     }
   },
   mounted () {
-    this.fetchGetStatus()
+    if (!this.process) {
+      this.fetchGetStatus()
+    }
   },
   computed: {
     user () {
@@ -66,25 +63,33 @@ export default {
   },
   methods: {
     async fetchGetStatus () {
-      this.$store.commit('SET_PROCESS', 'vk')
-      const result = await VK.fetchStatusGet(this.id ? '-' + this.id : this.user.id)
+      this.start()
 
+      const result = await VK.fetchStatusGet(this.id ? '-' + this.id : this.user.id)
       if (result.ok && result.body.response) {
         this.status = result.body.response.text
         this.link = this.id ? VK.getLinkGroup(this.id) : VK.getLinkUser()
       }
 
-      this.$store.commit('CLEAR_PROCESS', 'vk')
+      this.stop()
     },
     async fetchDeleteStatus () {
-      this.$store.commit('SET_PROCESS', 'vk')
-      let result = await VK.fetchStatusSet('', this.id || null)
+      this.start()
 
+      let result = await VK.fetchStatusSet('', this.id || null)
       if (result.ok && result.body.response) {
         this.status = ''
       }
 
-      this.$store.commit('CLEAR_PROCESS', 'vk')
+      this.stop()
+    },
+    start () {
+      this.$store.commit('START_PROCESS', 'vk')
+      this.loading = true
+    },
+    stop () {
+      this.$store.commit('STOP_PROCESS', 'vk')
+      this.loading = false
     }
   },
   watch: {
@@ -103,9 +108,5 @@ export default {
     border-left: 5px solid #6190e8;
     padding: 7px 20px;
   }
-}
-
-.text-center {
-  text-align: center;
 }
 </style>

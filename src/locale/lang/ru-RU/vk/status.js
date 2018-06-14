@@ -6,6 +6,5 @@ export default {
   },
   empty: 'Статус пуст',
   current_status: 'Текущий статус',
-  get_status: 'Получить статус',
-  clear_status: 'Очистить статус'
+  get_status: 'Получить статус'
 }
