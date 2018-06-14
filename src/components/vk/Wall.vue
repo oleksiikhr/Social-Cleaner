@@ -9,14 +9,8 @@
                   :process="process" />
       <attr-select name="Фильтр записей" :html="html.filters" :model.sync="main.filter" size="large" :process="process" />
       <attr-count name="Количество записей (от и до), включительно" :model="main.count" :process="process" />
-      <!--TODO radioButton Attribute-->
-      <div class="block__attr">
-        <p>Удалить записи или очистить комментарии</p>
-        <at-radio-group v-model="main.isDeletePosts">
-          <at-radio-button :label="0" :disabled="process">Записи</at-radio-button>
-          <at-radio-button :label="1" disabled>Комментарии</at-radio-button>
-        </at-radio-group>
-      </div>
+      <attr-radio-button name="Удалить записи или очистить комментарии под записями" :model.sync="main.isDeletePosts"
+                         :process="process" :html="html.deletePosts" />
       <config-result v-if="!process" :main-config="main" :owner-id="ownerId" />
     </div>
 
@@ -35,7 +29,7 @@
         <div class="top">
           <p :class="getStyleStatus(isActiveWallCount)">Значения</p>
           <a @click="wall.count.compareAll = !wall.count.compareAll" class="compare">
-            {{ wall.count.compareAll ? 'All' : 'One' }}
+            {{ wall.count.compareAll ? 'And' : 'Or' }}
           </a>
         </div>
         <div class="counts">
@@ -119,8 +113,9 @@
 </template>
 
 <script>
-import AttrCheckbox from '../attributes/Checkbox'
+import AttrRadioButton from '../attributes/RadioButton'
 import ConfigResult from './parts/WallConfigResult'
+import AttrCheckbox from '../attributes/Checkbox'
 import AttrSelect from '../attributes/Select'
 import AttrInput from '../attributes/Input'
 import AttrCount from '../attributes/Count'
@@ -135,7 +130,7 @@ const SLEEP_GET_MAX = 1500
 
 export default {
   components: {
-    ConfigResult, AttrTag, AttrCheckbox, AttrCount, AttrInput, AttrSelect
+    ConfigResult, AttrTag, AttrCheckbox, AttrCount, AttrInput, AttrSelect, AttrRadioButton
   },
   data () {
     return {
@@ -214,6 +209,10 @@ export default {
         loading: false
       },
       html: {
+        deletePosts: [
+          { name: 'Записи', val: 0 },
+          { name: 'Комментарии', val: 1 }
+        ],
         filters: [
           { name: 'Все', val: 'all' },
           { name: 'Предложенные записи на стене сообщества', val: 'suggests' },
