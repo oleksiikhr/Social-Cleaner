@@ -1,21 +1,21 @@
 <template>
-  <!--TODO Global process-->
   <div id="docs">
     <div class="main-config block">
       <h2>Основные настройки</h2>
-      <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
-      <attr-count name="Количество документов (от и до), включительно" :model="main.count" />
-      <attr-radio name="Фильтр" :model.sync="main.type" :html="html.types" />
+      <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id"
+                  :process="process" />
+      <attr-count name="Количество документов (от и до), включительно" :model="main.count" :process="process" />
+      <attr-radio name="Фильтр" :model.sync="main.type" :html="html.types" :process="process" />
     </div>
 
     <hr>
     <div class="docs-config block">
       <h2>Настройки</h2>
-      <attr-tag :obj="config.fromIds" name="ID авторов документов" :push="pushNumber" :link-tag="getLinkPage"
-                 info="After filling, press enter to add to the list. Use a negative value to designate a community ID." />
-      <attr-tag :obj="config.exts" name="Расширения документов" :push="pushString"
+      <attr-tag :obj="config.fromIds" name="ID авторов документов" :push="pushNumber" :link-tag="getLinkPage" :process="process"
+                 info="Press enter to add to the list. Use a negative value to designate a community ID." />
+      <attr-tag :obj="config.exts" name="Расширения документов" :push="pushString" :process="process"
                  info="After filling, press enter to add to the list. Without a dot. Example: png, jpg" />
-      <attr-tag :obj="config.texts" name="Фразы в названии" :push="pushString" compare
+      <attr-tag :obj="config.texts" name="Фразы в названии" :push="pushString" :process="process" compare
                  info="After filling, press enter to add to the list." />
       <!--TODO Date-->
     </div>
@@ -77,10 +77,10 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.vk.user
+      return this.$store.state.media.vk.user
     },
     process () {
-      return this.$store.state.vk.process
+      return this.$store.state.media.vk.process
     },
     ownerId () {
       return this.main.owner_id ? '-' + this.main.owner_id : this.user.id

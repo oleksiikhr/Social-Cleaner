@@ -33,11 +33,10 @@ export default {
     info: {
       type: String,
       required: false
-    }
-  },
-  computed: {
-    process () {
-      return this.$store.state.vk.process
+    },
+    process: {
+      type: Boolean,
+      required: false
     }
   }
 }

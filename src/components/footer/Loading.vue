@@ -2,7 +2,7 @@
   <div id="loading">
     <div class="loading__inner">
       <div class="loading__item" v-for="(item, index) in media" :key="index">
-        {{ item }}
+        {{ item.stop }}
       </div>
     </div>
   </div>

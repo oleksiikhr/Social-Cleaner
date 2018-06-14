@@ -58,10 +58,10 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.vk.user
+      return this.$store.state.media.vk.user
     },
     process () {
-      return this.$store.state.media.list.vk.process
+      return this.$store.state.media.vk.process
     }
   },
   methods: {

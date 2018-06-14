@@ -33,16 +33,15 @@ export default {
       type: String,
       required: false,
       default: 'normal'
+    },
+    process: {
+      type: Boolean,
+      required: false
     }
   },
   data () {
     return {
       input: this.model
-    }
-  },
-  computed: {
-    process () {
-      return this.$store.state.vk.process
     }
   },
   watch: {

@@ -5,9 +5,10 @@
   <div id="wall">
     <div class="main-config block">
       <h2>Основные настройки</h2>
-      <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
-      <attr-select name="Фильтр записей" :html="html.filters" :model.sync="main.filter" size="large" />
-      <attr-count name="Количество записей (от и до), включительно" :model="main.count" />
+      <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id"
+                  :process="process" />
+      <attr-select name="Фильтр записей" :html="html.filters" :model.sync="main.filter" size="large" :process="process" />
+      <attr-count name="Количество записей (от и до), включительно" :model="main.count" :process="process" />
       <!--TODO radioButton Attribute-->
       <div class="block__attr">
         <p>Удалить записи или очистить комментарии</p>
@@ -22,13 +23,13 @@
     <hr>
     <div class="wall-config block">
       <h2>Параметры стены</h2>
-      <attr-tag :obj="wall.ids" name="ID записей" :push="pushNumber" :link-tag="getLinkPost"
+      <attr-tag :obj="wall.ids" name="ID записей" :push="pushNumber" :link-tag="getLinkPost" :process="process"
                  info="After filling, press enter to add to the list." />
-      <attr-tag :obj="wall.fromIds" name="ID авторов записей" :push="pushNumber" :link-tag="getLinkPage"
+      <attr-tag :obj="wall.fromIds" name="ID авторов записей" :push="pushNumber" :link-tag="getLinkPage" :process="process"
                  info="After filling, press enter to add to the list. Use a negative value to designate a community ID." />
-      <attr-tag :obj="wall.texts" name="Фразы в тексте" :push="pushString" compare
+      <attr-tag :obj="wall.texts" name="Фразы в тексте" :push="pushString" :process="process" compare
                  info="After filling, press enter to add to the list." />
-      <attr-checkbox :obj="wall.attachments" name="Added media attachments" compare />
+      <attr-checkbox :obj="wall.attachments" name="Added media attachments" :process="process" compare />
       <!--TODO Type content-->
       <div class="block__attr">
         <div class="top">
@@ -231,10 +232,10 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.vk.user
+      return this.$store.state.media.vk.user
     },
     process () {
-      return this.$store.state.vk.process
+      return this.$store.state.media.vk.process
     },
     ownerId () {
       return this.main.owner_id ? '-' + this.main.owner_id : this.user.id

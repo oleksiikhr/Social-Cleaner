@@ -28,7 +28,7 @@ Vue.http.interceptors.push((req, next) => {
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.vk && !store.state.vk.user.id) {
+  if (to.meta.vk && !store.state.media.vk.user.id) {
     next({ name: 'vk' })
   } else {
     next()

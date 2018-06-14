@@ -20,16 +20,15 @@ export default {
     info: {
       type: String,
       required: false
+    },
+    process: {
+      type: Boolean,
+      required: false
     }
   },
   data () {
     return {
       input: this.model
-    }
-  },
-  computed: {
-    process () {
-      return this.$store.state.vk.process
     }
   },
   watch: {

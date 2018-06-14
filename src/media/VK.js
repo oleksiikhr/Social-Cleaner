@@ -20,7 +20,7 @@ const network = class VK {
     params.v = this.prototype.version
 
     if (!params.access_token) {
-      params.access_token = store.state.vk.token
+      params.access_token = store.state.media.vk.token
     }
 
     const result = await Vue.http.jsonp(this.prototype.urlApi + method, {
@@ -37,7 +37,7 @@ const network = class VK {
    * @see https://vk.com/dev/wall.get
    */
   static async fetchWallGet (
-    ownerId = store.state.vk.user.id,
+    ownerId = store.state.media.vk.user.id,
     filter = 'all',
     count = this.prototype.COUNT_WALL,
     offset = 0,
@@ -56,7 +56,7 @@ const network = class VK {
   /**
    * @see https://vk.com/dev/wall.delete
    */
-  static async fetchWallDelete (postId, ownerId = store.state.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
+  static async fetchWallDelete (postId, ownerId = store.state.media.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
     const result = await this.send('wall.delete', {
       owner_id: ownerId,
       post_id: postId
@@ -67,7 +67,7 @@ const network = class VK {
   /**
    * @see https://vk.com/dev/users.get
    */
-  static async fetchUsersGet (userIds = store.state.vk.user.id, fields = '', sleepMin = 0, sleepMax = sleepMin) {
+  static async fetchUsersGet (userIds = store.state.media.vk.user.id, fields = '', sleepMin = 0, sleepMax = sleepMin) {
     const result = await this.send('users.get', {
       user_ids: userIds,
       fields: fields
@@ -89,7 +89,7 @@ const network = class VK {
   /**
    * @see https://vk.com/dev/status.get
    */
-  static async fetchStatusGet (id = store.state.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
+  static async fetchStatusGet (id = store.state.media.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
     const result = await this.send('status.get', {
       user_id: id
     }, { min: sleepMin, max: sleepMax })
@@ -114,7 +114,7 @@ const network = class VK {
     count = this.prototype.COUNT_DOCS,
     offset = 0,
     type = 0,
-    ownerId = store.state.vk.user.id,
+    ownerId = store.state.media.vk.user.id,
     sleepMin = 0,
     sleepMax = sleepMin
   ) {
@@ -130,7 +130,7 @@ const network = class VK {
   /**
    * @see https://vk.com/dev/docs.delete
    */
-  static async fetchDocsDelete (docId, ownerId = store.state.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
+  static async fetchDocsDelete (docId, ownerId = store.state.media.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
     const result = await this.send('docs.delete', {
       owner_id: ownerId,
       doc_id: docId
@@ -168,7 +168,7 @@ const network = class VK {
 
     return this.getLinkUser(id)
   }
-  static getLinkUser (id = store.state.vk.user.id) {
+  static getLinkUser (id = store.state.media.vk.user.id) {
     return `${this.prototype.url}id${id}`
   }
   static getLinkGroup (id) {

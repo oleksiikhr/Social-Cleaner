@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.vk.user.id
+      return this.$store.state.media.vk.user.id
     }
   },
   methods: {

@@ -44,11 +44,10 @@ export default {
     compare: {
       type: Boolean,
       required: false
-    }
-  },
-  computed: {
-    process () {
-      return this.$store.state.vk.process
+    },
+    process: {
+      type: Boolean,
+      required: false
     }
   }
 }
