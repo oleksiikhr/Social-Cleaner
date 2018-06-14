@@ -5,7 +5,7 @@
       <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id"
                   :process="process" />
       <attr-count name="Количество документов (от и до), включительно" :model="main.count" :process="process" />
-      <attr-radio name="Фильтр" :model.sync="main.type" :html="html.types" :process="process" />
+      <attr-radio name="Фильтр" :model.sync="main.type.value" :html="main.type.html" :process="process" />
     </div>
 
     <hr>
@@ -19,10 +19,14 @@
                  info="After filling, press enter to add to the list." />
       <!--TODO Date-->
     </div>
+
+    <hr>
+    <attr-action :process="process" canPreview @start="start" @preview="preview" />
   </div>
 </template>
 
 <script>
+import AttrAction from '../attributes/Action'
 import AttrInput from '../attributes/Input'
 import AttrCount from '../attributes/Count'
 import AttrRadio from '../attributes/Radio'
@@ -31,7 +35,7 @@ import VK from '../../media/VK'
 
 export default {
   components: {
-    AttrTag, AttrInput, AttrRadio, AttrCount
+    AttrTag, AttrInput, AttrRadio, AttrCount, AttrAction
   },
   data () {
     return {
@@ -41,7 +45,20 @@ export default {
           min: '1',
           max: '20'
         },
-        type: 0
+        type: {
+          value: 0,
+          html: [
+            { name: 'Все', val: 0 },
+            { name: 'Текстовые документы', val: 1 },
+            { name: 'Архивы', val: 2 },
+            { name: 'Gif', val: 3 },
+            { name: 'Изображения', val: 4 },
+            { name: 'Аудио', val: 5 },
+            { name: 'Видео', val: 6 },
+            { name: 'Электронные книги', val: 7 },
+            { name: 'Неизвестно', val: 8 }
+          ]
+        }
       },
       config: {
         texts: {
@@ -59,19 +76,6 @@ export default {
           items: [],
           compareAll: false
         }
-      },
-      html: {
-        types: [
-          { name: 'Все', val: 0 },
-          { name: 'Текстовые документы', val: 1 },
-          { name: 'Архивы', val: 2 },
-          { name: 'Gif', val: 3 },
-          { name: 'Изображения', val: 4 },
-          { name: 'Аудио', val: 5 },
-          { name: 'Видео', val: 6 },
-          { name: 'Электронные книги', val: 7 },
-          { name: 'Неизвестно', val: 8 }
-        ]
       }
     }
   },
@@ -93,7 +97,7 @@ export default {
      * |
      */
     async fetchGet (count = VK.prototype.COUNT_DOCS, offset = this.main.count.min - 1, sleepMin = 0, sleepMax = sleepMin) {
-      const res = await VK.fetchDocsGet(count, offset, this.main.type, this.ownerId, sleepMin, sleepMax)
+      const res = await VK.fetchDocsGet(count, offset, this.main.type.value, this.ownerId, sleepMin, sleepMax)
 
       return res
     },
@@ -101,6 +105,20 @@ export default {
       const res = await VK.fetchDocsDelete(docId, this.ownerId, sleepMin, sleepMax)
 
       return res
+    },
+
+    /* | -----------------------------------------------------------------------------
+     * | Start / Stop
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    start () {
+      console.log('Start')
+      this.$store.commit('START_PROCESS', 'vk')
+    },
+    preview () {
+      console.log('Preview')
+      this.$store.commit('STOP_PROCESS', 'vk')
     },
 
     /* | -----------------------------------------------------------------------------

@@ -18,11 +18,11 @@ const state = {
       groups: false
     },
     process: false,
-    stop: false
+    cancel: false
   },
   twitter: {
     process: false,
-    stop: false
+    cancel: false
   }
 }
 
@@ -32,17 +32,17 @@ const mutations = {
    * | -----------------------------------------------------------------------------
    * |
    */
-  SET_PROCESS (state, media) {
+  START_PROCESS (state, media) {
     state[media].process = true
   },
-  CLEAR_PROCESS (state, media) {
+  STOP_PROCESS (state, media) {
     state[media].process = false
   },
-  SET_STOP (state, media) {
-    state[media].stop = true
+  SET_CANCEL (state, media) {
+    state[media].cancel = true
   },
-  CLEAR_STOP (state, media) {
-    state[media].stop = false
+  CLEAR_CANCEL (state, media) {
+    state[media].cancel = false
   },
 
   /* | -----------------------------------------------------------------------------
