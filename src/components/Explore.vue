@@ -5,14 +5,14 @@
       <at-input v-model="search" placeholder="Search" icon="search" title="Search" />
     </div>
     <div class="result">
-      <card v-for="(item, index) in filteredNetworks" :key="index" :item="item" />
+      <card v-for="(item, index) in filteredMedia" :key="index" :item="item" />
     </div>
   </div>
 </template>
 
 <script>
-import networks from '../media'
 import Card from './parts/Card'
+import media from '../media'
 
 export default {
   components: {
@@ -20,29 +20,30 @@ export default {
   },
   data () {
     return {
-      networks: [],
+      media: [],
       search: ''
     }
   },
   created () {
-    this.networks = networks.filter(network => {
-      return !network.off
+    // Get a list of social media and filter out disabled
+    this.media = media.filter(item => {
+      return !item.off
     })
   },
   deactivated () {
     this.search = ''
   },
   computed: {
-    filteredNetworks () {
+    filteredMedia () {
       let search = this.search
 
       if (!search) {
-        return this.networks
+        return this.media
       }
 
       search = search.toLocaleLowerCase().trim()
 
-      return this.networks.filter(n => {
+      return this.media.filter(n => {
         if (n.name.toLowerCase().indexOf(search) !== -1 || n.domain.indexOf(search) !== -1) {
           return n
         }

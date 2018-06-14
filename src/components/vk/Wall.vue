@@ -1,4 +1,5 @@
 <template>
+  <!--TODO Global process-->
   <!--TODO Translate-->
   <!--TODO Documentation for the user-->
   <div id="wall">

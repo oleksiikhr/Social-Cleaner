@@ -7,16 +7,18 @@
       </keep-alive>
     </div>
     <footer-component />
+    <loading />
   </div>
 </template>
 
 <script>
 import FooterComponent from './components/footer/Index'
 import HeaderComponent from './components/header/Index'
+import Loading from './components/footer/Loading'
 
 export default {
   components: {
-    HeaderComponent, FooterComponent
+    HeaderComponent, FooterComponent, Loading
   },
   computed: {
     appClass () {

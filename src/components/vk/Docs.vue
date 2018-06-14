@@ -1,4 +1,5 @@
 <template>
+  <!--TODO Global process-->
   <div id="docs">
     <div class="main-config block">
       <h2>Основные настройки</h2>
