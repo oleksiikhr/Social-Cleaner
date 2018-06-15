@@ -47,10 +47,38 @@ new Vue({
 
 Vue.mixin({
   methods: {
+    /* | -----------------------------------------------------------------------------
+     * | Working with loop.
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    /**
+     * How many posts you need to receive to completely delete posts.
+     *
+     * @param {object} countObj - {min, max}
+     * @param {int} countMax
+     *
+     * @return number
+     */
+    getCountLoop (countObj, countMax) {
+      return Math.ceil((countObj.max - countObj.min + 1) / countMax)
+    },
+    /**
+     * How many posts you need to delete.
+     *
+     * @param {object} countObj - {min, max}
+     *
+     * @return number
+     */
+    getCountDeletePosts (countObj) {
+      return countObj.max - countObj.min + 1
+    },
     /**
      * Add a new, unique and sorted number to an array from the input.
      *
-     * @param obj - {input, numbers}
+     * @param {object} obj - {input, numbers, compareAll*}
+     *
+     * @return void - adding an input value to the array
      */
     pushNumber (obj) {
       const id = parseInt(obj.input)
@@ -65,7 +93,9 @@ Vue.mixin({
     /**
      * Add a new, unique, and sorted string to an array from the input.
      *
-     * @param obj - {input, items}
+     * @param {object} obj - {input, items, compareAll*}
+     *
+     * @return void - adding an input value to the array
      */
     pushString (obj) {
       const value = obj.input.toLowerCase().trim()

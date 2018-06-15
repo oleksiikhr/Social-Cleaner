@@ -326,8 +326,8 @@ export default {
         return
       }
 
-      for (let i = 0; i < this.getCountLoop(); i++) {
-        const count = this.getCountDeletePosts()
+      for (let i = 0; i < this.getCountLoop(this.main.count, VK.prototype.COUNT_WALL); i++) {
+        const count = this.getCountDeletePosts(this.main.count)
         const res = await this.fetchGetWall(count > 100 ? 100 : count)
 
         if (res.ok && res.body.response) {
@@ -373,14 +373,14 @@ export default {
       this.preview.show = true
       this.preview.ids = []
 
-      for (let i = 0; i < this.getCountLoop(); i++) {
+      for (let i = 0; i < this.getCountLoop(this.main.count, VK.prototype.COUNT_WALL); i++) {
         // If user click the stop button
         if (!this.del.continue) {
           return this.stopAction()
         }
 
         const offset = i * VK.prototype.COUNT_WALL
-        const res = await this.fetchGetWall(this.getCountDeletePosts() - offset, offset)
+        const res = await this.fetchGetWall(this.getCountDeletePosts(this.main.count) - offset, offset)
 
         if (res.ok && res.body.response && res.body.response.items.length) {
           res.body.response.items.forEach(post => {
@@ -565,28 +565,6 @@ export default {
     },
     getLinkPage (id) {
       return VK.getLinkPage(id)
-    },
-
-    /* | -----------------------------------------------------------------------------
-     * | Other
-     * | -----------------------------------------------------------------------------
-     * |
-     */
-    /**
-     * How many posts you need to receive to completely delete posts.
-     *
-     * @return number
-     */
-    getCountLoop () {
-      return Math.ceil((this.main.count.max - this.main.count.min + 1) / VK.prototype.COUNT_WALL)
-    },
-    /**
-     * How many posts you need to delete.
-     *
-     * @return number
-     */
-    getCountDeletePosts () {
-      return this.main.count.max - this.main.count.min + 1
     }
   }
 }
