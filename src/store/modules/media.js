@@ -17,10 +17,11 @@ const state = {
       docs: false,
       groups: false
     },
-    process: false,
-    cancel: false
-  },
-  twitter: {
+    info: {
+      name: VK.prototype.name,
+      icon: VK.prototype.icon,
+      to: VK.prototype.to
+    },
     process: false,
     cancel: false
   }

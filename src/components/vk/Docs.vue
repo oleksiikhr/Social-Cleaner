@@ -115,10 +115,20 @@ export default {
     start () {
       console.log('Start')
       this.$store.commit('START_PROCESS', 'vk')
+      this.loading = true
+
+      this.stop()
     },
     preview () {
       console.log('Preview')
+      this.$store.commit('START_PROCESS', 'vk')
+      this.loading = true
+
+      this.stop()
+    },
+    stop () {
       this.$store.commit('STOP_PROCESS', 'vk')
+      this.loading = false
     },
 
     /* | -----------------------------------------------------------------------------
