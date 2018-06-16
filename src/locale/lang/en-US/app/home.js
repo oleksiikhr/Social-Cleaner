@@ -6,7 +6,7 @@ export default {
   works: {
     title: 'How it works',
     items: [
-      { name: 'Receiving a token', description: 'Get a token for your account in the desired social media.' },
+      { name: 'Accessing', description: 'Get a special token to access your account.' },
       { name: 'Account setup', description: 'Select the partition to be cleaned and configure the required settings.' },
       { name: 'Waiting for cleaning', description: 'Start the cleaning process and wait for the process to complete.' }
     ]
