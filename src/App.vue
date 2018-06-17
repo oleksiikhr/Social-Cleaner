@@ -1,5 +1,6 @@
 <template>
   <div id="app" :class="appClass">
+    <loading-component />
     <header-component />
     <div id="content">
       <keep-alive>
@@ -7,18 +8,17 @@
       </keep-alive>
     </div>
     <footer-component />
-    <loading />
   </div>
 </template>
 
 <script>
+import LoadingComponent from './components/parts/Loading'
 import FooterComponent from './components/footer/Index'
 import HeaderComponent from './components/header/Index'
-import Loading from './components/footer/Loading'
 
 export default {
   components: {
-    HeaderComponent, FooterComponent, Loading
+    HeaderComponent, FooterComponent, LoadingComponent
   },
   computed: {
     appClass () {

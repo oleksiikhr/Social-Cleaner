@@ -1,7 +1,7 @@
 <template>
   <div id="loading">
     <div class="loading__inner">
-      <a class="loading__item" v-for="(item, index) in media" :key="index" @click="item.cancel = true">
+      <a :class="getClassItem(item)" v-if="item.process" v-for="(item, index) in media" :key="index" @click="cancel(index)">
         <div class="loading__icon">
           <i :class="`fa ${item.info.icon}`" aria-hidden="true"></i>
         </div>
@@ -15,6 +15,14 @@ export default {
   computed: {
     media () {
       return this.$store.state.media
+    }
+  },
+  methods: {
+    cancel (name) {
+      this.$store.commit('SET_CANCEL', name)
+    },
+    getClassItem (media) {
+      return 'loading__item' + (media.cancel ? ' loading__cancel' : '')
     }
   }
 }
@@ -49,6 +57,10 @@ export default {
   }
   &:last-child {
     border-bottom: 0;
+  }
+  &.loading__cancel {
+    pointer-events: none;
+    opacity: .5;
   }
 }
 </style>
