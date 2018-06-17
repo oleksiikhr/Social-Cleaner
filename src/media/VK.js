@@ -194,6 +194,9 @@ const network = class VK {
   static getLinkGroup (id) {
     return `${this.prototype.url}public${id}`
   }
+  static getLinkDoc (docId, userId = store.state.media.vk.user.id) {
+    return `${this.prototype.url}doc${userId}_${docId}`
+  }
 }
 
 /* | -----------------------------------------------------------------------------

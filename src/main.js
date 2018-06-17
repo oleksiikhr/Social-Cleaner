@@ -48,12 +48,136 @@ new Vue({
 Vue.mixin({
   methods: {
     /* | -----------------------------------------------------------------------------
+     * | Check.
+     * | -----------------------------------------------------------------------------
+     * |
+     * | null  - config is off
+     * | false - no matches found
+     * | true  - matches found
+     * |
+     */
+    /**
+     * Checking settings for startup.
+     *
+     * @param {object} countObj - {min, max}
+     *
+     * @return boolean
+     */
+    checkStart (countObj) {
+      const min = parseInt(this.main.count.min)
+      const max = parseInt(this.main.count.max)
+
+      if (min > 0 && max > 0 && max >= min) {
+        this.main.count.min = min.toString()
+        this.main.count.max = max.toString()
+        return true
+      }
+
+      this.$Modal.alert({ title: 'Ошибка', content: 'Проверьте диапазон в основных настройках' })
+      return false
+    },
+    /**
+     * @param {array} items - {obj, method, param}
+     * @param {boolean} reverse
+     *
+     * @return object - {result(bool), index(number)}
+     */
+    checkFinal (items, reverse = false) {
+      let onlyNull = true
+
+      for (const [index, item] of items.entries()) {
+        const result = item.method(item.obj, item.param)
+
+        if (result === null) {
+          continue
+        }
+
+        onlyNull = false
+
+        if (!result) {
+          return { result: reverse, index: index }
+        }
+      }
+
+      return { result: reverse ? onlyNull : !onlyNull, index: null }
+    },
+
+    checkNumber (obj, need) {
+      const compareAll = obj.compareAll
+      const items = obj.items
+      const len = items.length
+
+      if (!len) {
+        return null
+      }
+
+      if (compareAll) {
+        for (let i = 0; i < items; i++) {
+          if (items[i] !== need) {
+            return false
+          }
+        }
+        return true
+      }
+
+      return items.includes(need)
+    },
+    checkText (obj, need) {
+      const compareAll = obj.compareAll
+      const items = obj.items
+      const len = items.length
+
+      if (!len) {
+        return null
+      }
+
+      need = need.toLowerCase().trim()
+
+      for (let i = 0; i < len; i++) {
+        const isFind = need.indexOf(items[i]) !== -1
+
+        if (compareAll && !isFind) {
+          return false
+        }
+        if (!compareAll && isFind) {
+          return true
+        }
+      }
+
+      return compareAll
+    },
+    checkTextFull (obj, need) {
+      const compareAll = obj.compareAll
+      const items = obj.items
+      const len = items.length
+
+      if (!len) {
+        return null
+      }
+
+      need = need.toLowerCase().trim()
+
+      for (let i = 0; i < len; i++) {
+        const isFind = need === items[i]
+
+        if (compareAll && !isFind) {
+          return false
+        }
+        if (!compareAll && isFind) {
+          return true
+        }
+      }
+
+      return compareAll
+    },
+
+    /* | -----------------------------------------------------------------------------
      * | Working with loop.
      * | -----------------------------------------------------------------------------
      * |
      */
     /**
-     * How many posts you need to receive to completely delete posts.
+     * Number of cycles to go through to delete all items.
      *
      * @param {object} countObj - {min, max}
      * @param {int} countMax
@@ -70,9 +194,15 @@ Vue.mixin({
      *
      * @return number
      */
-    getCountDeletePosts (countObj) {
+    getCountDeleteItems (countObj) {
       return countObj.max - countObj.min + 1
     },
+
+    /* | -----------------------------------------------------------------------------
+     * | Working with attributes.
+     * | -----------------------------------------------------------------------------
+     * |
+     */
     /**
      * Add a new, unique and sorted number to an array from the input.
      *
@@ -107,6 +237,12 @@ Vue.mixin({
 
       obj.input = ''
     },
+
+    /* | -----------------------------------------------------------------------------
+     * | Other.
+     * | -----------------------------------------------------------------------------
+     * |
+     */
     /**
      * HTML (on / off).
      *

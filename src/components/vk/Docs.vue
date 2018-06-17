@@ -11,21 +11,30 @@
     <hr>
     <div class="docs-config block">
       <h2>Настройки</h2>
-      <attr-tag :obj="config.fromIds" name="ID авторов документов" :push="pushNumber" :link-tag="getLinkPage" :process="process"
+      <attr-tag :obj="config.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
                  info="Press enter to add to the list. Use a negative value to designate a community ID." />
-      <attr-tag :obj="config.exts" name="Расширения документов" :push="pushString" :process="process"
-                 info="After filling, press enter to add to the list. Without a dot. Example: png, jpg" />
-      <attr-tag :obj="config.texts" name="Фразы в названии" :push="pushString" :process="process" compare
-                 info="After filling, press enter to add to the list." />
+      <attr-tag :obj="config.exts" :push="pushString" :process="process"
+                info="After filling, press enter to add to the list. Without a dot. Example: png, jpg" />
+      <attr-tag :obj="config.texts" :push="pushString" :process="process" compare
+                info="After filling, press enter to add to the list." />
+      <attr-reverse :model.sync="config.reverse" />
       <!--TODO Date-->
+      <!--TODO Count Size-->
     </div>
 
     <hr>
-    <attr-action :process="process" canPreview @start="start" @preview="preview" />
+    <attr-action :process="process" :loading="loading" canPreview @start="doStart" @preview="doPreview" />
+
+    <template v-if="result.length">
+      <hr>
+      <attr-result :data="result" />
+    </template>
   </div>
 </template>
 
 <script>
+import AttrReverse from '../attributes/Reverse'
+import AttrResult from '../attributes/Result'
 import AttrAction from '../attributes/Action'
 import AttrInput from '../attributes/Input'
 import AttrCount from '../attributes/Count'
@@ -33,9 +42,15 @@ import AttrRadio from '../attributes/Radio'
 import AttrTag from '../attributes/Tag'
 import VK from '../../media/VK'
 
+const SLEEP_GET_MIN = 500
+const SLEEP_GET_MAX = 1500
+
+const SLEEP_DELETE_MIN = 1500
+const SLEEP_DELETE_MAX = 2500
+
 export default {
   components: {
-    AttrTag, AttrInput, AttrRadio, AttrCount, AttrAction
+    AttrTag, AttrInput, AttrRadio, AttrCount, AttrAction, AttrReverse, AttrResult
   },
   data () {
     return {
@@ -61,22 +76,28 @@ export default {
         }
       },
       config: {
-        texts: {
+        fromIds: {
+          name: 'ID авторов',
           input: '',
           items: [],
           compareAll: false
         },
         exts: {
+          name: 'Расширения документов',
           input: '',
           items: [],
           compareAll: false
         },
-        fromIds: {
+        texts: {
+          name: 'Фразы в названии',
           input: '',
           items: [],
           compareAll: false
-        }
-      }
+        },
+        reverse: false
+      },
+      result: [],
+      loading: false
     }
   },
   computed: {
@@ -85,6 +106,9 @@ export default {
     },
     process () {
       return this.$store.state.media.vk.process
+    },
+    cancel () {
+      return this.$store.state.media.vk.cancel
     },
     ownerId () {
       return this.main.owner_id ? '-' + this.main.owner_id : this.user.id
@@ -96,13 +120,13 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    async fetchGet (count = VK.prototype.COUNT_DOCS, offset = this.main.count.min - 1, sleepMin = 0, sleepMax = sleepMin) {
-      const res = await VK.fetchDocsGet(count, offset, this.main.type.value, this.ownerId, sleepMin, sleepMax)
+    async fetchGet (count = VK.prototype.COUNT_DOCS, offset = this.main.count.min - 1) {
+      const res = await VK.fetchDocsGet(count, offset, this.main.type.value, this.ownerId, SLEEP_GET_MIN, SLEEP_GET_MAX)
 
       return res
     },
-    async fetchDelete (docId, sleepMin = 0, sleepMax = sleepMin) {
-      const res = await VK.fetchDocsDelete(docId, this.ownerId, sleepMin, sleepMax)
+    async fetchDelete (docId) {
+      const res = await VK.fetchDocsDelete(docId, this.ownerId, SLEEP_DELETE_MIN, SLEEP_DELETE_MAX)
 
       return res
     },
@@ -112,23 +136,104 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    start () {
-      console.log('Start')
-      this.$store.commit('START_PROCESS', 'vk')
-      this.loading = true
+    async doStart () {
+      if (!this.start()) {
+        return
+      }
+
+      for (let i = 0; i < this.getCountLoop(this.main.count, VK.prototype.COUNT_DOCS); i++) {
+        const count = this.getCountDeleteItems(this.main.count)
+        const res = await this.fetchGet(count > VK.prototype.COUNT_DOCS ? VK.prototype.COUNT_DOCS : count)
+
+        if (res.ok && res.body.response) {
+          const len = res.body.response.items.length
+          for (let j = 0; j < len; j++) {
+            if (this.cancel) {
+              return this.stop()
+            }
+
+            const doc = res.body.response.items[j]
+
+            if (this.check(doc)) {
+              const resDelete = await this.fetchDelete(doc.id)
+              if (resDelete.ok && resDelete.body.response) {
+                this.main.count.max--
+              }
+            } else {
+              this.main.count.min++
+            }
+          }
+        } else {
+          this.stop()
+        }
+      }
 
       this.stop()
     },
-    preview () {
-      console.log('Preview')
-      this.$store.commit('START_PROCESS', 'vk')
-      this.loading = true
+    async doPreview () {
+      if (!this.start()) {
+        return
+      }
+
+      for (let i = 0; i < this.getCountLoop(this.main.count, VK.prototype.COUNT_DOCS); i++) {
+        // Check if the user clicked on the stop.
+        if (this.cancel) {
+          return this.stop()
+        }
+
+        const offset = i * VK.prototype.COUNT_WALL
+        const res = await this.fetchGet(this.getCountDeleteItems(this.main.count) - offset, offset)
+
+        if (res.ok && res.body.response && res.body.response.items.length) {
+          res.body.response.items.forEach(doc => {
+            this.check(doc)
+          })
+        } else {
+          return this.stop()
+        }
+      }
 
       this.stop()
+    },
+    start () {
+      this.$store.commit('START_PROCESS', 'vk')
+      this.loading = true
+      this.result = []
+
+      if (this.checkStart(this.main.count)) {
+        return true
+      }
+
+      this.stop()
+      return false
     },
     stop () {
       this.$store.commit('STOP_PROCESS', 'vk')
       this.loading = false
+    },
+
+    /* | -----------------------------------------------------------------------------
+     * | Check
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    check (doc) {
+      const items = [
+        { obj: this.config.fromIds, method: this.checkNumber, param: doc.owner_id },
+        { obj: this.config.exts, method: this.checkTextFull, param: doc.ext },
+        { obj: this.config.texts, method: this.checkText, param: doc.title }
+      ]
+
+      const checked = this.checkFinal(items, this.config.reverse)
+
+      this.result.push({
+        name: doc.title,
+        link: VK.getLinkDoc(doc.id, this.ownerId),
+        reason: checked.index ? items[checked.index].obj.name : null,
+        result: checked.result ? 'Yes' : 'No'
+      })
+
+      return checked.result
     },
 
     /* | -----------------------------------------------------------------------------
@@ -142,7 +247,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

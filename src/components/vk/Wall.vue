@@ -327,18 +327,18 @@ export default {
       }
 
       for (let i = 0; i < this.getCountLoop(this.main.count, VK.prototype.COUNT_WALL); i++) {
-        const count = this.getCountDeletePosts(this.main.count)
-        const res = await this.fetchGetWall(count > 100 ? 100 : count)
+        const count = this.getCountDeleteItems(this.main.count)
+        const res = await this.fetchGetWall(count > VK.prototype.COUNT_WALL ? VK.prototype.COUNT_WALL : count)
 
         if (res.ok && res.body.response) {
           const len = res.body.response.items.length
           for (let j = 0; j < len; j++) {
-            const post = res.body.response.items[j]
-
             // If user click the stop button
             if (!this.del.continue) {
               return this.stopAction(true, true)
             }
+
+            const post = res.body.response.items[j]
 
             // If can't delete post - show modal and stopDelete
             if (typeof post.can_delete === 'undefined' || !post.can_delete) {
@@ -346,16 +346,17 @@ export default {
               return this.stopAction(false)
             }
 
-            if (!this.checkWallConfiguration(post)) {
-              this.main.count.min++
+            // If equal
+            if (this.checkWallConfiguration(post)) {
+              const resDelete = await this.fetchDeletePost(post.id)
+
+              if (resDelete.ok && resDelete.body.response) {
+                this.main.count.max--
+              }
               continue
             }
 
-            const resDelete = await this.fetchDeletePost(post.id)
-
-            if (resDelete.ok && resDelete.body.response) {
-              this.main.count.max--
-            }
+            this.main.count.min++
           }
         } else {
           return this.stopAction(res.ok && typeof res.body.error === 'undefined', true)
@@ -380,7 +381,7 @@ export default {
         }
 
         const offset = i * VK.prototype.COUNT_WALL
-        const res = await this.fetchGetWall(this.getCountDeletePosts(this.main.count) - offset, offset)
+        const res = await this.fetchGetWall(this.getCountDeleteItems(this.main.count) - offset, offset)
 
         if (res.ok && res.body.response && res.body.response.items.length) {
           res.body.response.items.forEach(post => {

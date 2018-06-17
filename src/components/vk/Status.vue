@@ -48,11 +48,6 @@ export default {
       loading: false
     }
   },
-  mounted () {
-    if (!this.process) {
-      this.fetchGetStatus()
-    }
-  },
   computed: {
     user () {
       return this.$store.state.media.vk.user

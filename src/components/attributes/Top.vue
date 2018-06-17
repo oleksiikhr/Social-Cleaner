@@ -1,6 +1,6 @@
 <template>
   <div class="top">
-    <p :class="getStyleStatus(obj.items.length)">{{ name }}</p>
+    <p :class="getStyleStatus(obj.items.length)">{{ obj.name }}</p>
     <a class="compare" @click="obj.compareAll = !obj.compareAll" :disabled="!compare">
       {{ obj.compareAll ? 'And' : 'Or' }}
     </a>
@@ -12,10 +12,6 @@ export default {
   props: {
     obj: {
       type: Object,
-      required: true
-    },
-    name: {
-      type: String,
       required: true
     },
     compare: {

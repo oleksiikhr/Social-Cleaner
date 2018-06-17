@@ -58,6 +58,7 @@ export default {
       type: Boolean,
       required: true
     },
+    // Component
     loading: {
       type: Boolean,
       required: false
