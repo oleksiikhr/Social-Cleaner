@@ -17,7 +17,7 @@ export default {
     return {
       columns: [
         { title: 'Название', key: 'name' },
-        { title: 'Совпадение', key: 'reason' },
+        { title: 'Причина', key: 'reason' },
         { title: 'Удаление', key: 'result' },
         {
           title: 'Сссылка',

@@ -25,10 +25,8 @@
     <hr>
     <attr-action :process="process" :loading="loading" canPreview @start="doStart" @preview="doPreview" />
 
-    <template v-if="result.length">
-      <hr>
-      <attr-result :data="result" />
-    </template>
+    <hr>
+    <attr-result :data="result" />
   </div>
 </template>
 
