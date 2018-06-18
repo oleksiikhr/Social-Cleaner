@@ -246,7 +246,7 @@ Vue.mixin({
     /**
      * HTML (on / off).
      *
-     * @param {int|boolean} inner
+     * @param {boolean|number} inner
      *
      * @return string
      */

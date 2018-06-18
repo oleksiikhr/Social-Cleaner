@@ -1,6 +1,6 @@
 <template>
   <div class="top">
-    <p :class="getStyleStatus(obj.items.length)">{{ obj.name }}</p>
+    <p :class="getStyleStatus(activeStatus)">{{ name }}</p>
     <a class="compare" @click="obj.compareAll = !obj.compareAll" :disabled="!compare || process">
       {{ obj.compareAll ? 'And' : 'Or' }}
     </a>
@@ -14,12 +14,20 @@ export default {
       type: Object,
       required: true
     },
+    name: {
+      type: String,
+      required: true
+    },
     process: {
       type: Boolean,
       required: true
     },
     compare: {
       type: Boolean,
+      required: false
+    },
+    activeStatus: {
+      type: Boolean | Number,
       required: false
     }
   }

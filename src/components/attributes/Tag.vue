@@ -1,6 +1,6 @@
 <template>
   <div class="block__attr">
-    <top :obj="obj" :compare="compare" :process="process" />
+    <top :obj="obj" :name="name" :compare="compare" :process="process" :active-status="obj.items.length" />
     <at-input v-model="obj.input" :disabled="process" @keyup.enter.native="push(obj)" />
     <div class="block__attr-inner">
       <at-tag v-for="(text, index) in obj.items" :key="index" :name="index" :closable="!process"
@@ -23,6 +23,10 @@ export default {
   props: {
     obj: {
       type: Object,
+      required: true
+    },
+    name: {
+      type: String,
       required: true
     },
     push: {

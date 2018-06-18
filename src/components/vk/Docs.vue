@@ -10,11 +10,11 @@
 
     <div class="docs-config block">
       <h2>Настройки</h2>
-      <attr-tag :obj="config.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
+      <attr-tag :obj="config.fromIds" :name="config.fromIds.name" :push="pushNumber" :link-tag="getLinkPage" :process="process"
                  info="Press enter to add to the list. Use a negative value to designate a community ID." />
-      <attr-tag :obj="config.exts" :push="pushString" :process="process"
+      <attr-tag :obj="config.exts" :name="config.exts.name" :push="pushString" :process="process"
                 info="After filling, press enter to add to the list. Without a dot. Example: png, jpg" />
-      <attr-tag :obj="config.texts" :push="pushString" :process="process" compare
+      <attr-tag :obj="config.texts" :name="config.texts.name" :push="pushString" :process="process" compare
                 info="After filling, press enter to add to the list." />
       <attr-reverse :model.sync="config.reverse" :process="process" />
       <!--TODO Date-->
@@ -44,7 +44,6 @@ const SLEEP_DELETE_MAX = 2500
 
 export default {
   components: {
-    AttrTag, AttrInput, AttrRadio, AttrCount, AttrAction, AttrReverse, AttrResult
   },
   data () {
     return {
