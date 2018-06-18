@@ -34,12 +34,6 @@ body {
   min-height: 100%;
 }
 
-hr {
-  margin: 30px;
-  border: none;
-  border-bottom: 1px solid #e0e0e0;
-}
-
 #app {
   display: flex;
   flex-direction: column;
@@ -62,10 +56,49 @@ hr {
   }
 }
 
+// Home page
+#app.landing-page {
+  min-height: 100%;
+  background: linear-gradient(to left, #525252, #3d72b4);
+  max-width: none !important;
+  border: none;
+  > #content {
+    padding: 0;
+  }
+  > header {
+    display: none;
+  }
+  > footer {
+    border: none;
+    padding: 10px 0;
+  }
+  .footer__inner {
+    margin: 0 auto;
+    max-width: 1600px;
+    padding: 0 20px;
+    a, span, .github__name, .language__name {
+      color: rgba(255, 255, 255, .9);
+    }
+    .github__start, .github__forks, .language__current {
+      color: rgba(255, 255, 255, .7);
+    }
+    .lang-item {
+      color: #868686;
+    }
+  }
+}
+
 // Component (Block)
 .block {
   max-width: 500px;
-  margin: 0 auto;
+  margin: 30px auto 0;
+  border-top: 1px solid #e7e7e7;
+  padding-top: 30px;
+  &:first-child {
+    margin-top: 0;
+    border-top: 0;
+    padding-top: 0;
+  }
   h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -124,38 +157,6 @@ hr {
       > .at-radio__label {
         font-size: 13px;
       }
-    }
-  }
-}
-
-// Home page
-#app.landing-page {
-  min-height: 100%;
-  background: linear-gradient(to left, #525252, #3d72b4);
-  max-width: none !important;
-  border: none;
-  > #content {
-    padding: 0;
-  }
-  > header {
-    display: none;
-  }
-  > footer {
-    border: none;
-    padding: 10px 0;
-  }
-  .footer__inner {
-    margin: 0 auto;
-    max-width: 1600px;
-    padding: 0 20px;
-    a, span, .github__name, .language__name {
-      color: rgba(255, 255, 255, .9);
-    }
-    .github__start, .github__forks, .language__current {
-      color: rgba(255, 255, 255, .7);
-    }
-    .lang-item {
-      color: #868686;
     }
   }
 }

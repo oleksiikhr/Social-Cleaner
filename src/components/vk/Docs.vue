@@ -8,7 +8,6 @@
       <attr-radio name="Фильтр" :model.sync="main.type.value" :html="main.type.html" :process="process" />
     </div>
 
-    <hr>
     <div class="docs-config block">
       <h2>Настройки</h2>
       <attr-tag :obj="config.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
@@ -22,10 +21,7 @@
       <!--TODO Count Size-->
     </div>
 
-    <hr>
     <attr-action :process="process" :loading="loading" canPreview @start="doStart" @preview="doPreview" />
-
-    <hr>
     <attr-result :data="result" />
   </div>
 </template>

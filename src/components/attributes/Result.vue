@@ -1,5 +1,6 @@
 <template>
-  <div id="result">
+  <div id="result" class="block result-block">
+    <h2>Результаты</h2>
     <at-table :columns="columns" :data="data" pagination />
   </div>
 </template>
@@ -45,3 +46,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.result-block {
+  max-width: 100%;
+}
+</style>
