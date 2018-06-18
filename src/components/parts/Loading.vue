@@ -1,5 +1,5 @@
 <template>
-  <div id="loading">
+  <div id="loading" v-if="haveItems">
     <div class="loading__inner">
       <a :class="getClassItem(item)" v-if="item.process" v-for="(item, index) in media" :key="index" @click="cancel(index)">
         <div class="loading__icon">
@@ -15,6 +15,13 @@ export default {
   computed: {
     media () {
       return this.$store.state.media
+    },
+    haveItems () {
+      return Object.keys(this.media).some(key => {
+        if (this.media[key].process) {
+          return true
+        }
+      })
     }
   },
   methods: {
