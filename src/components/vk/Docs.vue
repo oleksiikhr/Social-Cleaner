@@ -203,6 +203,7 @@ export default {
     },
     stop () {
       this.$store.commit('STOP_PROCESS', 'vk')
+      this.$store.commit('CLEAR_CANCEL', 'vk')
       this.loading = false
     },
 
