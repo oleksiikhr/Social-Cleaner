@@ -45,6 +45,7 @@ new Vue({
   template: '<App/>'
 })
 
+// TODO divide to files
 Vue.mixin({
   methods: {
     /* | -----------------------------------------------------------------------------
@@ -101,7 +102,12 @@ Vue.mixin({
 
       return { result: reverse ? onlyNull : !onlyNull, index: null }
     },
-
+    /**
+     * @param {object} obj - {items, compareAll}
+     * @param {number} need
+     *
+     * @return {boolean|null}
+     */
     checkNumber (obj, need) {
       const compareAll = obj.compareAll
       const items = obj.items
@@ -122,6 +128,12 @@ Vue.mixin({
 
       return items.includes(need)
     },
+    /**
+     * @param {object} obj - {items, compareAll}
+     * @param {string} need
+     *
+     * @return {boolean|null}
+     */
     checkText (obj, need) {
       const compareAll = obj.compareAll
       const items = obj.items
@@ -146,6 +158,12 @@ Vue.mixin({
 
       return compareAll
     },
+    /**
+     * @param {object} obj - {items, compareAll}
+     * @param {string} need
+     *
+     * @return {boolean|null}
+     */
     checkTextFull (obj, need) {
       const compareAll = obj.compareAll
       const items = obj.items
@@ -169,6 +187,66 @@ Vue.mixin({
       }
 
       return compareAll
+    },
+    /**
+     * @param {object} obj - {items(state, count), compareAll}
+     * @param {array} need
+     *
+     * @return {boolean|null}
+     */
+    checkIndicators (obj, need) {
+      // Start delete items, who disabled or "need" is undefined
+      let deleteIndex = []
+
+      const items = obj.items.filter((item, index) => {
+        const isValidate = item.state !== 0 && typeof need[index] !== 'undefined'
+        if (!isValidate) {
+          deleteIndex.push(index)
+        }
+        return isValidate
+      })
+
+      if (items.length < 1) {
+        return null
+      }
+
+      deleteIndex.forEach(index => {
+        need.splice(index, 1)
+      })
+
+      // Check every item
+      const results = items.map((item, index) => {
+        return this.checkIndicator(item, need[index])
+      })
+
+      for (let i = 0; i < results.length; i++) {
+        if (obj.compareAll && !results[i]) {
+          return false
+        }
+        if (!obj.compareAll && results[i]) {
+          return true
+        }
+      }
+
+      return obj.compareAll
+    },
+    /**
+     * @param {object} obj - {state, count}
+     * @param {number} need
+     *
+     * @return {boolean}
+     */
+    checkIndicator (obj, need) {
+      const count = parseInt(obj.count)
+
+      switch (obj.state) {
+        case -1:
+          return need < count
+        case 1:
+          return need > count
+        default:
+          return false
+      }
     },
 
     /* | -----------------------------------------------------------------------------

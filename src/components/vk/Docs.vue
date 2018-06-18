@@ -16,6 +16,7 @@
                 info="After filling, press enter to add to the list. Without a dot. Example: png, jpg" />
       <attr-tag :obj="config.texts" :name="config.texts.name" :push="pushString" :process="process" compare
                 info="After filling, press enter to add to the list." />
+      <attr-indicators :obj="config.indicators" :name="config.indicators.name" :process="process" compare />
       <attr-reverse :model.sync="config.reverse" :process="process" />
       <!--TODO Date-->
       <!--TODO Count Size-->
@@ -27,6 +28,7 @@
 </template>
 
 <script>
+import AttrIndicators from '../attributes/Indicators'
 import AttrReverse from '../attributes/Reverse'
 import AttrResult from '../attributes/Result'
 import AttrAction from '../attributes/Action'
@@ -44,6 +46,7 @@ const SLEEP_DELETE_MAX = 2500
 
 export default {
   components: {
+    AttrTag, AttrInput, AttrRadio, AttrCount, AttrAction, AttrReverse, AttrResult, AttrIndicators
   },
   data () {
     return {
@@ -85,6 +88,17 @@ export default {
           name: 'Фразы в названии',
           input: '',
           items: [],
+          compareAll: false
+        },
+        indicators: {
+          name: 'Показатели',
+          items: [{
+            // TODO helper (to gb*)
+            name: 'Размер файла',
+            icon: 'server',
+            state: 0,
+            count: 0
+          }],
           compareAll: false
         },
         reverse: false
@@ -215,13 +229,15 @@ export default {
       const items = [
         { obj: this.config.fromIds, method: this.checkNumber, param: doc.owner_id },
         { obj: this.config.exts, method: this.checkTextFull, param: doc.ext },
-        { obj: this.config.texts, method: this.checkText, param: doc.title }
+        { obj: this.config.texts, method: this.checkText, param: doc.title },
+        { obj: this.config.indicators, method: this.checkIndicators, param: [doc.size] }
       ]
 
       const checked = this.checkFinal(items, this.config.reverse)
 
+      // TODO doc.size to gb
       this.result.push({
-        name: doc.title,
+        name: `${doc.title} [${doc.size}]`,
         link: VK.getLinkDoc(doc.id, this.ownerId),
         reason: checked.index ? items[checked.index].obj.name : null,
         result: checked.result ? 'Yes' : 'No'

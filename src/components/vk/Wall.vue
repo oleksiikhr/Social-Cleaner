@@ -1,4 +1,5 @@
 <template>
+  <!--FIXME Rewritten-->
   <!--TODO Global process-->
   <!--TODO Translate-->
   <!--TODO Documentation for the user-->
@@ -35,7 +36,7 @@
         <div class="counts">
           <div :class="`count-${item.attr} count`" v-for="item in html.count" :key="item.attr">
             <div class="flex">
-              <i :class="`fa fa-${item.icon}`" aria-hidden="true"></i>
+              <i :class="`fa ${item.icon}`" aria-hidden="true"></i>
               <p>{{ item.name }}</p>
             </div>
             <at-input v-model="wall.count.items[item.attr].count" :disabled="process || wall.count.items[item.attr].state === 0" />
@@ -572,37 +573,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.counts {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  .count {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #e7e7e7;
-    margin: 5px;
-    padding: 10px 5px;
-    p {
-      font-weight: bold;
-    }
-    i {
-      font-size: 1.1rem;
-      margin-right: 10px;
-    }
-    .flex {
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .at-input {
-      margin-bottom: 20px;
-    }
-  }
-}
-
 .block-buttons {
   > button {
     width: 100%;

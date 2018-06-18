@@ -29,6 +29,8 @@ export default {
 </script>
 
 <style lang="scss">
+/*TODO Go to scss file*/
+
 body {
   background: #fbfbfb;
   min-height: 100%;
