@@ -1,5 +1,6 @@
 <template>
   <!--FIXME Design-->
+  <!--TODO disabled process-->
   <div class="reverse">
     <a @click="reverse = !reverse">Reverse: {{ reverse }}</a>
   </div>
@@ -9,6 +10,10 @@
 export default {
   props: {
     model: {
+      type: Boolean,
+      required: true
+    },
+    process: {
       type: Boolean,
       required: true
     }

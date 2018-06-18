@@ -16,7 +16,7 @@
                 info="After filling, press enter to add to the list. Without a dot. Example: png, jpg" />
       <attr-tag :obj="config.texts" :push="pushString" :process="process" compare
                 info="After filling, press enter to add to the list." />
-      <attr-reverse :model.sync="config.reverse" />
+      <attr-reverse :model.sync="config.reverse" :process="process" />
       <!--TODO Date-->
       <!--TODO Count Size-->
     </div>

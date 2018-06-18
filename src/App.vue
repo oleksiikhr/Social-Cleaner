@@ -34,6 +34,12 @@ body {
   min-height: 100%;
 }
 
+hr {
+  margin: 30px;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+}
+
 #app {
   display: flex;
   flex-direction: column;
@@ -92,7 +98,7 @@ body {
 .block {
   max-width: 500px;
   margin: 30px auto 0;
-  border-top: 1px solid #e7e7e7;
+  border-top: 1px solid #e0e0e0;
   padding-top: 30px;
   &:first-child {
     margin-top: 0;

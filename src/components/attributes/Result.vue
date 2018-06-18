@@ -1,4 +1,5 @@
 <template>
+  <!--TODO responsive design-->
   <div id="result" class="block result-block">
     <h2>Результаты</h2>
     <at-table :columns="columns" :data="data" pagination />
@@ -7,9 +8,9 @@
 
 <script>
 export default {
-  // {name, reason, result, link}
   props: {
     data: {
+      // {name, reason, result, link}
       type: Array,
       required: true
     }

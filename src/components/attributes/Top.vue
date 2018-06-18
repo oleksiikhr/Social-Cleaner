@@ -1,7 +1,7 @@
 <template>
   <div class="top">
     <p :class="getStyleStatus(obj.items.length)">{{ obj.name }}</p>
-    <a class="compare" @click="obj.compareAll = !obj.compareAll" :disabled="!compare">
+    <a class="compare" @click="obj.compareAll = !obj.compareAll" :disabled="!compare || process">
       {{ obj.compareAll ? 'And' : 'Or' }}
     </a>
   </div>
@@ -12,6 +12,10 @@ export default {
   props: {
     obj: {
       type: Object,
+      required: true
+    },
+    process: {
+      type: Boolean,
       required: true
     },
     compare: {
