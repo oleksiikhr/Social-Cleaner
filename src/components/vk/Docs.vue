@@ -43,6 +43,8 @@ const SLEEP_GET_MAX = 1500
 const SLEEP_DELETE_MIN = 1500
 const SLEEP_DELETE_MAX = 2500
 
+const MAX_COUNT_API = VK.prototype.COUNT_DOCS
+
 export default {
   components: {
     AttrTag, AttrInput, AttrRadio, AttrCount, AttrAction, AttrReverse, AttrResult, AttrIndicators
@@ -147,11 +149,10 @@ export default {
         return this.stop()
       }
 
-      const maxCountAPI = VK.prototype.COUNT_DOCS
-      const countLoop = this.getCountLoop(this.main.count, maxCountAPI)
+      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_API)
 
       for (let i = 0; i < countLoop; i++) {
-        const res = await this.fetchGet(this.getMaxCountItems(this.main.count, maxCountAPI))
+        const res = await this.fetchGet(this.getMaxCountItems(this.main.count, MAX_COUNT_API))
 
         if (res.ok && res.body.response) {
           const len = res.body.response.items.length
@@ -184,8 +185,7 @@ export default {
         return
       }
 
-      const maxCountAPI = VK.prototype.COUNT_DOCS
-      const countLoop = this.getCountLoop(this.main.count, maxCountAPI)
+      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_API)
 
       for (let i = 0; i < countLoop; i++) {
         // Check if the user clicked on the stop.
@@ -193,10 +193,10 @@ export default {
           return this.stop()
         }
 
-        const offset = i * maxCountAPI
+        const offset = i * MAX_COUNT_API
         const leftItems = this.main.count.max - offset
 
-        const res = await this.fetchGet(leftItems > maxCountAPI ? maxCountAPI : leftItems, offset)
+        const res = await this.fetchGet(leftItems > MAX_COUNT_API ? MAX_COUNT_API : leftItems, offset)
 
         if (res.ok && res.body.response && res.body.response.items.length) {
           res.body.response.items.forEach(doc => this.check(doc))
