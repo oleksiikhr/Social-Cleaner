@@ -12,7 +12,6 @@
       <attr-count name="Количество записей (от и до), включительно" :model="main.count" :process="process" />
       <attr-radio-button name="Удалить записи или очистить комментарии под записями" :model.sync="main.isDeletePosts"
                          :process="process" :html="html.deletePosts" />
-      <config-result v-if="!process" :main-config="main" :owner-id="ownerId" />
     </div>
 
     <hr>
@@ -115,7 +114,6 @@
 
 <script>
 import AttrRadioButton from '../attributes/RadioButton'
-import ConfigResult from './parts/WallConfigResult'
 import AttrCheckbox from '../attributes/Checkbox'
 import AttrSelect from '../attributes/Select'
 import AttrInput from '../attributes/Input'
@@ -131,7 +129,7 @@ const SLEEP_GET_MAX = 1500
 
 export default {
   components: {
-    ConfigResult, AttrTag, AttrCheckbox, AttrCount, AttrInput, AttrSelect, AttrRadioButton
+    AttrTag, AttrCheckbox, AttrCount, AttrInput, AttrSelect, AttrRadioButton
   },
   data () {
     return {

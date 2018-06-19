@@ -4,7 +4,6 @@ const state = {
 
 const mutations = {
   ADD_LOG (state, obj) {
-    // TODO Delete > 200 elements
     state.storage.unshift(obj)
   }
 }
