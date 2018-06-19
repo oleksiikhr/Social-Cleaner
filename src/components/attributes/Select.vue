@@ -1,8 +1,8 @@
 <template>
   <div class="block__attr">
     <p>{{ name }}</p>
-    <at-select v-model="input" :disabled="process" :size="size">
-      <at-option v-for="item in html" :key="item.val" :value="item.val">
+    <at-select v-model="obj.value" :disabled="process" :size="size">
+      <at-option v-for="item in obj.html" :key="item.val" :value="item.val">
         {{ item.name }}
       </at-option>
     </at-select>
@@ -13,16 +13,12 @@
 <script>
 export default {
   props: {
+    obj: {
+      type: Object,
+      required: true
+    },
     name: {
       type: String,
-      required: true
-    },
-    model: {
-      type: String,
-      required: true
-    },
-    html: {
-      type: Array,
       required: true
     },
     info: {

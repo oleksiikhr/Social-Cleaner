@@ -1,6 +1,4 @@
-import 'font-awesome/scss/font-awesome.scss'
 import VueResource from 'vue-resource'
-import './assets/scss/index.scss'
 import AtComponents from 'at-ui'
 import networks from './media'
 import router from './router'
@@ -8,8 +6,12 @@ import i18n from './locale'
 import store from './store'
 import App from './App'
 import Vue from 'vue'
-import 'at-ui-style'
 import './mixins'
+
+// Style
+import 'at-ui-style'
+import 'font-awesome/scss/font-awesome.scss'
+import './assets/scss/index.scss'
 
 Vue.use(AtComponents)
 Vue.use(VueResource)
