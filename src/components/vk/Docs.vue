@@ -19,7 +19,6 @@
       <attr-indicators :obj="config.indicators" :name="config.indicators.name" :process="process" compare />
       <attr-reverse :model.sync="config.reverse" :process="process" />
       <!--TODO Date-->
-      <!--TODO Count Size-->
     </div>
 
     <attr-action :process="process" :loading="loading" canPreview @start="doStart" @preview="doPreview" />
