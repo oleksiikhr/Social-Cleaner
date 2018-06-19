@@ -1,8 +1,8 @@
 <template>
   <div class="block__attr">
     <p>{{ name }}</p>
-    <at-radio-group v-model="input">
-      <at-radio-button v-for="item in html" :key="item.val" :label="item.val" :disabled="process">
+    <at-radio-group v-model="obj.value">
+      <at-radio-button v-for="item in obj.html" :key="item.val" :label="item.val" :disabled="process">
         {{ item.name }}
       </at-radio-button>
     </at-radio-group>
@@ -12,16 +12,12 @@
 <script>
 export default {
   props: {
+    obj: {
+      type: Object,
+      required: true
+    },
     name: {
       type: String,
-      required: true
-    },
-    model: {
-      type: Number | String,
-      required: true
-    },
-    html: {
-      type: Array,
       required: true
     },
     info: {
@@ -31,16 +27,6 @@ export default {
     process: {
       type: Boolean,
       required: false
-    }
-  },
-  data () {
-    return {
-      input: this.model
-    }
-  },
-  watch: {
-    input () {
-      this.$emit('update:model', this.input)
     }
   }
 }
