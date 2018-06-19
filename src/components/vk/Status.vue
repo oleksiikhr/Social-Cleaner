@@ -11,22 +11,21 @@
       </div>
     </div>
 
-    <template v-if="link">
-      <hr>
-      <div class="block">
-        <div class="block__result">
-          <h2>{{ $t('vk.status.current_status') }}</h2>
+    <div class="block">
+      <div class="block__result">
+        <h2>{{ $t('vk.status.current_status') }}</h2>
+        <template v-if="link">
           <a v-if="status" :href="link" class="status-text" target="_blank" rel="noopener">
             {{ status }}
           </a>
           <a v-else :href="link" target="_blank" rel="noopener">
             <at-alert :message="$t('vk.status.empty')" type="info" show-icon />
           </a>
-        </div>
+        </template>
+        <at-alert v-else :message="$t('vk.status.not_received')" type="warning" show-icon />
       </div>
-    </template>
+    </div>
 
-    <hr>
     <attr-action :process="process" :loading="loading" @start="fetchDeleteStatus" />
   </div>
 </template>
@@ -98,7 +97,6 @@ export default {
 
 <style lang="scss" scoped>
 .block__result {
-  margin: 25px 0;
   .status-text {
     border-left: 5px solid #6190e8;
     padding: 7px 20px;

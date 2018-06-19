@@ -4,7 +4,8 @@ export default {
     p: 'Community ID',
     small: 'Positive number. Empty - Current User.'
   },
-  empty: 'Status is empty',
   current_status: 'Current status',
+  empty: 'Status is empty',
+  not_received: 'Status not received',
   get_status: 'Get a status'
 }
