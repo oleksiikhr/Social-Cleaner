@@ -1,6 +1,6 @@
 <template>
   <div class="block__attr">
-    <top :obj="obj" :name="name" :compare="compare" :process="process" :active-status="isActive" />
+    <top :obj="obj" :name="nameAttribute" :compare="compare" :process="process" :active-status="isActive" />
     <div class="indicators">
       <div class="indicator" v-for="(item, index) in obj.items" :key="index">
         <div class="flex">
@@ -32,7 +32,7 @@ export default {
     },
     name: {
       type: String,
-      required: true
+      required: false
     },
     compare: {
       type: Boolean,
@@ -41,6 +41,18 @@ export default {
     process: {
       type: Boolean,
       required: false
+    }
+  },
+  data () {
+    return {
+      nameAttribute: ''
+    }
+  },
+  mounted () {
+    if (this.name) {
+      this.nameAttribute = this.name
+    } else if (this.obj.name) {
+      this.nameAttribute = this.obj.name
     }
   },
   computed: {
