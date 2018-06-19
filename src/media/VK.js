@@ -165,15 +165,22 @@ const network = class VK {
    * |
    */
   /**
+   * Returns a ling to wall post (user or public)
+   *
+   * @param {number|string} fromId
+   * @param {number|string} id
+   *
+   * @return string
+   *
    * @see https://vk.com/dev/objects/post
    */
-  static getLinkWall (item) {
-    return `${this.prototype.url}wall${item.from_id}_${item.id}`
+  static getLinkWall (fromId, id) {
+    return `${this.prototype.url}wall${fromId}_${id}`
   }
   /**
    * Returns a link to a user or community page.
    *
-   * @param {int|string} id
+   * @param {number|string} id
    *
    * @return string
    */
