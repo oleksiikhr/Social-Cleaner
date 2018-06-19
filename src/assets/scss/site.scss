@@ -1,0 +1,32 @@
+body {
+  background: #fbfbfb;
+  min-height: 100%;
+}
+
+hr {
+  margin: 30px;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  min-height: 100%;
+  border: 1px solid #e7e7e7;
+  border-top: none;
+  border-bottom: none;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#content {
+  flex-grow: 1;
+  padding: 30px 20px;
+  #vk {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+  }
+}

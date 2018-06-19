@@ -1,5 +1,6 @@
 import 'font-awesome/scss/font-awesome.scss'
 import VueResource from 'vue-resource'
+import './assets/scss/index.scss'
 import AtComponents from 'at-ui'
 import networks from './media'
 import router from './router'
