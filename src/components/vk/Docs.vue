@@ -144,16 +144,19 @@ export default {
      */
     async doStart () {
       if (!this.start()) {
-        return
+        return this.stop()
       }
 
-      for (let i = 0; i < this.getCountLoop(this.main.count, VK.prototype.COUNT_DOCS); i++) {
-        const count = this.getCountDeleteItems(this.main.count)
-        const res = await this.fetchGet(count > VK.prototype.COUNT_DOCS ? VK.prototype.COUNT_DOCS : count)
+      const maxCountAPI = VK.prototype.COUNT_DOCS
+      const countLoop = this.getCountLoop(this.main.count, maxCountAPI)
+
+      for (let i = 0; i < countLoop; i++) {
+        const res = await this.fetchGet(this.getMaxCountItems(this.main.count, maxCountAPI))
 
         if (res.ok && res.body.response) {
           const len = res.body.response.items.length
           for (let j = 0; j < len; j++) {
+            // Check if the user clicked on the stop.
             if (this.cancel) {
               return this.stop()
             }
@@ -170,7 +173,7 @@ export default {
             }
           }
         } else {
-          this.stop()
+          return this.stop()
         }
       }
 
@@ -181,19 +184,22 @@ export default {
         return
       }
 
-      for (let i = 0; i < this.getCountLoop(this.main.count, VK.prototype.COUNT_DOCS); i++) {
+      const maxCountAPI = VK.prototype.COUNT_DOCS
+      const countLoop = this.getCountLoop(this.main.count, maxCountAPI)
+
+      for (let i = 0; i < countLoop; i++) {
         // Check if the user clicked on the stop.
         if (this.cancel) {
           return this.stop()
         }
 
-        const offset = i * VK.prototype.COUNT_WALL
-        const res = await this.fetchGet(this.getCountDeleteItems(this.main.count) - offset, offset)
+        const offset = i * maxCountAPI
+        const leftItems = this.main.count.max - offset
+
+        const res = await this.fetchGet(leftItems > maxCountAPI ? maxCountAPI : leftItems, offset)
 
         if (res.ok && res.body.response && res.body.response.items.length) {
-          res.body.response.items.forEach(doc => {
-            this.check(doc)
-          })
+          res.body.response.items.forEach(doc => this.check(doc))
         } else {
           return this.stop()
         }
@@ -206,12 +212,7 @@ export default {
       this.loading = true
       this.result = []
 
-      if (this.checkStart(this.main.count)) {
-        return true
-      }
-
-      this.stop()
-      return false
+      return this.checkStart(this.main.count)
     },
     stop () {
       this.$store.commit('STOP_PROCESS', 'vk')
