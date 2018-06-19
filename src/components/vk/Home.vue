@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import VK from '../../networks/VK'
+import VK from '../../media/VK'
 
 export default {
   data () {
@@ -29,10 +29,10 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.vk.user
+      return this.$store.state.media.vk.user
     },
     access () {
-      return this.$store.state.vk.access
+      return this.$store.state.media.vk.access
     }
   },
   methods: {

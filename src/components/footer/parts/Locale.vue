@@ -45,7 +45,7 @@ export default {
   methods: {
     setLocale (lang) {
       this.modal = false
-      this.language = `${lang.name} ${lang.value}`
+      this.language = `${lang.name}, ${lang.value}`
       this.$i18n.locale = lang.value
       localStorage.setItem('lang', JSON.stringify(lang))
       document.getElementsByTagName('html')[0].setAttribute('lang', lang.value.split('-')[0])

@@ -12,6 +12,8 @@ const network = class Github {
     const result = await Vue.http.get(this.prototype.urlApi + method, {
       params: params
     })
+      .then(res => { return res })
+      .catch(err => { return err })
 
     return result
   }
@@ -47,7 +49,12 @@ network.prototype.logs = (req, next) => {
   addLog(this.default, method, { method: method, params: req.params }, colors.INFO)
 
   next(res => {
-    // TODO Error type, response code*
+    if (res.status >= 200 && res.status < 300) {
+      addLog(this.default, method, res.body, colors.SUCCESS)
+    } else {
+      addLog(this.default, method, res.body || 'Server error', colors.ERROR)
+      Vue.prototype.$Notify.error({ title: res.body.message || 'Server error', message: method })
+    }
   })
 }
 

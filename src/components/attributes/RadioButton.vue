@@ -1,12 +1,11 @@
 <template>
   <div class="block__attr">
     <p>{{ name }}</p>
-    <at-select v-model="input" :disabled="process" :size="size">
-      <at-option v-for="item in html" :key="item.val" :value="item.val">
+    <at-radio-group v-model="input">
+      <at-radio-button v-for="item in html" :key="item.val" :label="item.val" :disabled="process">
         {{ item.name }}
-      </at-option>
-    </at-select>
-    <small v-if="info">{{ info }}</small>
+      </at-radio-button>
+    </at-radio-group>
   </div>
 </template>
 
@@ -18,7 +17,7 @@ export default {
       required: true
     },
     model: {
-      type: String,
+      type: Number | String,
       required: true
     },
     html: {
@@ -28,11 +27,6 @@ export default {
     info: {
       type: String,
       required: false
-    },
-    size: {
-      type: String,
-      required: false,
-      default: 'normal'
     },
     process: {
       type: Boolean,

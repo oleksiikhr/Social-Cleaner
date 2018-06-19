@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import VK from '../../networks/VK'
+import VK from '../../media/VK'
 
 export default {
   data () {
@@ -67,16 +67,16 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.vk.user.id
+      return this.$store.state.media.vk.user.id
     }
   },
   methods: {
     installToken () {
-      this.$store.dispatch('vkInit', this.token)
+      this.$store.dispatch('vkLogIn', this.token)
     },
     deleteToken () {
       this.token = ''
-      this.$store.dispatch('vkExit')
+      this.$store.dispatch('vkLogOut')
     },
     goGetToken () {
       window.open(`${VK.prototype.urlOauth}?client_id=${this.appId}&display=page&redirect_uri=${VK.prototype.urlRedirect}
@@ -127,6 +127,9 @@ button {
     font-weight: bold;
     margin-bottom: 10px;
   }
+  > p {
+    word-wrap: break-word;
+  }
 }
 
 .exists {
@@ -140,6 +143,15 @@ button {
     text-align: center;
     > button {
       margin-top: 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .flex {
+    flex-direction: column;
+    > .at-popover {
+      margin-bottom: 20px;
     }
   }
 }

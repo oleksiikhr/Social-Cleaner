@@ -1,4 +1,5 @@
 <template>
+  <!--TODO Delete?-->
   <div class="block__result">
     <at-button type="primary" @click="sendRequest()" v-if="!page.response && !wall.response" hollow>
       Check main settings
@@ -39,7 +40,7 @@
 </template>
 
 <script>
-import VK from '../../../networks/VK'
+import VK from '../../../media/VK'
 
 export default {
   props: {

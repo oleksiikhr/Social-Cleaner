@@ -1,45 +1,42 @@
 <template>
+  <!--FIXME Rewritten-->
+  <!--TODO Global process-->
   <!--TODO Translate-->
   <!--TODO Documentation for the user-->
   <div id="wall">
     <div class="main-config block">
       <h2>Основные настройки</h2>
-      <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id" />
-      <attr-select name="Фильтр записей" :html="html.filters" :model.sync="main.filter" size="large" />
-      <attr-count name="Количество записей (от и до), включительно" :model="main.count" />
-      <!--TODO radioButton Attribute-->
-      <div class="block__attr">
-        <p>Удалить записи или очистить комментарии</p>
-        <at-radio-group v-model="main.isDeletePosts">
-          <at-radio-button :label="0" :disabled="process">Записи</at-radio-button>
-          <at-radio-button :label="1" disabled>Комментарии</at-radio-button>
-        </at-radio-group>
-      </div>
+      <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id"
+                  :process="process" />
+      <attr-select name="Фильтр записей" :html="html.filters" :model.sync="main.filter" size="large" :process="process" />
+      <attr-count name="Количество записей (от и до), включительно" :model="main.count" :process="process" />
+      <attr-radio-button name="Удалить записи или очистить комментарии под записями" :model.sync="main.isDeletePosts"
+                         :process="process" :html="html.deletePosts" />
       <config-result v-if="!process" :main-config="main" :owner-id="ownerId" />
     </div>
 
     <hr>
     <div class="wall-config block">
       <h2>Параметры стены</h2>
-      <attr-tag :obj="wall.ids" name="ID записей" :push="pushNumber" :link-tag="getLinkPost"
+      <attr-tag :obj="wall.ids" name="ID записей" :push="pushNumber" :link-tag="getLinkPost" :process="process"
                  info="After filling, press enter to add to the list." />
-      <attr-tag :obj="wall.fromIds" name="ID авторов записей" :push="pushNumber" :link-tag="getLinkPage"
+      <attr-tag :obj="wall.fromIds" name="ID авторов записей" :push="pushNumber" :link-tag="getLinkPage" :process="process"
                  info="After filling, press enter to add to the list. Use a negative value to designate a community ID." />
-      <attr-tag :obj="wall.texts" name="Фразы в тексте" :push="pushString" compare
+      <attr-tag :obj="wall.texts" name="Фразы в тексте" :push="pushString" :process="process" compare
                  info="After filling, press enter to add to the list." />
-      <attr-checkbox :obj="wall.attachments" name="Added media attachments" compare />
+      <attr-checkbox :obj="wall.attachments" name="Added media attachments" :process="process" compare />
       <!--TODO Type content-->
       <div class="block__attr">
         <div class="top">
           <p :class="getStyleStatus(isActiveWallCount)">Значения</p>
           <a @click="wall.count.compareAll = !wall.count.compareAll" class="compare">
-            {{ wall.count.compareAll ? 'All' : 'One' }}
+            {{ wall.count.compareAll ? 'And' : 'Or' }}
           </a>
         </div>
         <div class="counts">
           <div :class="`count-${item.attr} count`" v-for="item in html.count" :key="item.attr">
             <div class="flex">
-              <i :class="`fa fa-${item.icon}`" aria-hidden="true"></i>
+              <i :class="`fa ${item.icon}`" aria-hidden="true"></i>
               <p>{{ item.name }}</p>
             </div>
             <at-input v-model="wall.count.items[item.attr].count" :disabled="process || wall.count.items[item.attr].state === 0" />
@@ -117,13 +114,14 @@
 </template>
 
 <script>
-import AttrCheckbox from '../attributes/Checkbox'
+import AttrRadioButton from '../attributes/RadioButton'
 import ConfigResult from './parts/WallConfigResult'
+import AttrCheckbox from '../attributes/Checkbox'
 import AttrSelect from '../attributes/Select'
 import AttrInput from '../attributes/Input'
 import AttrCount from '../attributes/Count'
 import AttrTag from '../attributes/Tag'
-import VK from '../../networks/VK'
+import VK from '../../media/VK'
 
 const SLEEP_DELETE_MIN = 1500
 const SLEEP_DELETE_MAX = 2500
@@ -133,7 +131,7 @@ const SLEEP_GET_MAX = 1500
 
 export default {
   components: {
-    ConfigResult, AttrTag, AttrCheckbox, AttrCount, AttrInput, AttrSelect
+    ConfigResult, AttrTag, AttrCheckbox, AttrCount, AttrInput, AttrSelect, AttrRadioButton
   },
   data () {
     return {
@@ -212,6 +210,10 @@ export default {
         loading: false
       },
       html: {
+        deletePosts: [
+          { name: 'Записи', val: 0 },
+          { name: 'Комментарии', val: 1 }
+        ],
         filters: [
           { name: 'Все', val: 'all' },
           { name: 'Предложенные записи на стене сообщества', val: 'suggests' },
@@ -230,10 +232,10 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.vk.user
+      return this.$store.state.media.vk.user
     },
     process () {
-      return this.$store.state.vk.process
+      return this.$store.state.media.vk.process
     },
     ownerId () {
       return this.main.owner_id ? '-' + this.main.owner_id : this.user.id
@@ -325,19 +327,19 @@ export default {
         return
       }
 
-      for (let i = 0; i < this.getCountLoop(); i++) {
-        const count = this.getCountDeletePosts()
-        const res = await this.fetchGetWall(count > 100 ? 100 : count)
+      for (let i = 0; i < this.getCountLoop(this.main.count, VK.prototype.COUNT_WALL); i++) {
+        const count = this.getCountDeleteItems(this.main.count)
+        const res = await this.fetchGetWall(count > VK.prototype.COUNT_WALL ? VK.prototype.COUNT_WALL : count)
 
         if (res.ok && res.body.response) {
           const len = res.body.response.items.length
           for (let j = 0; j < len; j++) {
-            const post = res.body.response.items[j]
-
             // If user click the stop button
             if (!this.del.continue) {
               return this.stopAction(true, true)
             }
+
+            const post = res.body.response.items[j]
 
             // If can't delete post - show modal and stopDelete
             if (typeof post.can_delete === 'undefined' || !post.can_delete) {
@@ -345,16 +347,17 @@ export default {
               return this.stopAction(false)
             }
 
-            if (!this.checkWallConfiguration(post)) {
-              this.main.count.min++
+            // If equal
+            if (this.checkWallConfiguration(post)) {
+              const resDelete = await this.fetchDeletePost(post.id)
+
+              if (resDelete.ok && resDelete.body.response) {
+                this.main.count.max--
+              }
               continue
             }
 
-            const resDelete = await this.fetchDeletePost(post.id)
-
-            if (resDelete.ok && resDelete.body.response) {
-              this.main.count.max--
-            }
+            this.main.count.min++
           }
         } else {
           return this.stopAction(res.ok && typeof res.body.error === 'undefined', true)
@@ -372,14 +375,14 @@ export default {
       this.preview.show = true
       this.preview.ids = []
 
-      for (let i = 0; i < this.getCountLoop(); i++) {
+      for (let i = 0; i < this.getCountLoop(this.main.count, VK.prototype.COUNT_WALL); i++) {
         // If user click the stop button
         if (!this.del.continue) {
           return this.stopAction()
         }
 
         const offset = i * VK.prototype.COUNT_WALL
-        const res = await this.fetchGetWall(this.getCountDeletePosts() - offset, offset)
+        const res = await this.fetchGetWall(this.getCountDeleteItems(this.main.count) - offset, offset)
 
         if (res.ok && res.body.response && res.body.response.items.length) {
           res.body.response.items.forEach(post => {
@@ -564,65 +567,12 @@ export default {
     },
     getLinkPage (id) {
       return VK.getLinkPage(id)
-    },
-
-    /* | -----------------------------------------------------------------------------
-     * | Other
-     * | -----------------------------------------------------------------------------
-     * |
-     */
-    /**
-     * How many posts you need to receive to completely delete posts.
-     *
-     * @return number
-     */
-    getCountLoop () {
-      return Math.ceil((this.main.count.max - this.main.count.min + 1) / VK.prototype.COUNT_WALL)
-    },
-    /**
-     * How many posts you need to delete.
-     *
-     * @return number
-     */
-    getCountDeletePosts () {
-      return this.main.count.max - this.main.count.min + 1
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.counts {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  .count {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #e7e7e7;
-    margin: 5px;
-    padding: 10px 5px;
-    p {
-      font-weight: bold;
-    }
-    i {
-      font-size: 1.1rem;
-      margin-right: 10px;
-    }
-    .flex {
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .at-input {
-      margin-bottom: 20px;
-    }
-  }
-}
-
 .block-buttons {
   > button {
     width: 100%;

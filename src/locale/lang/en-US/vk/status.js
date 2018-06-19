@@ -6,6 +6,5 @@ export default {
   },
   empty: 'Status is empty',
   current_status: 'Current status',
-  get_status: 'Get a status',
-  clear_status: 'Clear status'
+  get_status: 'Get a status'
 }

@@ -1,8 +1,8 @@
 <template>
   <!--TODO Global color styles-->
   <div id="logs">
-    <h1>API logs</h1>
     <div class="header">
+      <h1>Query History</h1>
       <at-input v-model="search" placeholder="Method" icon="search" />
       <at-select v-model="networkName" placeholder="Social Network" clearable>
         <at-option v-for="network in networks" :key="network.to" :value="network.name">
@@ -35,11 +35,13 @@
         </div>
       </a>
     </div>
+
+    <!--TODO Pagination-->
   </div>
 </template>
 
 <script>
-import networks from '../networks'
+import networks from '../media'
 import moment from 'moment'
 
 export default {
@@ -87,24 +89,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h1 {
-  text-align: center;
-  margin-bottom: 25px;
-  text-transform: uppercase;
-}
-
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  max-width: 600px;
-  margin: 0 auto 20px;
+  margin: 0 auto 30px;
+  background: #fbfbfb;
+  padding: 20px 20px 0;
+  border: 1px solid #e7e7e7;
+  > * {
+    margin: 0 20px 20px 0;
+  }
+  > h1 {
+    text-align: center;
+    color: rgba(0, 0, 0, .6);
+    font-size: 1.2rem;
+  }
   > .at-input {
-    margin-right: 20px;
     flex-grow: 1;
   }
   > .at-select {
     max-width: 150px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }
 
