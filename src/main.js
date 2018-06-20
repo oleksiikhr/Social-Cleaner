@@ -11,7 +11,6 @@ import './mixins'
 // Style
 import 'at-ui-style'
 import 'font-awesome/scss/font-awesome.scss'
-import 'nprogress/nprogress.css'
 import './assets/scss/index.scss'
 
 // Use modules

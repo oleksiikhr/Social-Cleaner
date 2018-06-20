@@ -1,5 +1,4 @@
 import * as icons from '../heplers/icons'
-import NProgress from 'nprogress'
 import Router from 'vue-router'
 import store from '../store'
 import Vue from 'vue'
@@ -81,7 +80,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  NProgress.start()
+  Vue.prototype.$Loading.start()
 
   if (to.meta.vk && !store.state.media.vk.user.id) {
     next({ name: 'vk' })
@@ -91,7 +90,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  NProgress.done()
+  Vue.prototype.$Loading.finish()
 })
 
 export default router
