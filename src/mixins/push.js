@@ -38,6 +38,28 @@ export default {
       }
 
       obj.input = ''
+    },
+
+    /**
+     * Add a new element to the results array.
+     *
+     * @param {array} result
+     * @param {string} name
+     * @param {string} link
+     * @param {array} items
+     * @param {object} checked - (index, result()
+     *
+     * @return void - push to array
+     *
+     * TODO Translate
+     */
+    pushResult (result, name, link, items, checked) {
+      result.push({
+        name: name,
+        link: link,
+        reason: checked.index ? items[checked.index].obj.name : null,
+        result: checked.result ? 'Yes' : 'No'
+      })
     }
   }
 }

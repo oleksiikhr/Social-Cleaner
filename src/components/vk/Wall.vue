@@ -291,12 +291,7 @@ export default {
 
       const checked = this.checkFinal(items, this.wall.reverse)
 
-      this.result.push({
-        name: `id: ${post.id}`,
-        link: VK.getLinkWall(this.ownerId, post.id),
-        reason: checked.index ? items[checked.index].obj.name : '-',
-        result: checked.result ? 'Yes' : 'No'
-      })
+      this.pushResult(this.result, `id: ${post.id}`, VK.getLinkWall(this.ownerId, post.id), items, checked)
 
       return checked.result
     },

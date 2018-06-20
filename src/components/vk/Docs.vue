@@ -236,12 +236,7 @@ export default {
       const checked = this.checkFinal(items, this.config.reverse)
 
       // TODO doc.size to gb
-      this.result.push({
-        name: `${doc.title} [${doc.size}]`,
-        link: VK.getLinkDoc(doc.id, this.ownerId),
-        reason: checked.index ? items[checked.index].obj.name : null,
-        result: checked.result ? 'Yes' : 'No'
-      })
+      this.pushResult(this.result, `${doc.title} [${doc.size}]`, VK.getLinkDoc(doc.id, this.ownerId), items, checked)
 
       return checked.result
     },
