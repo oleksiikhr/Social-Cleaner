@@ -1,5 +1,7 @@
 import * as icons from '../heplers/icons'
+import NProgress from 'nprogress'
 import Router from 'vue-router'
+import store from '../store'
 import Vue from 'vue'
 
 Vue.use(Router)
@@ -12,7 +14,7 @@ function load (component) {
  * NOTE: It is important to keep the indexes of the array. See social networking classes.
  */
 
-export default new Router({
+const router = new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: [
     {
@@ -77,3 +79,19 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  NProgress.start()
+
+  if (to.meta.vk && !store.state.media.vk.user.id) {
+    next({ name: 'vk' })
+  } else {
+    next()
+  }
+})
+
+router.afterEach((to, from) => {
+  NProgress.done()
+})
+
+export default router

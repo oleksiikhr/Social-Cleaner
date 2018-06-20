@@ -1,4 +1,5 @@
 <template>
+  <!--FIXME Blink after open site (appClass*)-->
   <!--TODO Global Documentation for the user (how to use)-->
   <div id="app" :class="appClass">
     <loading-component />
