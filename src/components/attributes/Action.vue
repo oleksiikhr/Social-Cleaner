@@ -3,29 +3,28 @@
     <div class="block-buttons__inner">
       <div class="block-buttons__process" v-if="loading">
         <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-        <span class="sr-only">Loading...</span>
       </div>
       <template v-else-if="!process">
         <at-button type="info" @click="emitPreview()" v-if="canPreview">
-          {{ textPreview }}
+          {{ $t(textPreview) }}
         </at-button>
         <at-button type="error" @click="modal = true">
-          {{ textStart }}
+          {{ $t(textStart) }}
         </at-button>
       </template>
-      <div class="block-buttons__info" v-else>There is another cleaning</div>
+      <div class="block-buttons__info" v-else>{{ $t('app.attributes.action.another_cleaning') }}</div>
     </div>
 
     <at-modal v-model="modal">
       <div slot="header">
-        <span>The confirmation</span>
+        <span>{{ $t('app.attributes.action.confirmation') }}</span>
       </div>
       <div style="text-align:center;">
-        <p>{{ textModal }}</p>
+        <p>{{ $t(textModal) }}</p>
       </div>
       <div slot="footer">
-        <at-button @click="modal = false">Cancel</at-button>
-        <at-button type="error" @click="emitStart()">Start</at-button>
+        <at-button @click="modal = false">{{ $t('app.attributes.action.cancel') }}</at-button>
+        <at-button type="error" @click="emitStart()">{{ $t('app.attributes.action.start') }}</at-button>
       </div>
     </at-modal>
   </div>
@@ -37,17 +36,17 @@ export default {
     textStart: {
       type: String,
       required: false,
-      default: 'Start'
+      default: 'app.attributes.action.start'
     },
     textPreview: {
       type: String,
       required: false,
-      default: 'Preview'
+      default: 'app.attributes.action.preview'
     },
     textModal: {
       type: String,
       required: false,
-      default: 'Do you really want to start cleaning?'
+      default: 'app.attributes.action.text_modal'
     },
     canPreview: {
       type: Boolean,
