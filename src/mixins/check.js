@@ -162,9 +162,9 @@ export default {
         return null
       }
 
-      deleteIndex.forEach(index => {
-        need.splice(index, 1)
-      })
+      for (let i = deleteIndex.length - 1; i >= 0; i--) {
+        need.splice(deleteIndex[i], 1)
+      }
 
       // Check every item
       const results = items.map((item, index) => {
@@ -199,6 +199,36 @@ export default {
         default:
           return false
       }
+    },
+    /**
+     * @param {object} obj - {name, items[], compareAll}
+     * @param {array|undefined} need
+     *
+     * @return {boolean|null}
+     */
+    checkCheckbox (obj, need) {
+      const len = obj.items.length
+
+      if (!len) {
+        return null
+      }
+
+      if (typeof need === 'undefined') {
+        return false
+      }
+
+      for (let i = 0; i < len; i++) {
+        const include = need.includes(obj.items[i])
+
+        if (obj.compareAll && !include) {
+          return false
+        }
+        if (!obj.compareAll && include) {
+          return true
+        }
+      }
+
+      return obj.compareAll
     }
   }
 }
