@@ -6,7 +6,8 @@
     <div class="github__inner">
       <div class="github__name">{{ repository }}</div>
       <div class="github__info">
-        <p v-if="loading">Loading..</p>
+        <p v-if="loading" class="github__message">Loading..</p>
+        <p v-else-if="error" class="github__message">Error Response</p>
         <template v-else>
           <span class="github__start">{{ stars }} Stars</span>
           <div class="github__dot"></div>
@@ -18,8 +19,8 @@
 </template>
 
 <script>
-import Github from '../../../networks/Github'
 import { repository } from '../../../config'
+import Github from '../../../media/Github'
 
 export default {
   data () {
@@ -28,11 +29,13 @@ export default {
       repository,
       stars: 0,
       forks: 0,
-      loading: false
+      loading: false,
+      error: false
     }
   },
   mounted () {
     const storage = localStorage.getItem('github')
+    this.error = false
 
     if (storage) {
       try {
@@ -60,6 +63,8 @@ export default {
           forks: this.forks,
           time: this.getSecondsNow()
         }))
+      } else {
+        this.error = true
       }
 
       this.loading = false
@@ -95,6 +100,9 @@ export default {
     > span {
       font-size: .7rem;
       color: #868686;
+    }
+    .github__message {
+      font-size: .7rem;
     }
     .github__dot {
       border: 1px solid #777;

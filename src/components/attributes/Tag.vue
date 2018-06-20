@@ -1,6 +1,6 @@
 <template>
   <div class="block__attr">
-    <top :obj="obj" :name="name" :compare="compare" />
+    <top :obj="obj" :name="nameAttribute" :compare="compare" :process="process" :active-status="obj.items.length" />
     <at-input v-model="obj.input" :disabled="process" @keyup.enter.native="push(obj)" />
     <div class="block__attr-inner">
       <at-tag v-for="(text, index) in obj.items" :key="index" :name="index" :closable="!process"
@@ -25,13 +25,13 @@ export default {
       type: Object,
       required: true
     },
-    name: {
-      type: String,
-      required: true
-    },
     push: {
       type: Function,
       required: true
+    },
+    name: {
+      type: String,
+      required: false
     },
     linkTag: {
       type: Function,
@@ -44,11 +44,22 @@ export default {
     compare: {
       type: Boolean,
       required: false
+    },
+    process: {
+      type: Boolean,
+      required: false
     }
   },
-  computed: {
-    process () {
-      return this.$store.state.vk.process
+  data () {
+    return {
+      nameAttribute: ''
+    }
+  },
+  mounted () {
+    if (this.name) {
+      this.nameAttribute = this.name
+    } else if (this.obj.name) {
+      this.nameAttribute = this.obj.name
     }
   }
 }
