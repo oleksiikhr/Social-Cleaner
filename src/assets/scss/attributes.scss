@@ -71,3 +71,10 @@
     }
   }
 }
+
+.result-block {
+  .at-table__body {
+    width: 100%;
+    overflow: auto;
+  }
+}

@@ -103,6 +103,8 @@ const actions = {
       if (res.ok && res.body.response) {
         store.commit('VK_SET_USER', res.body.response[0])
       }
+
+      window.scrollTo(0, 0)
     }
   },
   vkLogOut ({commit}) {
