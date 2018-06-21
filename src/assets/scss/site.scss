@@ -31,7 +31,7 @@ hr {
   }
 }
 
-.header {
+#app > header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -110,7 +110,7 @@ hr {
   #content {
     padding: 10px 10px 30px;
   }
-  .header {
+  #app > header {
     margin: 0 10px 10px;
     > a {
       width: 70px;

@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header>
     <router-link :to="{ name: 'explore' }" class="brand">
       <span class="brand__name brand__full">Social Cleaner</span>
       <span class="brand__name brand__short">SC</span>
