@@ -1,7 +1,6 @@
 <template>
-  <!--TODO responsive design-->
   <div id="result" class="block result-block">
-    <h2>Результаты</h2>
+    <h2>{{ $t('app.attributes.result.h2') }}</h2>
     <at-table :columns="columns" :data="data" pagination />
   </div>
 </template>
@@ -17,12 +16,13 @@ export default {
   },
   data () {
     return {
+      // FIXME change locale - change title
       columns: [
-        { title: 'Название', key: 'name' },
-        { title: 'Причина', key: 'reason' },
-        { title: 'Удаление', key: 'result' },
+        { title: this.$t('app.attributes.result.columns[0]'), key: 'name' },
+        { title: this.$t('app.attributes.result.columns[1]'), key: 'reason' },
+        { title: this.$t('app.attributes.result.columns[2]'), key: 'result' },
         {
-          title: 'Сссылка',
+          title: this.$t('app.attributes.result.columns[3]'),
           render: (h, params) => {
             return h('div', [
               h('AtButton', {
@@ -38,7 +38,7 @@ export default {
                     window.open(params.item.link, '_blank')
                   }
                 }
-              }, 'Перейти')
+              }, this.$t('app.attributes.result.button'))
             ])
           }
         }

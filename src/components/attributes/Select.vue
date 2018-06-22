@@ -1,12 +1,12 @@
 <template>
   <div class="block__attr">
-    <p>{{ name }}</p>
+    <p>{{ $t(name) }}</p>
     <at-select v-model="obj.value" :disabled="process" :size="size">
       <at-option v-for="item in obj.html" :key="item.val" :value="item.val">
-        {{ item.name }}
+        {{ $t(item.name) }}
       </at-option>
     </at-select>
-    <small v-if="info">{{ info }}</small>
+    <small v-if="info">{{ $t(info) }}</small>
   </div>
 </template>
 

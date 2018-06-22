@@ -1,6 +1,7 @@
 <template>
   <!--FIXME Design-->
   <!--TODO disabled process-->
+  <!--TODO Translate-->
   <div class="reverse">
     <a @click="reverse = !reverse">Reverse: {{ reverse }}</a>
   </div>

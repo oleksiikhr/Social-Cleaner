@@ -5,13 +5,13 @@
       <div class="indicator" v-for="(item, index) in obj.items" :key="index">
         <div class="flex">
           <i v-if="item.icon" :class="`fa fa-${item.icon}`" aria-hidden="true"></i>
-          <p>{{ item.name }}</p>
+          <p>{{ $t(item.name) }}</p>
         </div>
         <at-input v-model="item.count" :disabled="process || item.state === 0" />
         <at-radio-group v-model="item.state" :disabled="process">
-          <at-radio-button :label="-1">Меньше</at-radio-button>
-          <at-radio-button :label="0">Выкл.</at-radio-button>
-          <at-radio-button :label="1">Больше</at-radio-button>
+          <at-radio-button :label="-1">{{ $t('app.attributes.indicators.less') }}</at-radio-button>
+          <at-radio-button :label="0">{{ $t('app.attributes.indicators.disable') }}</at-radio-button>
+          <at-radio-button :label="1">{{ $t('app.attributes.indicators.more') }}</at-radio-button>
         </at-radio-group>
       </div>
     </div>

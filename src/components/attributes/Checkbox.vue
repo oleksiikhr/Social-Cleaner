@@ -3,10 +3,10 @@
     <top :obj="obj" :name="nameAttribute" :compare="compare" :process="process" />
     <at-checkbox-group v-model="obj.items">
       <at-checkbox v-for="item in obj.html" :key="item.val" :label="item.val" :disabled="process">
-        {{ item.name }}
+        {{ $t(item.name) }}
       </at-checkbox>
     </at-checkbox-group>
-    <small v-if="info">{{ info }}</small>
+    <small v-if="info">{{ $t(info) }}</small>
   </div>
 </template>
 

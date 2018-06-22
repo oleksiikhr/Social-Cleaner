@@ -10,5 +10,15 @@ export default {
     text_modal: 'Do you really want to start cleaning?',
     cancel: 'Cancel',
     start: 'Start'
+  },
+  result: {
+    h2: 'Results',
+    columns: ['Name', 'Reason', 'Delete', 'Link'],
+    button: 'Go to'
+  },
+  indicators: {
+    less: 'Less',
+    disable: 'Disable',
+    more: 'More'
   }
 }

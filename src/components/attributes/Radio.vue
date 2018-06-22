@@ -1,9 +1,9 @@
 <template>
   <div class="block__attr">
-    <p>{{ name }}</p>
+    <p>{{ $t(name) }}</p>
     <at-radio-group v-model="input">
       <at-radio v-for="item in html" :key="item.val" :label="item.val" :disabled="process">
-        {{ item.name }}
+        {{ $t(item.name) }}
       </at-radio>
     </at-radio-group>
   </div>

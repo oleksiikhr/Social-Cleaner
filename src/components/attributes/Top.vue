@@ -1,6 +1,6 @@
 <template>
   <div class="top">
-    <p :class="getStyleStatus(activeStatus)">{{ name }}</p>
+    <p :class="getStyleStatus(activeStatus)">{{ $t(name) }}</p>
     <a class="compare" @click="obj.compareAll = !obj.compareAll" :disabled="!compare || process">
       {{ obj.compareAll ? $t('app.attributes.top.and') : $t('app.attributes.top.or') }}
     </a>
