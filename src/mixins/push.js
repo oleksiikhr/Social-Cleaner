@@ -1,3 +1,5 @@
+import i18n from '../locale'
+
 export default {
   methods: {
     /* | -----------------------------------------------------------------------------
@@ -50,15 +52,13 @@ export default {
      * @param {object} checked - (index, result()
      *
      * @return void - push to array
-     *
-     * TODO Translate
      */
     pushResult (result, name, link, items, checked) {
       result.push({
         name: name,
         link: link,
         reason: checked.index ? items[checked.index].obj.name : null,
-        result: checked.result ? 'Yes' : 'No'
+        result: checked.result ? i18n.t('app.global.yes') : i18n.t('app.global.no')
       })
     }
   }
