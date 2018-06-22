@@ -1,21 +1,22 @@
 <template>
   <div id="docs">
     <div class="main-config block">
-      <h2>Основные настройки</h2>
-      <attr-input name="ID сообщества" info="Positive number. Empty - Current User." :model.sync="main.owner_id"
+      <h2>{{ $t('vk.docs.main_config.h2') }}</h2>
+      <attr-input name="vk.docs.main_config.owner_id.name" info="vk.docs.main_config.owner_id.info"
+                  :model.sync="main.owner_id" :process="process" />
+      <attr-count name="vk.docs.main_config.count" :model="main.count" :process="process" />
+      <attr-radio name="vk.docs.main_config.type.name" :model.sync="main.type.value" :html="main.type.html"
                   :process="process" />
-      <attr-count name="Количество документов (от и до), включительно" :model="main.count" :process="process" />
-      <attr-radio name="Фильтр" :model.sync="main.type.value" :html="main.type.html" :process="process" />
     </div>
 
-    <div class="docs-config block">
-      <h2>Настройки</h2>
+    <div class="additional-config block">
+      <h2>{{ $t('vk.docs.additional_config.h2') }}</h2>
       <attr-tag :obj="config.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
-                 info="Press enter to add to the list. Use a negative value to designate a community ID." />
+                 info="vk.docs.additional_config.from_ids.info" />
       <attr-tag :obj="config.exts" :push="pushString" :process="process"
-                info="After filling, press enter to add to the list. Without a dot. Example: png, jpg" />
+                info="vk.docs.additional_config.exts.info" />
       <attr-tag :obj="config.texts" :push="pushString" :process="process" compare
-                info="After filling, press enter to add to the list." />
+                info="vk.docs.additional_config.texts.info" />
       <attr-indicators :obj="config.indicators" :process="process" compare />
       <attr-reverse :model.sync="config.reverse" :process="process" />
       <!--TODO Date-->
@@ -60,42 +61,42 @@ export default {
         type: {
           value: 0,
           html: [
-            { name: 'Все', val: 0 },
-            { name: 'Текстовые документы', val: 1 },
-            { name: 'Архивы', val: 2 },
-            { name: 'Gif', val: 3 },
-            { name: 'Изображения', val: 4 },
-            { name: 'Аудио', val: 5 },
-            { name: 'Видео', val: 6 },
-            { name: 'Электронные книги', val: 7 },
-            { name: 'Неизвестно', val: 8 }
+            { name: 'vk.docs.main_config.type.items[0]', val: 0 },
+            { name: 'vk.docs.main_config.type.items[1]', val: 1 },
+            { name: 'vk.docs.main_config.type.items[2]', val: 2 },
+            { name: 'vk.docs.main_config.type.items[3]', val: 3 },
+            { name: 'vk.docs.main_config.type.items[4]', val: 4 },
+            { name: 'vk.docs.main_config.type.items[5]', val: 5 },
+            { name: 'vk.docs.main_config.type.items[6]', val: 6 },
+            { name: 'vk.docs.main_config.type.items[7]', val: 7 },
+            { name: 'vk.docs.main_config.type.items[8]', val: 8 }
           ]
         }
       },
       config: {
         fromIds: {
-          name: 'ID авторов',
+          name: 'vk.docs.additional_config.from_ids.name',
           input: '',
           items: [],
           compareAll: false
         },
         exts: {
-          name: 'Расширения документов',
+          name: 'vk.docs.additional_config.exts.name',
           input: '',
           items: [],
           compareAll: false
         },
         texts: {
-          name: 'Фразы в названии',
+          name: 'vk.docs.additional_config.texts.name',
           input: '',
           items: [],
           compareAll: false
         },
         indicators: {
-          name: 'Показатели',
+          name: 'vk.docs.additional_config.indicators.name',
           items: [{
             // TODO helper (to gb*)
-            name: 'Размер файла',
+            name: 'vk.docs.additional_config.indicators.items[0]',
             icon: 'server',
             state: 0,
             count: 0
