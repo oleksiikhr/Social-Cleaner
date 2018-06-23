@@ -2,7 +2,7 @@
   <div class="block__attr">
     <p>{{ $t(name) }}</p>
     <at-select v-model="obj.value" :disabled="process" :size="size">
-      <at-option v-for="item in obj.html" :key="item.val" :value="item.val">
+      <at-option v-for="item in html" :key="item.val" :value="item.val">
         {{ $t(item.name) }}
       </at-option>
     </at-select>
@@ -19,6 +19,10 @@ export default {
     },
     name: {
       type: String,
+      required: true
+    },
+    html: {
+      type: Array,
       required: true
     },
     info: {
