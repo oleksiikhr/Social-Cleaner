@@ -57,7 +57,7 @@ export default {
       result.push({
         name: name,
         link: link,
-        reason: checked.index ? items[checked.index].obj.name : null,
+        reason: checked.index ? i18n.t(items[checked.index].obj.name) : null,
         result: checked.result ? i18n.t('app.global.yes') : i18n.t('app.global.no')
       })
     }
