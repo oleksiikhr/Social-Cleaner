@@ -27,7 +27,7 @@ export default {
     },
     indicators: {
       name: 'Indicators',
-      items: ['File size']
+      items: ['File size (bytes)']
     }
   }
 }

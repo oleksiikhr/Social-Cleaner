@@ -30,11 +30,13 @@
 <script>
 import AttrIndicators from '../attributes/Indicators'
 import AttrReverse from '../attributes/Reverse'
+import { bytesToMB } from '../../heplers/file'
 import AttrResult from '../attributes/Result'
 import AttrAction from '../attributes/Action'
 import AttrInput from '../attributes/Input'
 import AttrCount from '../attributes/Count'
 import AttrRadio from '../attributes/Radio'
+import { bytes } from '../../heplers/info'
 import AttrTag from '../attributes/Tag'
 import VK from '../../media/VK'
 
@@ -95,8 +97,8 @@ export default {
         indicators: {
           name: 'vk.docs.additional_config.indicators.name',
           items: [{
-            // TODO helper (to gb*)
             name: 'vk.docs.additional_config.indicators.items[0]',
+            info: bytes,
             icon: 'server',
             state: 0,
             count: 0
@@ -236,8 +238,8 @@ export default {
 
       const checked = this.checkFinal(items, this.config.reverse)
 
-      // TODO doc.size to gb
-      this.pushResult(this.result, `${doc.title} [${doc.size}]`, VK.getLinkDoc(doc.id, this.ownerId), items, checked)
+      const name = `${doc.title} [${Math.floor(bytesToMB(doc.size))} MB]`
+      this.pushResult(this.result, name, VK.getLinkDoc(doc.id, this.ownerId), items, checked)
 
       return checked.result
     },
