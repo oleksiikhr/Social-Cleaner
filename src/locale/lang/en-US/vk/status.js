@@ -1,8 +1,8 @@
 export default {
   h2: 'Basic settings',
-  attr_1: {
-    p: 'Community ID',
-    small: 'Positive number. Empty - Current User.'
+  id: {
+    name: 'Community ID',
+    info: 'Positive number. Empty - current user.'
   },
   current_status: 'Current status',
   empty: 'Status is empty',
