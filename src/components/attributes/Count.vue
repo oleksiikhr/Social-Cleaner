@@ -1,11 +1,11 @@
 <template>
   <div class="block__attr">
-    <p>{{ name }}</p>
+    <p>{{ $t(name) }}</p>
     <div class="flex">
       <at-input v-model="model.min" :disabled="process" placeholder="От" /> -
       <at-input v-model="model.max" :disabled="process" placeholder="До" />
     </div>
-    <small v-if="info">{{ info }}</small>
+    <small v-if="info">{{ $t(info) }}</small>
   </div>
 </template>
 

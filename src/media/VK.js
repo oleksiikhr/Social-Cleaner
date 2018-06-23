@@ -268,6 +268,7 @@ network.prototype.logs = (req, next) => {
  * |
  */
 // API params
+// TODO lang request + change (as the site)
 network.prototype.clientId = 6244330
 network.prototype.version = '5.76'
 network.prototype.urlOauth = 'https://oauth.vk.com/authorize/'

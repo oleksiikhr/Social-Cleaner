@@ -1,30 +1,30 @@
 <template>
-  <!--TODO Translate-->
   <div id="wall">
     <div class="main-config block">
-      <h2>Основные настройки</h2>
-      <attr-input name="ID сообщества" :model.sync="main.owner_id" info="Positive number. Empty - Current User."
-                  :process="process" />
-      <attr-select name="Фильтр записей" :obj="main.filter" size="large" :process="process" />
-      <attr-count name="Количество записей (от и до), включительно" :model="main.count" :process="process" />
-      <attr-radio-button name="Удалить записи или очистить комментарии под записями" :obj="main.isDeletePosts"
+      <h2>{{ $t('vk.wall.main_config.h2') }}</h2>
+      <attr-input name="vk.wall.main_config.owner_id.name" :model.sync="main.owner_id" :process="process"
+                  info="vk.wall.main_config.owner_id.info" />
+      <attr-select name="vk.wall.main_config.filter.name" :html="main.filter.html" :obj="main.filter" size="large"
+                   :process="process" />
+      <attr-count name="vk.wall.main_config.count.name" :model="main.count" :process="process" />
+      <attr-radio-button name="vk.wall.main_config.is_delete_posts.name" :obj="main.isDeletePosts"
                          :process="process" />
     </div>
 
     <div class="wall-config block">
-      <h2>Параметры стены</h2>
+      <h2>{{ $t('vk.wall.wall_config.h2') }}</h2>
       <attr-tag :obj="wall.ids" :push="pushNumber" :link-tag="getLinkPost" :process="process"
-                 info="After filling, press enter to add to the list." />
+                 info="vk.wall.wall_config.ids.info" />
       <attr-tag :obj="wall.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
-                 info="After filling, press enter to add to the list. Use a negative value to designate a community ID." />
-      <attr-tag :obj="wall.texts" :push="pushString" :process="process" compare
-                 info="After filling, press enter to add to the list." />
+                 info="vk.wall.wall_config.from_ids.info" />
+      <attr-tag :obj="wall.texts" :push="pushString" :process="process" info="vk.wall.wall_config.texts.info" compare />
       <attr-checkbox :obj="wall.attachments" :process="process" compare />
       <attr-indicators :obj="wall.indicators" :process="process" compare />
       <attr-reverse :model.sync="wall.reverse" :process="process" />
       <!--TODO Date-->
     </div>
 
+    <!--TODO Translate-->
     <template v-if="main.isDeletePosts.value">
       <div class="comments-config block">
         <h2>Параметры комментарий</h2>
@@ -73,11 +73,11 @@ export default {
         filter: {
           value: 'all',
           html: [
-            { name: 'Все', val: 'all' },
-            { name: 'Предложенные записи на стене сообщества', val: 'suggests' },
-            { name: 'Отложенные записи', val: 'postponed' },
-            { name: 'Записи владельца стены', val: 'owner' },
-            { name: 'Записи не от владельца стены', val: 'others' }
+            { name: 'vk.wall.main_config.filter.items[0]', val: 'all' },
+            { name: 'vk.wall.main_config.filter.items[1]', val: 'suggests' },
+            { name: 'vk.wall.main_config.filter.items[2]', val: 'postponed' },
+            { name: 'vk.wall.main_config.filter.items[3]', val: 'owner' },
+            { name: 'vk.wall.main_config.filter.items[4]', val: 'others' }
           ]
         },
         count: {
@@ -87,55 +87,55 @@ export default {
         isDeletePosts: {
           value: 0,
           html: [
-            { name: 'Записи', val: 0 },
-            { name: 'Комментарии', val: 1 }
+            { name: 'vk.wall.main_config.is_delete_posts.items[0]', val: 0 },
+            { name: 'vk.wall.main_config.is_delete_posts.items[1]', val: 1 }
           ]
         }
       },
       wall: {
         ids: {
-          name: 'ID записей',
+          name: 'vk.wall.wall_config.ids.name',
           input: '',
           items: [],
           compareAll: false
         },
         fromIds: {
-          name: 'ID авторов записей',
+          name: 'vk.wall.wall_config.from_ids.name',
           input: '',
           items: [],
           compareAll: false
         },
         texts: {
-          name: 'Фразы в тексте',
+          name: 'vk.wall.wall_config.texts.name',
           input: '',
           items: [],
           compareAll: false
         },
         attachments: {
-          name: 'Added media attachments',
+          name: 'vk.wall.wall_config.attachments.name',
           items: [],
           compareAll: true,
           html: [
-            { name: 'Photo', val: 'photo' },
-            { name: 'Video', val: 'video' },
-            { name: 'Audio', val: 'audio' },
-            { name: 'Document', val: 'doc' },
-            { name: 'Link', val: 'link' },
-            { name: 'Note', val: 'note' },
-            { name: 'Poll', val: 'poll' },
-            { name: 'Wiki Page', val: 'page' },
-            { name: 'Photos List', val: 'photos_list' },
-            { name: 'Market Item', val: 'market' },
-            { name: 'Market Collection', val: 'market_album' }
+            { name: 'vk.wall.wall_config.attachments.items[0]', val: 'photo' },
+            { name: 'vk.wall.wall_config.attachments.items[1]', val: 'video' },
+            { name: 'vk.wall.wall_config.attachments.items[2]', val: 'audio' },
+            { name: 'vk.wall.wall_config.attachments.items[3]', val: 'doc' },
+            { name: 'vk.wall.wall_config.attachments.items[4]', val: 'link' },
+            { name: 'vk.wall.wall_config.attachments.items[5]', val: 'note' },
+            { name: 'vk.wall.wall_config.attachments.items[6]', val: 'poll' },
+            { name: 'vk.wall.wall_config.attachments.items[7]', val: 'page' },
+            { name: 'vk.wall.wall_config.attachments.items[8]', val: 'photos_list' },
+            { name: 'vk.wall.wall_config.attachments.items[9]', val: 'market' },
+            { name: 'vk.wall.wall_config.attachments.items[10]', val: 'market_album' }
           ]
         },
         indicators: {
-          name: 'Показатели',
+          name: 'vk.wall.wall_config.indicators.name',
           items: [
-            { name: 'Comments', icon: 'comment-o', state: 0, count: 0 },
-            { name: 'Likes', icon: 'heart-o', state: 0, count: 0 },
-            { name: 'Reposts', icon: 'bullhorn', state: 0, count: 0 },
-            { name: 'Views', icon: 'eye', state: 0, count: 0 }
+            { name: 'vk.wall.wall_config.indicators.items[0]', icon: 'comment-o', state: 0, count: 0 },
+            { name: 'vk.wall.wall_config.indicators.items[1]', icon: 'heart-o', state: 0, count: 0 },
+            { name: 'vk.wall.wall_config.indicators.items[2]', icon: 'bullhorn', state: 0, count: 0 },
+            { name: 'vk.wall.wall_config.indicators.items[3]', icon: 'eye', state: 0, count: 0 }
           ],
           compareAll: true
         },
@@ -291,12 +291,7 @@ export default {
 
       const checked = this.checkFinal(items, this.wall.reverse)
 
-      this.result.push({
-        name: `id: ${post.id}`,
-        link: VK.getLinkWall(this.ownerId, post.id),
-        reason: checked.index ? items[checked.index].obj.name : '-',
-        result: checked.result ? 'Yes' : 'No'
-      })
+      this.pushResult(this.result, `ID: ${post.id}`, VK.getLinkWall(this.ownerId, post.id), items, checked)
 
       return checked.result
     },

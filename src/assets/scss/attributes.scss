@@ -44,6 +44,8 @@
       .compare {
         font-size: .7rem;
         text-transform: uppercase;
+        min-width: 25px;
+        text-align: center;
       }
     }
     .flex {
@@ -67,5 +69,12 @@
         font-size: 13px;
       }
     }
+  }
+}
+
+.result-block {
+  .at-table__body {
+    width: 100%;
+    overflow: auto;
   }
 }

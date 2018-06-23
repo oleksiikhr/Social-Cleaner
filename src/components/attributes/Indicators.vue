@@ -5,13 +5,20 @@
       <div class="indicator" v-for="(item, index) in obj.items" :key="index">
         <div class="flex">
           <i v-if="item.icon" :class="`fa fa-${item.icon}`" aria-hidden="true"></i>
-          <p>{{ item.name }}</p>
+          <p>{{ $t(item.name) }}</p>
         </div>
-        <at-input v-model="item.count" :disabled="process || item.state === 0" />
+
+        <at-popover v-if="item.info" placement="top" :content="item.info(item.count)">
+          <at-input v-model="item.count" :disabled="process || item.state === 0" />
+        </at-popover>
+        <template v-else>
+          <at-input v-model="item.count" :disabled="process || item.state === 0" />
+        </template>
+
         <at-radio-group v-model="item.state" :disabled="process">
-          <at-radio-button :label="-1">Меньше</at-radio-button>
-          <at-radio-button :label="0">Выкл.</at-radio-button>
-          <at-radio-button :label="1">Больше</at-radio-button>
+          <at-radio-button :label="-1">{{ $t('app.attributes.indicators.less') }}</at-radio-button>
+          <at-radio-button :label="0">{{ $t('app.attributes.indicators.disable') }}</at-radio-button>
+          <at-radio-button :label="1">{{ $t('app.attributes.indicators.more') }}</at-radio-button>
         </at-radio-group>
       </div>
     </div>
@@ -26,7 +33,7 @@ export default {
     Top
   },
   props: {
-    obj: { // {items: [{name1, icon1, state1, count1}], compareAll}
+    obj: { // {items: [{name1, info, icon1, state1, count1}], compareAll}
       type: Object,
       required: true
     },

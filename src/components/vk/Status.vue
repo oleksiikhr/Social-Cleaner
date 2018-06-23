@@ -2,8 +2,7 @@
   <div id="status">
     <div class="main-config block">
       <h2>{{ $t('vk.status.h2') }}</h2>
-      <attr-input :name="$t('vk.status.attr_1.p')" :info="$t('vk.status.attr_1.small')" :model.sync="id"
-                  :process="process" />
+      <attr-input name="vk.status.id.name" info="vk.status.id.info" :model.sync="id" :process="process" />
       <div class="text-center">
         <at-button type="primary" @click="fetchGetStatus()" :disabled="process">
           {{ $t('vk.status.get_status') }}

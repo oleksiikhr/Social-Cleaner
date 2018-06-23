@@ -1,8 +1,8 @@
 <template>
   <div class="block__attr">
-    <p>{{ name }}</p>
+    <p>{{ $t(name) }}</p>
     <at-input v-model="input" :disabled="process" />
-    <small v-if="info">{{ info }}</small>
+    <small v-if="info">{{ $t(info) }}</small>
   </div>
 </template>
 

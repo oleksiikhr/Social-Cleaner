@@ -13,11 +13,14 @@ import 'at-ui-style'
 import 'font-awesome/scss/font-awesome.scss'
 import './assets/scss/index.scss'
 
+// Use modules
 Vue.use(AtComponents)
 Vue.use(VueResource)
 
+// Hide message
 Vue.config.productionTip = false
 
+// Add logs after each http call
 Vue.http.interceptors.push((req, next) => {
   const isFind = networks.some(network => {
     if (req.url.indexOf(network.urlApi) !== -1) {
@@ -28,14 +31,6 @@ Vue.http.interceptors.push((req, next) => {
 
   if (!isFind) {
     Vue.prototype.$Notify.warning({ title: 'Undefined API', message: req.url })
-  }
-})
-
-router.beforeEach((to, from, next) => {
-  if (to.meta.vk && !store.state.media.vk.user.id) {
-    next({ name: 'vk' })
-  } else {
-    next()
   }
 })
 

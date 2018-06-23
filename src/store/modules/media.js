@@ -103,6 +103,8 @@ const actions = {
       if (res.ok && res.body.response) {
         store.commit('VK_SET_USER', res.body.response[0])
       }
+
+      window.scrollTo(0, 0)
     }
   },
   vkLogOut ({commit}) {
@@ -110,7 +112,7 @@ const actions = {
     commit('VK_CLEAR_USER')
     commit('VK_CLEAR_PERMISSIONS')
     Vue.prototype.$Message.info('VK - Log Out')
-    router.push({ name: 'vk-token' })
+    router.push({ name: 'vk' })
   }
 }
 
