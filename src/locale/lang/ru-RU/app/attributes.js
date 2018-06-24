@@ -20,5 +20,8 @@ export default {
     less: 'Меньше',
     disable: 'Выкл.',
     more: 'Больше'
+  },
+  tag: {
+    info: 'Нажмите «enter», чтобы добавить в список.'
   }
 }

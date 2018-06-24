@@ -5,11 +5,11 @@
     <div class="block__attr-inner">
       <at-tag v-for="(text, index) in obj.items" :key="index" :name="index" :closable="!process"
               @on-close="obj.items.splice(index, 1)">
-        <a v-if="linkTag" :href="linkTag(text)" target="_blank" rel="noopener">{{ $t(text) }}</a>
-        <span v-else>{{ $t(text) }}</span>
+        <a v-if="linkTag" :href="linkTag(text)" target="_blank" rel="noopener">{{ text }}</a>
+        <span v-else>{{ text }}</span>
       </at-tag>
     </div>
-    <small v-if="info">{{ $t(info) }}</small>
+    <small>{{ $t('app.attributes.tag.info') }}<template v-if="info"> {{ $t(info) }}</template></small>
   </div>
 </template>
 
