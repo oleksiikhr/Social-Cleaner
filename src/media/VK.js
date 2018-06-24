@@ -7,6 +7,12 @@ import Vue from 'vue'
 
 const ROUTE_INDEX = 3
 
+const DEFAULT_LANG = 'en'
+
+const LIST_OF_LANG = [
+  'ru', 'uk', 'be', 'en', 'es', 'fi', 'de', 'it'
+]
+
 const network = class VK {
   /* | -----------------------------------------------------------------------------
    * | API
@@ -25,6 +31,7 @@ const network = class VK {
     })
 
     params.v = this.prototype.version
+    params.lang = this.prototype.lang
 
     if (!params.access_token) {
       params.access_token = store.state.media.vk.token
@@ -261,21 +268,31 @@ network.prototype.logs = (req, next) => {
     }
   })
 }
+network.prototype.changeLang = (name, value, valueShort) => {
+  network.prototype.lang = LIST_OF_LANG.includes(valueShort) ? valueShort : DEFAULT_LANG
+}
 
 /* | -----------------------------------------------------------------------------
- * | Other
+ * | Other properties
  * | -----------------------------------------------------------------------------
  * |
  */
 // API params
-// TODO lang request + change (as the site)
 network.prototype.clientId = 6244330
-network.prototype.version = '5.76'
+network.prototype.version = '5.80'
+network.prototype.lang = DEFAULT_LANG
 network.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
 network.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
 
 // Information about methods
 network.prototype.COUNT_WALL = 100
 network.prototype.COUNT_DOCS = 2000
+
+/* | -----------------------------------------------------------------------------
+ * | Other methods
+ * | -----------------------------------------------------------------------------
+ * |
+ */
+// ..
 
 export default network
