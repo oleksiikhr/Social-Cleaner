@@ -2,7 +2,7 @@
   <div class="block__attr">
     <top :obj="obj" :name="nameAttribute" :compare="compare" :process="process" />
     <at-checkbox-group v-model="obj.items">
-      <at-checkbox v-for="item in obj.html" :key="item.val" :label="item.val" :disabled="process">
+      <at-checkbox v-for="item in html" :key="item.val" :label="item.val" :disabled="process">
         {{ $t(item.name) }}
       </at-checkbox>
     </at-checkbox-group>
@@ -25,6 +25,10 @@ export default {
     name: {
       type: String,
       required: false
+    },
+    html: {
+      type: Array,
+      required: true
     },
     compare: {
       type: Boolean,
