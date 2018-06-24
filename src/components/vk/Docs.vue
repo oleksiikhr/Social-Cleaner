@@ -15,8 +15,7 @@
                  info="vk.docs.additional_config.from_ids.info" />
       <attr-tag :obj="config.exts" :push="pushString" :process="process"
                 info="vk.docs.additional_config.exts.info" />
-      <attr-tag :obj="config.texts" :push="pushString" :process="process" compare
-                info="vk.docs.additional_config.texts.info" />
+      <attr-tag :obj="config.texts" :push="pushString" :process="process" compare />
       <attr-indicators :obj="config.indicators" :process="process" compare />
       <attr-reverse :model.sync="config.reverse" :process="process" />
       <!--TODO Date-->
