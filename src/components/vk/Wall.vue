@@ -13,12 +13,11 @@
 
     <div class="wall-config block">
       <h2>{{ $t('vk.wall.wall_config.h2') }}</h2>
-      <attr-tag :obj="wall.ids" :push="pushNumber" :link-tag="getLinkPost" :process="process"
-                 info="vk.wall.wall_config.ids.info" />
+      <attr-tag :obj="wall.ids" :push="pushNumber" :link-tag="getLinkPost" :process="process" />
       <attr-tag :obj="wall.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
-                 info="vk.wall.wall_config.from_ids.info" />
-      <attr-tag :obj="wall.texts" :push="pushString" :process="process" info="vk.wall.wall_config.texts.info" compare />
-      <attr-checkbox :obj="wall.attachments" :process="process" compare />
+                info="vk.wall.wall_config.from_ids.info" />
+      <attr-tag :obj="wall.texts" :push="pushString" :process="process" compare />
+      <attr-checkbox :obj="wall.attachments" :html="html.attachments" :process="process" compare />
       <attr-indicators :obj="wall.indicators" :process="process" compare />
       <attr-reverse :model.sync="wall.reverse" :process="process" />
       <!--TODO Date-->
@@ -27,12 +26,13 @@
     <!--TODO Translate-->
     <template v-if="main.isDeletePosts.value">
       <div class="comments-config block">
-        <h2>Параметры комментарий</h2>
-        <!--TODO From_id-->
-        <!--TODO Text-->
-        <!--TODO Attachments-->
+        <h2>{{ $t('vk.wall.comments_config.h2') }}</h2>
+        <attr-tag :obj="comments.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
+                  info="vk.wall.comments_config.from_ids.info" />
+        <attr-tag :obj="comments.texts" :push="pushString" :process="process" />
+        <attr-checkbox :obj="comments.attachments" :html="html.attachments" :process="process" compare />
+        <attr-indicators :obj="comments.indicators" :process="process" compare />
         <!--TODO Date-->
-        <!--TODO Count [likes]-->
       </div>
     </template>
 
@@ -114,20 +114,7 @@ export default {
         attachments: {
           name: 'vk.wall.wall_config.attachments.name',
           items: [],
-          compareAll: true,
-          html: [
-            { name: 'vk.wall.wall_config.attachments.items[0]', val: 'photo' },
-            { name: 'vk.wall.wall_config.attachments.items[1]', val: 'video' },
-            { name: 'vk.wall.wall_config.attachments.items[2]', val: 'audio' },
-            { name: 'vk.wall.wall_config.attachments.items[3]', val: 'doc' },
-            { name: 'vk.wall.wall_config.attachments.items[4]', val: 'link' },
-            { name: 'vk.wall.wall_config.attachments.items[5]', val: 'note' },
-            { name: 'vk.wall.wall_config.attachments.items[6]', val: 'poll' },
-            { name: 'vk.wall.wall_config.attachments.items[7]', val: 'page' },
-            { name: 'vk.wall.wall_config.attachments.items[8]', val: 'photos_list' },
-            { name: 'vk.wall.wall_config.attachments.items[9]', val: 'market' },
-            { name: 'vk.wall.wall_config.attachments.items[10]', val: 'market_album' }
-          ]
+          compareAll: true
         },
         indicators: {
           name: 'vk.wall.wall_config.indicators.name',
@@ -140,6 +127,50 @@ export default {
           compareAll: true
         },
         reverse: false
+      },
+      comments: {
+        fromIds: {
+          name: 'vk.wall.comments_config.from_ids.name',
+          input: '',
+          items: [],
+          compareAll: false
+        },
+        texts: {
+          name: 'vk.wall.comments_config.texts.name',
+          input: '',
+          items: [],
+          compareAll: false
+        },
+        attachments: {
+          name: 'vk.wall.comments_config.attachments.name',
+          items: [],
+          compareAll: true
+        },
+        indicators: {
+          name: 'vk.wall.comments_config.indicators.name',
+          items: [{
+            name: 'vk.wall.comments_config.indicators.items[0]',
+            icon: 'heart-o',
+            state: 0,
+            count: 0
+          }],
+          compareAll: false
+        }
+      },
+      html: {
+        attachments: [
+          { name: 'vk.wall.html.attachments[0]', val: 'photo' },
+          { name: 'vk.wall.html.attachments[1]', val: 'video' },
+          { name: 'vk.wall.html.attachments[2]', val: 'audio' },
+          { name: 'vk.wall.html.attachments[3]', val: 'doc' },
+          { name: 'vk.wall.html.attachments[4]', val: 'link' },
+          { name: 'vk.wall.html.attachments[5]', val: 'note' },
+          { name: 'vk.wall.html.attachments[6]', val: 'poll' },
+          { name: 'vk.wall.html.attachments[7]', val: 'page' },
+          { name: 'vk.wall.html.attachments[8]', val: 'photos_list' },
+          { name: 'vk.wall.html.attachments[9]', val: 'market' },
+          { name: 'vk.wall.html.attachments[10]', val: 'market_album' }
+        ]
       },
       result: [],
       loading: false
