@@ -23,7 +23,6 @@
       <!--TODO Date-->
     </div>
 
-    <!--TODO Translate-->
     <template v-if="main.isDeletePosts.value">
       <div class="comments-config block">
         <h2>{{ $t('vk.wall.comments_config.h2') }}</h2>
@@ -32,6 +31,7 @@
         <attr-tag :obj="comments.texts" :push="pushString" :process="process" />
         <attr-checkbox :obj="comments.attachments" :html="html.attachments" :process="process" compare />
         <attr-indicators :obj="comments.indicators" :process="process" compare />
+        <attr-reverse :model.sync="comments.reverse" :process="process" />
         <!--TODO Date-->
       </div>
     </template>
@@ -155,7 +155,8 @@ export default {
             count: 0
           }],
           compareAll: false
-        }
+        },
+        reverse: false
       },
       html: {
         attachments: [
