@@ -16,8 +16,8 @@ export const repository = pack.repository
  */
 export const languages = Object.keys(locale)
   .filter(key => {
-    return typeof locale[key]['name'] !== 'undefined'
+    return typeof locale[key].global.name !== 'undefined'
   })
   .map(key => {
-    return { name: locale[key]['name'], value: key }
+    return { name: locale[key].global.name, value: key }
   })
