@@ -92,6 +92,39 @@ const network = class VK {
     return result
   }
   /**
+   * @see https://vk.com/dev/wall.getComments
+   */
+  static async fetchWallGetComments (
+    postId,
+    ownerId = store.state.media.vk.user.id,
+    count = this.prototype.COUNT_WALL_COMMENTS,
+    offset = 0,
+    needLikes = true,
+    sleepMin = 0,
+    sleepMax = sleepMin
+  ) {
+    const result = await this.send('wall.getComments', {
+      owner_id: ownerId,
+      post_id: postId,
+      count: count,
+      offset: offset,
+      need_likes: needLikes
+    }, { min: sleepMin, max: sleepMax })
+
+    return result
+  }
+  /**
+   * @see https://vk.com/dev/wall.deleteComment
+   */
+  static async fetchWallDeleteComment (commentId, ownerId = store.state.media.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
+    const result = await this.send('wall.deleteComment', {
+      owner_id: ownerId,
+      comment_id: commentId
+    }, { min: sleepMin, max: sleepMax })
+
+    return result
+  }
+  /**
    * @see https://vk.com/dev/users.get
    */
   static async fetchUsersGet (userIds = store.state.media.vk.user.id, fields = '', sleepMin = 0, sleepMax = sleepMin) {
@@ -287,6 +320,7 @@ network.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
 // Information about methods
 network.prototype.COUNT_WALL = 100
 network.prototype.COUNT_DOCS = 2000
+network.prototype.COUNT_WALL_COMMENTS = 100
 
 /* | -----------------------------------------------------------------------------
  * | Other methods
