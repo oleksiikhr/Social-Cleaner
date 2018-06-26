@@ -8,7 +8,7 @@
                    :process="process" />
       <attr-count name="vk.wall.main_config.count.name" :model="main.count" :process="process" />
       <attr-radio-button name="vk.wall.main_config.is_delete_posts.name" :obj="main.isDeletePosts"
-                         :process="process" />
+                         :html="main.isDeletePosts.html" :process="process" />
     </div>
 
     <div class="wall-config block">
@@ -23,7 +23,7 @@
       <!--TODO Date-->
     </div>
 
-    <template v-if="main.isDeletePosts.value">
+    <template v-if="!main.isDeletePosts.value">
       <div class="comments-config block">
         <h2>{{ $t('vk.wall.comments_config.h2') }}</h2>
         <attr-tag :obj="comments.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
@@ -53,6 +53,7 @@ import AttrInput from '../attributes/Input'
 import AttrCount from '../attributes/Count'
 import AttrTag from '../attributes/Tag'
 import VK from '../../media/VK'
+import push from "../../mixins/push";
 
 const SLEEP_DELETE_MIN = 1500
 const SLEEP_DELETE_MAX = 2500
@@ -60,7 +61,8 @@ const SLEEP_DELETE_MAX = 2500
 const SLEEP_GET_MIN = 500
 const SLEEP_GET_MAX = 1500
 
-const MAX_COUNT_API = VK.prototype.COUNT_WALL
+const MAX_COUNT_WALL_API = VK.prototype.COUNT_WALL
+const MAX_COUNT_WALL_COMMENTS_API = VK.prototype.COUNT_WALL_COMMENTS
 
 export default {
   components: {
@@ -85,10 +87,10 @@ export default {
           max: '20'
         },
         isDeletePosts: {
-          value: 0,
+          value: 1,
           html: [
-            { name: 'vk.wall.main_config.is_delete_posts.items[0]', val: 0 },
-            { name: 'vk.wall.main_config.is_delete_posts.items[1]', val: 1 }
+            { name: 'vk.wall.main_config.is_delete_posts.items[0]', val: 1 },
+            { name: 'vk.wall.main_config.is_delete_posts.items[1]', val: 0 }
           ]
         }
       },
@@ -211,23 +213,32 @@ export default {
 
       return res
     },
+    async fetchCommentsGet (id, count = VK.prototype.COUNT_WALL_COMMENTS, offset = this.main.count.min - 1) {
+      const res = await VK.fetchWallGetComments(id, this.ownerId, count, offset, true, SLEEP_GET_MIN, SLEEP_GET_MAX)
+
+      return res
+    },
+    async fetchCommentDelete (id) {
+      const res = await VK.fetchWallDeleteComment(id, this.ownerId, SLEEP_GET_MIN, SLEEP_GET_MAX)
+
+      return res
+    },
 
     /* | -----------------------------------------------------------------------------
      * | Start/Stop action
      * | -----------------------------------------------------------------------------
      * |
      */
-    // TODO Start delete comments
-    // TODO Preview comments*
+    // TODO Delete comments
     async doStart () {
       if (!this.start()) {
         return this.stop()
       }
 
-      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_API)
+      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_WALL_API)
 
       for (let i = 0; i < countLoop; i++) {
-        const res = await this.fetchGetWall(this.getMaxCountItems(this.main.count, MAX_COUNT_API))
+        const res = await this.fetchGetWall(this.getMaxCountItems(this.main.count, MAX_COUNT_WALL_API))
 
         if (res.ok && res.body.response) {
           const len = res.body.response.items.length
@@ -239,7 +250,7 @@ export default {
 
             const post = res.body.response.items[j]
 
-            if (this.check(post)) {
+            if (this.checkPost(post)) {
               const resDelete = await this.fetchDeleteWall(post.id)
               if (resDelete.ok && resDelete.body.response) {
                 this.main.count.max--
@@ -255,32 +266,82 @@ export default {
 
       this.stop()
     },
-    async doPreview () {
+    doPreview () {
       if (!this.start()) {
         return this.stop()
       }
 
-      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_API)
+      if (this.main.isDeletePosts.value) {
+        this.doPreviewWallPosts()
+      } else {
+        this.doPreviewWallComments()
+      }
+
+      this.stop()
+    },
+    async doPreviewWallPosts () {
+      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_WALL_API)
 
       for (let i = 0; i < countLoop; i++) {
-        // Check if the user clicked on the stop.
-        if (this.cancel) {
-          return this.stop()
-        }
+        if (this.cancel) return this.stop()
 
-        const offset = i * MAX_COUNT_API
+        const offset = i * MAX_COUNT_WALL_API
         const leftItems = this.main.count.max - offset
-
-        const res = await this.fetchGetWall(leftItems > MAX_COUNT_API ? MAX_COUNT_API : leftItems, offset)
+        const res = await this.fetchGetWall(leftItems > MAX_COUNT_WALL_API ? MAX_COUNT_WALL_API : leftItems, offset)
 
         if (res.ok && res.body.response && res.body.response.items.length) {
-          res.body.response.items.forEach(post => this.check(post))
+          res.body.response.items.forEach(post => this.checkPost(post))
         } else {
           return this.stop()
         }
       }
+    },
+    // TODO Rewritten more simple!!
+    async doPreviewWallComments () {
+      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_WALL_API)
 
-      this.stop()
+      for (let i = 0; i < countLoop; i++) {
+        if (this.cancel) return this.stop()
+
+        const offset = i * MAX_COUNT_WALL_API
+        const leftItems = this.main.count.max - offset
+        const res = await this.fetchGetWall(leftItems > MAX_COUNT_WALL_API ? MAX_COUNT_WALL_API : leftItems, offset)
+
+        if (res.ok && res.body.response && res.body.response.items.length) {
+          const len = res.body.response.items.length
+          for (let j = 0; j < len; j++) {
+            if (this.cancel) return this.stop()
+
+            const post = res.body.response.items[j]
+
+            // COMMENTS SECTION
+            if (this.checkPost(post, false)) {
+              const commentsLength = post.comments.count
+              const countLoopComments = this.getCountLoop({ min: 1, max: commentsLength }, MAX_COUNT_WALL_COMMENTS_API)
+
+              for (let k = 0; k < countLoopComments; k++) {
+                if (this.cancel) return this.stop()
+
+                const offsetComments = k * MAX_COUNT_WALL_COMMENTS_API
+                const leftItemsComments = commentsLength - offsetComments
+                const resComments = await this.fetchCommentsGet(
+                  post.id,
+                  leftItemsComments > MAX_COUNT_WALL_COMMENTS_API ? MAX_COUNT_WALL_COMMENTS_API : leftItemsComments,
+                  offsetComments
+                )
+
+                if (resComments.ok && resComments.body.response && res.body.response.items.length) {
+                  resComments.body.response.items.forEach(item => this.checkComment(item))
+                } else {
+                  return this.stop()
+                }
+              }
+            }
+          }
+        } else {
+          return this.stop()
+        }
+      }
     },
     start () {
       this.$store.commit('START_PROCESS', 'vk')
@@ -300,7 +361,7 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    check (post) {
+    checkPost (post, pushResult = true) {
       const attachments = typeof post.attachments === 'undefined' ? undefined : post.attachments.map(attachment => {
         return attachment.type
       })
@@ -323,7 +384,29 @@ export default {
 
       const checked = this.checkFinal(items, this.wall.reverse)
 
-      this.pushResult(this.result, `ID: ${post.id}`, VK.getLinkWall(this.ownerId, post.id), items, checked)
+      if (pushResult) {
+        this.pushResult(this.result, `ID: ${post.id}`, VK.getLinkWall(this.ownerId, post.id), items, checked)
+      }
+
+      return checked.result
+    },
+    checkComment (comment, pushResult = true) {
+      const attachments = typeof comment.attachments === 'undefined' ? undefined : comment.attachments.map(attachment => {
+        return attachment.type
+      })
+
+      const items = [
+        { obj: this.comments.fromIds, method: this.checkNumber, param: comment.from_id },
+        { obj: this.comments.texts, method: this.checkText, param: comment.text },
+        { obj: this.comments.attachments, method: this.checkCheckbox, param: attachments },
+        { obj: this.comments.indicators, method: this.checkIndicators, param: [comment.likes.count] }
+      ]
+
+      const checked = this.checkFinal(items, this.comments.reverse)
+
+      if (pushResult) {
+        this.pushResult(this.result, comment.text, '', items, checked)
+      }
 
       return checked.result
     },
