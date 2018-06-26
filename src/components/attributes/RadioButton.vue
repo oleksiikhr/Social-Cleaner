@@ -2,7 +2,7 @@
   <div class="block__attr">
     <p>{{ $t(name) }}</p>
     <at-radio-group v-model="obj.value">
-      <at-radio-button v-for="item in obj.html" :key="item.val" :label="item.val" :disabled="process">
+      <at-radio-button v-for="item in html" :key="item.val" :label="item.val" :disabled="process">
         {{ $t(item.name) }}
       </at-radio-button>
     </at-radio-group>
@@ -18,6 +18,10 @@ export default {
     },
     name: {
       type: String,
+      required: true
+    },
+    html: {
+      type: Array,
       required: true
     },
     info: {
