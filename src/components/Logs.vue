@@ -26,7 +26,7 @@
     </div>
 
     <div class="items">
-      <a :class="'log ' + log.color" v-for="(log, index) in filteredLogs" :key="index"
+      <a :class="'log ' + log.color" v-for="(log, index) in croppedFilteredLogs" :key="index"
          @click="openDialogResponse(log.response)">
         <span class="log__name">{{ log.method }}</span>
         <div class="log__footer">
@@ -36,7 +36,10 @@
       </a>
     </div>
 
-    <!--TODO Pagination-->
+    <div id="pagination">
+      <at-pagination :total="len" :page-size="20" show-total show-sizer show-quickjump @page-change="eventPageChange"
+                     @pagesize-change="eventPageSizeChange" />
+    </div>
   </div>
 </template>
 
@@ -50,15 +53,21 @@ export default {
       networks,
       networkName: '',
       color: '',
-      search: ''
+      search: '',
+      page: {
+        size: 20,
+        current: 1
+      }
     }
   },
-  // TODO Update time every 10sec (destroy on deactivated*)
   computed: {
     logs () {
       return this.$store.state.logs.storage
     },
-    filteredLogs () {
+    len () {
+      return this.filterLogs.length
+    },
+    filterLogs () {
       const search = this.search.toLocaleLowerCase().trim()
 
       return this.logs.filter(log => {
@@ -74,6 +83,10 @@ export default {
 
         return log
       })
+    },
+    croppedFilteredLogs () {
+      const len = this.page.size * (this.page.current - 1)
+      return this.filterLogs.slice(len, len + this.page.size)
     }
   },
   methods: {
@@ -83,6 +96,13 @@ export default {
     },
     fromNow (time) {
       return moment(time).fromNow()
+    },
+    // TODO Screen to top
+    eventPageChange (val) {
+      this.page.current = val
+    },
+    eventPageSizeChange (val) {
+      this.page.size = val
     }
   }
 }
@@ -97,6 +117,7 @@ export default {
   background: #fbfbfb;
   padding: 20px 20px 0;
   border: 1px solid #e7e7e7;
+  width: 100%;
   > * {
     margin: 0 20px 20px 0;
   }
@@ -144,22 +165,32 @@ export default {
   &.info .log__name {
     color: #6c94e1;
   }
+  .log__name {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .log__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: .8rem;
+    opacity: .6;
+    > span {
+      padding-left: 15px;
+    }
+  }
 }
 
-.log__name {
-  font-weight: bold;
+#pagination {
   text-align: center;
-  margin-bottom: 15px;
-}
-
-.log__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: .8rem;
-  opacity: .6;
-  > span {
-    padding-left: 15px;
+  font-size: 0;
+  padding: 20px 0;
+  background: #fbfbfb;
+  border: 1px solid #e7e7e7;
+  margin-top: 30px;
+  > .at-pagination {
+    display: inline-block;
   }
 }
 </style>
