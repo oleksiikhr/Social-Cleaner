@@ -21,6 +21,7 @@
 <script>
 import { languages } from '../../../config'
 import media from '../../../media'
+import moment from 'moment'
 
 export default {
   data () {
@@ -64,6 +65,9 @@ export default {
           item.changeLang(lang.name, lang.value, valueShort)
         }
       })
+
+      // Change language in plugins
+      moment.locale(valueShort)
     }
   }
 }
