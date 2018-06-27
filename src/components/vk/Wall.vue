@@ -53,7 +53,6 @@ import AttrInput from '../attributes/Input'
 import AttrCount from '../attributes/Count'
 import AttrTag from '../attributes/Tag'
 import VK from '../../media/VK'
-import push from "../../mixins/push";
 
 const SLEEP_DELETE_MIN = 1500
 const SLEEP_DELETE_MAX = 2500
