@@ -1,7 +1,71 @@
-.text-center {
+/*
+ * Text
+ */
+
+.text--center {
   text-align: center;
 }
 
-.mw-200 {
+.text--left {
+  text-align: left;
+}
+
+.text--right {
+  text-align: right;
+}
+
+/*
+ * Colors
+ */
+
+.color--success {
+  color: #0dad54;
+}
+
+.background--success {
+  background-color: #0dad54;
+}
+
+.color--info {
+  color: #6c94e1;
+}
+
+.background--info {
+  background-color: #6c94e1;
+}
+
+.color--error {
+  color: #ff5b5b;
+}
+
+.background--error {
+  background-color: #ff5b5b;
+}
+
+.color--warning {
+  color: #efb30d;
+}
+
+.background--warning {
+  background-color: #efb30d;
+}
+
+/*
+ * Float
+ */
+
+.float--right {
+  float: right;
+}
+
+.float--left {
+  float: left;
+}
+
+/*
+ * Min width
+ */
+
+.mw--200 {
   min-width: 200px;
 }

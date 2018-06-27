@@ -136,7 +136,7 @@ hr {
  */
 
 @media screen and (max-width: 600px) {
-  .mw-200 {
+  .mw--200 {
     min-width: unset !important;
   }
 }
@@ -179,7 +179,7 @@ hr {
   .footer__inner {
     flex-direction: column;
   }
-  .mw-200 {
+  .mw--200 {
     padding: 8px;
   }
 }

@@ -12,23 +12,23 @@
       <at-select v-model="color" placeholder="Type" clearable>
         <at-option value="info" label="Request">
           <span>Request</span>
-          <span style="float: right;color: #6c94e1;">**</span>
+          <span class="float--right color--info">**</span>
         </at-option>
         <at-option value="success" label="Success">
           <span>Success</span>
-          <span style="float: right;color: #0dad54;">**</span>
+          <span class="float--right color--success">**</span>
         </at-option>
         <at-option value="error" label="Error">
           <span>Error</span>
-          <span style="float: right;color: #ff5b5b;">**</span>
+          <span class="float--right color--error">**</span>
         </at-option>
       </at-select>
     </div>
 
     <div class="items">
-      <a :class="'log ' + log.color" v-for="(log, index) in croppedFilteredLogs" :key="index"
+      <a class="log" v-for="(log, index) in croppedFilteredLogs" :key="index"
          @click="openDialogResponse(log.response)">
-        <span class="log__name">{{ log.method }}</span>
+        <span :class="`log__name color--${log.color}`">{{ log.method }}</span>
         <div class="log__footer">
           <i :class="'current fa ' + log.socialNetwork.icon" aria-hidden="true"></i>
           <span class="time">{{ fromNow(log.time) }}</span>
@@ -149,21 +149,10 @@ export default {
   padding: 10px;
   color: #333;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  transition: .3s;
   &:hover {
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-  }
-  &.success .log__name {
-    color: #0dad54;
-  }
-  &.error .log__name {
-    color: #ff5b5b;
-  }
-  &.warning .log__name {
-    color: #efb30d;
-  }
-  &.info .log__name {
-    color: #6c94e1;
+    background: #fbfbfb;
+    color: #222;
   }
   .log__name {
     font-weight: bold;
