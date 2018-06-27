@@ -1,26 +1,22 @@
 <template>
-  <!--TODO Global color styles-->
   <div id="logs">
     <div class="header">
-      <h1>Query History</h1>
-      <at-input v-model="search" placeholder="Method" icon="search" />
-      <at-select v-model="networkName" placeholder="Social Network" clearable>
+      <h1>{{ $t('app.logs.h1') }}</h1>
+      <at-input v-model="search" :placeholder="$t('app.logs.search.placeholder')" icon="search" />
+      <at-select v-model="networkName" :placeholder="$t('app.logs.network_name.placeholder')" clearable>
         <at-option v-for="network in networks" :key="network.to" :value="network.name">
           {{ network.name }}
         </at-option>
       </at-select>
-      <at-select v-model="color" placeholder="Type" clearable>
+      <at-select v-model="color" :placeholder="$t('app.logs.options.placeholder')" clearable>
         <at-option value="info" label="Request">
-          <span>Request</span>
-          <span class="float--right color--info">**</span>
+          <span class="color--info">{{ $t('app.logs.options.request') }}</span>
         </at-option>
         <at-option value="success" label="Success">
-          <span>Success</span>
-          <span class="float--right color--success">**</span>
+          <span class="color--success">{{ $t('app.logs.options.success') }}</span>
         </at-option>
         <at-option value="error" label="Error">
-          <span>Error</span>
-          <span class="float--right color--error">**</span>
+          <span class="color--error">{{ $t('app.logs.options.error') }}</span>
         </at-option>
       </at-select>
     </div>
