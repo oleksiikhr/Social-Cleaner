@@ -7,7 +7,7 @@ import pack from '../package'
  * |
  */
 export const version = pack.version
-export const repository = pack.repository
+export const repository = pack.repository.split(':')[1]
 
 /* | -----------------------------------------------------------------------------
  * | Translations. See Locale folder

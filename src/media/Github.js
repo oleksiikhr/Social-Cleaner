@@ -45,14 +45,14 @@ network.prototype.sections = []
  * |
  */
 network.prototype.logs = (req, next) => {
-  const method = req.url.substr(this.default.prototype.urlApi.length)
-  addLog(this.default, method, { method: method, params: req.params }, colors.INFO)
+  const method = req.url.substr(network.prototype.urlApi.length)
+  addLog(network, method, { method: method, params: req.params }, colors.INFO)
 
   next(res => {
     if (res.status >= 200 && res.status < 300) {
-      addLog(this.default, method, res.body, colors.SUCCESS)
+      addLog(network, method, res.body, colors.SUCCESS)
     } else {
-      addLog(this.default, method, res.body || 'Server error', colors.ERROR)
+      addLog(network, method, res.body || 'Server error', colors.ERROR)
       Vue.prototype.$Notify.error({ title: res.body.message || 'Server error', message: method })
     }
   })

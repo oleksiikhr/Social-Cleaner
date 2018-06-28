@@ -287,16 +287,16 @@ network.prototype.logs = (req, next) => {
     }
   })
 
-  addLog(this.default, method, { method: method, params: params }, colors.INFO)
+  addLog(network, method, { method: method, params: params }, colors.INFO)
 
   next(res => {
     if (res.status >= 200 && res.status < 300) {
-      addLog(this.default, method, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
+      addLog(network, method, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
       if (res.body.error) {
         Vue.prototype.$Notify.error({ title: res.body.error.error_msg || 'Error', message: method })
       }
     } else {
-      addLog(this.default, method, 'Server error', colors.ERROR)
+      addLog(network, method, 'Server error', colors.ERROR)
       Vue.prototype.$Notify.error({ title: 'Server error', message: method })
     }
   })
