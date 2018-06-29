@@ -4,7 +4,7 @@
     <div class="logs__header">
       <h1>{{ $t('app.logs.h1') }}</h1>
       <at-input v-model="search" :placeholder="$t('app.logs.search.placeholder')" icon="search" />
-      <at-select v-model="networkName" :placeholder="$t('app.logs.network_name.placeholder')" clearable>
+      <at-select v-model="mediaName" :placeholder="$t('app.logs.network_name.placeholder')" clearable>
         <at-option v-for="network in networks" :key="network.to" :value="network.name">
           {{ network.name }}
         </at-option>
@@ -35,20 +35,24 @@
                      @pagesize-change="eventPageSizeChange" />
     </div>
 
-    <!--TODO Complete-->
     <at-modal v-model="modal.model" class="logs-modal" :show-footer="false">
       <div slot="header" style="text-align:center;">
         <div class="logs-modal__title">
           <span :class="`color--${modal.item.color}`">{{ modal.item.name }}</span>
-          <small>[{{ modalTime }}]</small>
+          <small class="logs-modal__time">[{{ modalTime }}]</small>
         </div>
       </div>
       <div class="logs-modal__inner">
-        <p style="font-weight: bold;">REQUEST</p>
-        <pre>{{ modal.item.request }}</pre>
-        <br><br>
-        <p style="font-weight: bold;">RESPONSE</p>
-        <pre>{{ modal.item.response }}</pre>
+        <!--TODO Fast scroll (id) to section-->
+        <div class="logs-modal__section">
+          <p class="title">Request</p>
+          <pre>{{ modal.item.request }}</pre>
+        </div>
+        <div class="logs-modal__section">
+          <p class="title">Response</p>
+          <pre>{{ modal.item.response }}</pre>
+        </div>
+        <!--TODO arrow to top-->
       </div>
     </at-modal>
   </div>
@@ -62,7 +66,7 @@ export default {
   data () {
     return {
       networks,
-      networkName: '',
+      mediaName: '',
       color: '',
       search: '',
       page: {
@@ -86,10 +90,10 @@ export default {
       const search = this.search.toLocaleLowerCase().trim()
 
       return this.logs.filter(log => {
-        if (search && log.method.toLowerCase().indexOf(search) <= -1) {
+        if (search && log.name.toLowerCase().indexOf(search) <= -1) {
           return false
         }
-        if (this.networkName && this.networkName !== log.socialNetwork.name) {
+        if (this.mediaName && this.mediaName !== log.media.name) {
           return false
         }
         if (this.color && log.color !== this.color) {
