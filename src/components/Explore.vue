@@ -1,8 +1,8 @@
 <template>
   <div id="dashboard">
     <div class="header">
-      <h1>Social Media</h1>
-      <at-input v-model="search" placeholder="Search" icon="search" title="Search" />
+      <h1>{{ $t('app.explore.h1') }}</h1>
+      <at-input v-model="search" :placeholder="searchName" icon="search" :title="searchName" />
     </div>
     <div class="result">
       <card v-for="(item, index) in filteredMedia" :key="index" :item="item" />
@@ -24,14 +24,14 @@ export default {
       search: ''
     }
   },
+  deactivated () {
+    this.search = ''
+  },
   created () {
     // Get a list of social media and filter out disabled
     this.media = media.filter(item => {
       return !item.off
     })
-  },
-  deactivated () {
-    this.search = ''
   },
   computed: {
     filteredMedia () {
@@ -48,6 +48,9 @@ export default {
           return n
         }
       })
+    },
+    searchName () {
+      return this.$t('app.explore.search')
     }
   }
 }
