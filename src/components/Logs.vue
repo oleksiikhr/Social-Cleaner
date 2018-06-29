@@ -1,6 +1,6 @@
 <template>
   <div id="logs">
-    <div class="header">
+    <div class="logs__header">
       <h1>{{ $t('app.logs.h1') }}</h1>
       <at-input v-model="search" :placeholder="$t('app.logs.search.placeholder')" icon="search" />
       <at-select v-model="networkName" :placeholder="$t('app.logs.network_name.placeholder')" clearable>
@@ -21,7 +21,7 @@
       </at-select>
     </div>
 
-    <div class="items">
+    <div class="logs__items">
       <a class="log" v-for="(log, index) in croppedFilteredLogs" :key="index"
          @click="openDialogResponse(log.response)">
         <span :class="`log__name color--${log.color}`">{{ log.method }}</span>
@@ -93,19 +93,23 @@ export default {
     fromNow (time) {
       return moment(time).fromNow()
     },
-    // TODO Screen to top
     eventPageChange (val) {
+      this.scrollToItems()
       this.page.current = val
     },
     eventPageSizeChange (val) {
+      this.scrollToItems()
       this.page.size = val
+    },
+    scrollToItems () {
+      document.getElementsByClassName('logs__items')[0].scrollIntoView({ block: 'start', inline: 'start', behavior: 'smooth' })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.header {
+.logs__header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -133,7 +137,7 @@ export default {
   }
 }
 
-.items {
+.logs__items {
   display: flex;
   flex-wrap: wrap;
 }

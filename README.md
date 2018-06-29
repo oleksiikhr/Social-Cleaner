@@ -2,6 +2,10 @@
 
 > In developing..
 
+## TODO
+
+- [ ] Getting javascript to delete data on the site itself
+
 ## Build Setup
 
 ``` bash
