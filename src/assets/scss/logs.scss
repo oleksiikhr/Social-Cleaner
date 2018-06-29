@@ -1,0 +1,15 @@
+@import 'variables';
+//FIXME Responsive design
+
+.logs-modal {
+  .at-modal {
+    display: flex;
+    flex-direction: column;
+    width: 90% !important;
+    top: 50px;
+    height: calc(100vh - 100px);
+    .at-modal__body {
+      overflow: auto;
+    }
+  }
+}

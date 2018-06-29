@@ -1,4 +1,5 @@
 <template>
+  <!--TODO Responsive design (header, pagination, center items)-->
   <div id="logs">
     <div class="logs__header">
       <h1>{{ $t('app.logs.h1') }}</h1>
@@ -20,7 +21,7 @@
 
     <div class="logs__items">
       <a class="log" v-for="(log, index) in croppedFilteredLogs" :key="index"
-         @click="openDialogResponse(log.response)">
+         @click="openDialogResponse(log)">
         <span :class="`log__name color--${log.color}`">{{ log.name }}</span>
         <div class="log__footer">
           <i :class="'current fa ' + log.media.icon" aria-hidden="true"></i>
@@ -33,6 +34,23 @@
       <at-pagination :total="len" :page-size="20" show-total show-sizer show-quickjump @page-change="eventPageChange"
                      @pagesize-change="eventPageSizeChange" />
     </div>
+
+    <!--TODO Complete-->
+    <at-modal v-model="modal.model" class="logs-modal" :show-footer="false">
+      <div slot="header" style="text-align:center;">
+        <div class="logs-modal__title">
+          <span :class="`color--${modal.item.color}`">{{ modal.item.name }}</span>
+          <small>[{{ modalTime }}]</small>
+        </div>
+      </div>
+      <div class="logs-modal__inner">
+        <p style="font-weight: bold;">REQUEST</p>
+        <pre>{{ modal.item.request }}</pre>
+        <br><br>
+        <p style="font-weight: bold;">RESPONSE</p>
+        <pre>{{ modal.item.response }}</pre>
+      </div>
+    </at-modal>
   </div>
 </template>
 
@@ -50,6 +68,10 @@ export default {
       page: {
         size: 20,
         current: 1
+      },
+      modal: {
+        model: false,
+        item: {}
       }
     }
   },
@@ -80,12 +102,15 @@ export default {
     croppedFilteredLogs () {
       const len = this.page.size * (this.page.current - 1)
       return this.filterLogs.slice(len, len + this.page.size)
+    },
+    modalTime () {
+      return moment(this.modal.item.time).format('LTS')
     }
   },
   methods: {
-    openDialogResponse (response) {
-      // TODO
-      console.log(response)
+    openDialogResponse (log) {
+      this.modal.item = log
+      this.modal.model = true
     },
     fromNow (time) {
       return moment(time).fromNow()
