@@ -8,7 +8,6 @@ export default {
   },
   options: {
     placeholder: 'Тип',
-    request: 'Запрос',
     success: 'Успешно',
     error: 'Ошибка'
   }

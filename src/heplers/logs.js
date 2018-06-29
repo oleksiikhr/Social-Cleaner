@@ -1,19 +1,21 @@
 import store from '../store/index'
 
 /**
- * Adding a log item.
+ * Adding a new log item.
  *
- * @param socialNetwork class
- * @param method
- * @param response
- * @param color
+ * @param {class} media
+ * @param {string} name
+ * @param {object} request
+ * @param {object} response
+ * @param {string} color - success, error
  *
  * @return void
  */
-export function addLog (socialNetwork, method, response, color) {
+export function addLog (media, name, request, response, color) {
   store.commit('ADD_LOG', {
-    socialNetwork: { name: socialNetwork.prototype.name, icon: socialNetwork.prototype.icon },
-    method: method,
+    media: { name: media.prototype.name, icon: media.prototype.icon },
+    name: name,
+    request: request,
     response: response,
     color: color,
     time: new Date()

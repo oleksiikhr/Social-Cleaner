@@ -13,7 +13,7 @@ const LIST_OF_LANG = [
   'ru', 'uk', 'be', 'en', 'es', 'fi', 'de', 'it'
 ]
 
-const network = class VK {
+const media = class VK {
   /* | -----------------------------------------------------------------------------
    * | API
    * | -----------------------------------------------------------------------------
@@ -251,15 +251,15 @@ const network = class VK {
  * | -----------------------------------------------------------------------------
  * |
  */
-network.prototype.off = false
-network.prototype.disabled = false
-network.prototype.name = 'VK'
-network.prototype.to = '/vk'
-network.prototype.domain = 'vk.com'
-network.prototype.icon = 'fa-vk'
-network.prototype.url = 'https://vk.com/'
-network.prototype.urlApi = 'https://api.vk.com/method/'
-network.prototype.sections = router.options.routes[ROUTE_INDEX].children.map(route => {
+media.prototype.off = false
+media.prototype.disabled = false
+media.prototype.name = 'VK'
+media.prototype.to = '/vk'
+media.prototype.domain = 'vk.com'
+media.prototype.icon = 'fa-vk'
+media.prototype.url = 'https://vk.com/'
+media.prototype.urlApi = 'https://api.vk.com/method/'
+media.prototype.sections = router.options.routes[ROUTE_INDEX].children.map(route => {
   return { title: route.meta.name, name: route.name, icon: route.meta.icon, path: route.path }
 })
 
@@ -268,9 +268,9 @@ network.prototype.sections = router.options.routes[ROUTE_INDEX].children.map(rou
  * | -----------------------------------------------------------------------------
  * |
  */
-network.prototype.logs = (req, next) => {
+media.prototype.logs = (req, next) => {
   const urlSplit = req.url.split('/')
-  const method = urlSplit[urlSplit.length - 1]
+  const name = urlSplit[urlSplit.length - 1]
 
   // Hide params from logs
   const params = []
@@ -287,22 +287,20 @@ network.prototype.logs = (req, next) => {
     }
   })
 
-  addLog(network, method, { method: method, params: params }, colors.INFO)
-
   next(res => {
     if (res.status >= 200 && res.status < 300) {
-      addLog(network, method, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
+      addLog(media, name, { method: name, params: params }, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
       if (res.body.error) {
-        Vue.prototype.$Notify.error({ title: res.body.error.error_msg || 'Error', message: method })
+        Vue.prototype.$Notify.error({ title: res.body.error.error_msg || 'Error', message: name })
       }
     } else {
-      addLog(network, method, 'Server error', colors.ERROR)
-      Vue.prototype.$Notify.error({ title: 'Server error', message: method })
+      addLog(media, name, { method: name, params: params }, 'Server error', colors.ERROR)
+      Vue.prototype.$Notify.error({ title: 'Server error', message: name })
     }
   })
 }
-network.prototype.changeLang = (name, value, valueShort) => {
-  network.prototype.lang = LIST_OF_LANG.includes(valueShort) ? valueShort : DEFAULT_LANG
+media.prototype.changeLang = (name, value, valueShort) => {
+  media.prototype.lang = LIST_OF_LANG.includes(valueShort) ? valueShort : DEFAULT_LANG
 }
 
 /* | -----------------------------------------------------------------------------
@@ -311,16 +309,16 @@ network.prototype.changeLang = (name, value, valueShort) => {
  * |
  */
 // API params
-network.prototype.clientId = 6244330
-network.prototype.version = '5.80'
-network.prototype.lang = DEFAULT_LANG
-network.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
-network.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
+media.prototype.clientId = 6244330
+media.prototype.version = '5.80'
+media.prototype.lang = DEFAULT_LANG
+media.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
+media.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
 
 // Information about methods
-network.prototype.COUNT_WALL = 100
-network.prototype.COUNT_DOCS = 2000
-network.prototype.COUNT_WALL_COMMENTS = 100
+media.prototype.COUNT_WALL = 100
+media.prototype.COUNT_DOCS = 2000
+media.prototype.COUNT_WALL_COMMENTS = 100
 
 /* | -----------------------------------------------------------------------------
  * | Other methods
@@ -329,4 +327,4 @@ network.prototype.COUNT_WALL_COMMENTS = 100
  */
 // ..
 
-export default network
+export default media

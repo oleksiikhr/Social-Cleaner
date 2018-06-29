@@ -8,7 +8,6 @@ export default {
   },
   options: {
     placeholder: 'Type',
-    request: 'Request',
     success: 'Success',
     error: 'Error'
   }

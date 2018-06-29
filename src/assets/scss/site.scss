@@ -66,18 +66,6 @@ hr {
         display: block;
         padding: 2px 10px;
         font-weight: bold;
-        &.success {
-          color: #0dad54;
-        }
-        &.error {
-          color: #ff5b5b;
-        }
-        &.warning {
-          color: #efb30d;
-        }
-        &.info {
-          color: #6c94e1;
-        }
       }
     }
   }

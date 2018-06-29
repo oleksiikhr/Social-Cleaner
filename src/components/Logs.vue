@@ -9,9 +9,6 @@
         </at-option>
       </at-select>
       <at-select v-model="color" :placeholder="$t('app.logs.options.placeholder')" clearable>
-        <at-option value="info" label="Request">
-          <span class="color--info">{{ $t('app.logs.options.request') }}</span>
-        </at-option>
         <at-option value="success" label="Success">
           <span class="color--success">{{ $t('app.logs.options.success') }}</span>
         </at-option>
@@ -24,9 +21,9 @@
     <div class="logs__items">
       <a class="log" v-for="(log, index) in croppedFilteredLogs" :key="index"
          @click="openDialogResponse(log.response)">
-        <span :class="`log__name color--${log.color}`">{{ log.method }}</span>
+        <span :class="`log__name color--${log.color}`">{{ log.name }}</span>
         <div class="log__footer">
-          <i :class="'current fa ' + log.socialNetwork.icon" aria-hidden="true"></i>
+          <i :class="'current fa ' + log.media.icon" aria-hidden="true"></i>
           <span class="time">{{ fromNow(log.time) }}</span>
         </div>
       </a>
