@@ -45,7 +45,7 @@
       <hr>
       <div class="exists">
         <at-input type="password" v-model="token" clearable :placeholder="$t('vk.token.guest.placeholder_password')" />
-        <at-button v-if="token" @click="installToken()" type="primary">
+        <at-button v-if="token" :disabled="process" @click="installToken()" type="primary">
           {{ $t('vk.token.guest.get') }}
         </at-button>
       </div>
@@ -68,6 +68,9 @@ export default {
   computed: {
     user () {
       return this.$store.state.media.vk.user.id
+    },
+    process () {
+      return this.$store.state.media.vk.process
     }
   },
   methods: {
