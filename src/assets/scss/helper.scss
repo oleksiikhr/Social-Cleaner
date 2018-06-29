@@ -1,3 +1,5 @@
+@import "variables";
+
 /*
  * Text
  */
@@ -19,35 +21,35 @@
  */
 
 .color--success {
-  color: #0dad54;
+  color: $color-success;
 }
 
 .background--success {
-  background-color: #0dad54;
+  background-color: $color-success;
 }
 
 .color--info {
-  color: #6c94e1;
+  color: $color-info;
 }
 
 .background--info {
-  background-color: #6c94e1;
+  background-color: $color-info;
 }
 
 .color--error {
-  color: #ff5b5b;
+  color: $color-error;
 }
 
 .background--error {
-  background-color: #ff5b5b;
+  background-color: $color-error;
 }
 
 .color--warning {
-  color: #efb30d;
+  color: $color-warning;
 }
 
 .background--warning {
-  background-color: #efb30d;
+  background-color: $color-warning;
 }
 
 /*
