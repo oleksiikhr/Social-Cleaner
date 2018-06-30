@@ -105,6 +105,8 @@ const actions = {
       }
 
       window.scrollTo(0, 0)
+    } else {
+      Vue.prototype.$Message.error('VK - Log In')
     }
 
     commit('STOP_PROCESS', 'vk')

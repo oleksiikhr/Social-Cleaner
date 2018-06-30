@@ -159,17 +159,15 @@ export default {
         if (res.ok && res.body.response) {
           const len = res.body.response.items.length
           for (let j = 0; j < len; j++) {
-            // Check if the user clicked on the stop.
-            if (this.cancel) {
-              return this.stop()
-            }
-
             const doc = res.body.response.items[j]
 
             if (this.check(doc)) {
               const resDelete = await this.fetchDelete(doc.id)
               if (resDelete.ok && resDelete.body.response) {
                 this.main.count.max--
+              } else {
+                this.result.splice(this.result.length - 1, 1)
+                return this.stop()
               }
             } else {
               this.main.count.min++
@@ -190,11 +188,6 @@ export default {
       const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_API)
 
       for (let i = 0; i < countLoop; i++) {
-        // Check if the user clicked on the stop.
-        if (this.cancel) {
-          return this.stop()
-        }
-
         const offset = i * MAX_COUNT_API
         const leftItems = this.main.count.max - offset
 

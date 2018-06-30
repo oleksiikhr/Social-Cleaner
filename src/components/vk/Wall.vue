@@ -7,8 +7,8 @@
       <attr-select name="vk.wall.main_config.filter.name" :html="main.filter.html" :obj="main.filter" size="large"
                    :process="process" />
       <attr-count name="vk.wall.main_config.count.name" :model="main.count" :process="process" />
-      <attr-radio-button name="vk.wall.main_config.is_delete_posts.name" :obj="main.isDeletePosts"
-                         :html="main.isDeletePosts.html" :process="process" />
+      <!--<attr-radio-button name="vk.wall.main_config.is_delete_posts.name" :obj="main.isDeletePosts"-->
+                         <!--:html="main.isDeletePosts.html" :process="process" />-->
     </div>
 
     <div class="wall-config block">
@@ -36,7 +36,7 @@
       </div>
     </template>
 
-    <attr-action :process="process" :loading="loading" canPreview @start="doStart" @preview="doPreview" />
+    <attr-action :process="process" :loading="loading" canPreview @start="doStartWallPosts" @preview="doPreview" />
     <attr-result :data="result" />
   </div>
 </template>
@@ -229,7 +229,7 @@ export default {
      * |
      */
     // TODO Delete comments
-    async doStart () {
+    async doStartWallPosts () {
       if (!this.start()) {
         return this.stop()
       }
@@ -242,17 +242,15 @@ export default {
         if (res.ok && res.body.response) {
           const len = res.body.response.items.length
           for (let j = 0; j < len; j++) {
-            // Check if the user clicked on the stop.
-            if (this.cancel) {
-              return this.stop()
-            }
-
             const post = res.body.response.items[j]
 
             if (this.checkPost(post)) {
               const resDelete = await this.fetchDeleteWall(post.id)
               if (resDelete.ok && resDelete.body.response) {
                 this.main.count.max--
+              } else {
+                this.result.splice(this.result.length - 1, 1)
+                return this.stop()
               }
             } else {
               this.main.count.min++
@@ -265,15 +263,15 @@ export default {
 
       this.stop()
     },
-    doPreview () {
+    async doPreview () {
       if (!this.start()) {
         return this.stop()
       }
 
       if (this.main.isDeletePosts.value) {
-        this.doPreviewWallPosts()
+        await this.doPreviewWallPosts()
       } else {
-        this.doPreviewWallComments()
+        await this.doPreviewWallComments()
       }
 
       this.stop()
@@ -282,8 +280,6 @@ export default {
       const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_WALL_API)
 
       for (let i = 0; i < countLoop; i++) {
-        if (this.cancel) return this.stop()
-
         const offset = i * MAX_COUNT_WALL_API
         const leftItems = this.main.count.max - offset
         const res = await this.fetchGetWall(leftItems > MAX_COUNT_WALL_API ? MAX_COUNT_WALL_API : leftItems, offset)
@@ -300,8 +296,6 @@ export default {
       const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_WALL_API)
 
       for (let i = 0; i < countLoop; i++) {
-        if (this.cancel) return this.stop()
-
         const offset = i * MAX_COUNT_WALL_API
         const leftItems = this.main.count.max - offset
         const res = await this.fetchGetWall(leftItems > MAX_COUNT_WALL_API ? MAX_COUNT_WALL_API : leftItems, offset)
@@ -309,8 +303,6 @@ export default {
         if (res.ok && res.body.response && res.body.response.items.length) {
           const len = res.body.response.items.length
           for (let j = 0; j < len; j++) {
-            if (this.cancel) return this.stop()
-
             const post = res.body.response.items[j]
 
             // COMMENTS SECTION
@@ -319,8 +311,6 @@ export default {
               const countLoopComments = this.getCountLoop({ min: 1, max: commentsLength }, MAX_COUNT_WALL_COMMENTS_API)
 
               for (let k = 0; k < countLoopComments; k++) {
-                if (this.cancel) return this.stop()
-
                 const offsetComments = k * MAX_COUNT_WALL_COMMENTS_API
                 const leftItemsComments = commentsLength - offsetComments
                 const resComments = await this.fetchCommentsGet(
@@ -329,7 +319,7 @@ export default {
                   offsetComments
                 )
 
-                if (resComments.ok && resComments.body.response && res.body.response.items.length) {
+                if (resComments.ok && resComments.body.response && resComments.body.response.items.length) {
                   resComments.body.response.items.forEach(item => this.checkComment(item))
                 } else {
                   return this.stop()

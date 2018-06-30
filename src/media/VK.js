@@ -23,6 +23,11 @@ const media = class VK {
    * Send request to VK.
    */
   static async send (method, params = [], rnd = { min: 0, max: 0 }) {
+    // if the user canceled the data cleaning
+    if (store.state.media.vk.cancel) {
+      return {}
+    }
+
     // Delete unused attributes from object
     Object.keys(params).forEach(key => {
       if (params[key] === null) {
@@ -30,6 +35,7 @@ const media = class VK {
       }
     })
 
+    // Set the required parameters for each request
     params.v = this.prototype.version
     params.lang = this.prototype.lang
 
@@ -272,7 +278,7 @@ media.prototype.logs = (req, next) => {
   const urlSplit = req.url.split('/')
   const name = urlSplit[urlSplit.length - 1]
 
-  // Hide params from logs
+  // Hide important information in the logs
   const params = []
   Object.keys(req.params).forEach(key => {
     const param = req.params[key]
