@@ -20,5 +20,8 @@ export default {
     less: 'Less',
     disable: 'Disable',
     more: 'More'
+  },
+  tag: {
+    info: 'Press enter to add to the list.'
   }
 }

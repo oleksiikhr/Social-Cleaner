@@ -66,18 +66,6 @@ hr {
         display: block;
         padding: 2px 10px;
         font-weight: bold;
-        &.success {
-          color: #0dad54;
-        }
-        &.error {
-          color: #ff5b5b;
-        }
-        &.warning {
-          color: #efb30d;
-        }
-        &.info {
-          color: #6c94e1;
-        }
       }
     }
   }
@@ -136,7 +124,7 @@ hr {
  */
 
 @media screen and (max-width: 600px) {
-  .mw-200 {
+  .mw--200 {
     min-width: unset !important;
   }
 }
@@ -179,7 +167,7 @@ hr {
   .footer__inner {
     flex-direction: column;
   }
-  .mw-200 {
+  .mw--200 {
     padding: 8px;
   }
 }

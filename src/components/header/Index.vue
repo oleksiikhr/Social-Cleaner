@@ -9,9 +9,9 @@
     <router-link to="/logs" class="logs">
       <div class="logs__full">
         <template v-if="firstLog">
-          <span :class="firstLog.color">{{ firstLog.method }}</span>
+          <span :class="`color--${firstLog.color}`">{{ firstLog.name }}</span>
         </template>
-        <span v-else>{{ $t('app.query_history') }}</span>
+        <span v-else>{{ $t('app.header.query_history') }}</span>
       </div>
       <div class="logs__short">
         <i class="fa fa-folder-open-o" aria-hidden="true"></i>

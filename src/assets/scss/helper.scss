@@ -1,7 +1,73 @@
-.text-center {
+@import "variables";
+
+/*
+ * Text
+ */
+
+.text--center {
   text-align: center;
 }
 
-.mw-200 {
+.text--left {
+  text-align: left;
+}
+
+.text--right {
+  text-align: right;
+}
+
+/*
+ * Colors
+ */
+
+.color--success {
+  color: $color-success;
+}
+
+.background--success {
+  background-color: $color-success;
+}
+
+.color--info {
+  color: $color-info;
+}
+
+.background--info {
+  background-color: $color-info;
+}
+
+.color--error {
+  color: $color-error;
+}
+
+.background--error {
+  background-color: $color-error;
+}
+
+.color--warning {
+  color: $color-warning;
+}
+
+.background--warning {
+  background-color: $color-warning;
+}
+
+/*
+ * Float
+ */
+
+.float--right {
+  float: right;
+}
+
+.float--left {
+  float: left;
+}
+
+/*
+ * Min width
+ */
+
+.mw--200 {
   min-width: 200px;
 }

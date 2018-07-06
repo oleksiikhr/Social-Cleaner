@@ -1,5 +1,4 @@
 import router from '../../router/index'
-import store from '../../store/index'
 import VK from '../../media/VK'
 import Vue from 'vue'
 
@@ -91,21 +90,26 @@ const actions = {
    * |
    */
   async vkLogIn ({commit}, token) {
+    commit('START_PROCESS', 'vk')
     let res = await VK.fetchAccountGetAppPermissions(token)
 
     if (res.ok && res.body.response) {
-      store.commit('VK_SET_PERMISSIONS', res.body.response)
-      store.commit('VK_SET_TOKEN', token)
+      commit('VK_SET_PERMISSIONS', res.body.response)
+      commit('VK_SET_TOKEN', token)
       Vue.prototype.$Message.success('VK - Log In')
 
       res = await VK.fetchUsersGet(null, 'has_photo,photo_100,counters', 500)
 
       if (res.ok && res.body.response) {
-        store.commit('VK_SET_USER', res.body.response[0])
+        commit('VK_SET_USER', res.body.response[0])
       }
 
       window.scrollTo(0, 0)
+    } else {
+      Vue.prototype.$Message.error('VK - Log In')
     }
+
+    commit('STOP_PROCESS', 'vk')
   },
   vkLogOut ({commit}) {
     commit('VK_CLEAR_TOKEN')

@@ -38,6 +38,7 @@
           </div>
           <div class="info">
             <p class="i1">{{ $t('vk.token.guest.info') }}</p>
+            <!--TODO Add/Replace text: You can set all url or only access_token-->
             <p>{{ VK.prototype.urlRedirect }}#access_token=<strong>{{ $t('vk.token.guest.copy_here') }}</strong>&expires_in=86400&user_id=..</p>
           </div>
         </template>
@@ -45,7 +46,7 @@
       <hr>
       <div class="exists">
         <at-input type="password" v-model="token" clearable :placeholder="$t('vk.token.guest.placeholder_password')" />
-        <at-button v-if="token" @click="installToken()" type="primary">
+        <at-button v-if="token" :disabled="process" @click="installToken()" type="primary">
           {{ $t('vk.token.guest.get') }}
         </at-button>
       </div>
@@ -68,11 +69,14 @@ export default {
   computed: {
     user () {
       return this.$store.state.media.vk.user.id
+    },
+    process () {
+      return this.$store.state.media.vk.process
     }
   },
   methods: {
     installToken () {
-      this.$store.dispatch('vkLogIn', this.token)
+      this.$store.dispatch('vkLogIn', this.parseToken(this.token))
     },
     deleteToken () {
       this.token = ''
@@ -81,6 +85,15 @@ export default {
     goGetToken () {
       window.open(`${VK.prototype.urlOauth}?client_id=${this.appId}&display=page&redirect_uri=${VK.prototype.urlRedirect}
         &scope=${this.scope.join(',')}&response_type=token&v=${VK.prototype.version}`, '_blank')
+    },
+    parseToken (input) {
+      const split = input.match(/access_token=(\w+)&/)
+
+      if (split) {
+        return split[1]
+      }
+
+      return input
     }
   }
 }

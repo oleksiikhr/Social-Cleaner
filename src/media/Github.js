@@ -2,7 +2,7 @@ import * as colors from '../heplers/colors'
 import { addLog } from '../heplers/logs'
 import Vue from 'vue'
 
-const network = class Github {
+const media = class Github {
   /* | -----------------------------------------------------------------------------
    * | API
    * | -----------------------------------------------------------------------------
@@ -29,38 +29,32 @@ const network = class Github {
  * | -----------------------------------------------------------------------------
  * |
  */
-network.prototype.off = true
-network.prototype.disabled = false
-network.prototype.name = 'Github'
-network.prototype.to = '/github'
-network.prototype.domain = 'github.com'
-network.prototype.icon = 'fa-github'
-network.prototype.url = 'https://github.com/'
-network.prototype.urlApi = 'https://api.github.com/'
-network.prototype.sections = []
+media.prototype.off = true
+media.prototype.disabled = false
+media.prototype.name = 'Github'
+media.prototype.to = '/github'
+media.prototype.domain = 'github.com'
+media.prototype.icon = 'fa-github'
+media.prototype.url = 'https://github.com/'
+media.prototype.urlApi = 'https://api.github.com/'
+media.prototype.sections = []
 
 /* | -----------------------------------------------------------------------------
  * | Important methods
  * | -----------------------------------------------------------------------------
  * |
  */
-network.prototype.logs = (req, next) => {
-  const method = req.url.substr(this.default.prototype.urlApi.length)
-  addLog(this.default, method, { method: method, params: req.params }, colors.INFO)
+media.prototype.logs = (req, next) => {
+  const name = req.url.substr(media.prototype.urlApi.length)
 
   next(res => {
     if (res.status >= 200 && res.status < 300) {
-      addLog(this.default, method, res.body, colors.SUCCESS)
+      addLog(media, name, { method: name, params: req.params }, res.body, colors.SUCCESS)
     } else {
-      addLog(this.default, method, res.body || 'Server error', colors.ERROR)
-      Vue.prototype.$Notify.error({ title: res.body.message || 'Server error', message: method })
+      addLog(media, name, { method: name, params: req.params }, res.body || 'Server error', colors.ERROR)
+      Vue.prototype.$Notify.error({ title: res.body.message || 'Server error', message: name })
     }
   })
 }
 
-/* | -----------------------------------------------------------------------------
- * | Other
- * | -----------------------------------------------------------------------------
- * |
- */
-export default network
+export default media

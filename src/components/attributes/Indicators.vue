@@ -90,6 +90,7 @@ export default {
     padding: 10px 5px;
     p {
       font-weight: bold;
+      margin: 0;
     }
     i {
       font-size: 1.1rem;

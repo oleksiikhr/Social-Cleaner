@@ -7,7 +7,13 @@ import Vue from 'vue'
 
 const ROUTE_INDEX = 3
 
-const network = class VK {
+const DEFAULT_LANG = 'en'
+
+const LIST_OF_LANG = [
+  'ru', 'uk', 'be', 'en', 'es', 'fi', 'de', 'it'
+]
+
+const media = class VK {
   /* | -----------------------------------------------------------------------------
    * | API
    * | -----------------------------------------------------------------------------
@@ -17,6 +23,11 @@ const network = class VK {
    * Send request to VK.
    */
   static async send (method, params = [], rnd = { min: 0, max: 0 }) {
+    // if the user canceled the data cleaning
+    if (store.state.media.vk.cancel) {
+      return {}
+    }
+
     // Delete unused attributes from object
     Object.keys(params).forEach(key => {
       if (params[key] === null) {
@@ -24,7 +35,9 @@ const network = class VK {
       }
     })
 
+    // Set the required parameters for each request
     params.v = this.prototype.version
+    params.lang = this.prototype.lang
 
     if (!params.access_token) {
       params.access_token = store.state.media.vk.token
@@ -80,6 +93,39 @@ const network = class VK {
     const result = await this.send('wall.delete', {
       owner_id: ownerId,
       post_id: postId
+    }, { min: sleepMin, max: sleepMax })
+
+    return result
+  }
+  /**
+   * @see https://vk.com/dev/wall.getComments
+   */
+  static async fetchWallGetComments (
+    postId,
+    ownerId = store.state.media.vk.user.id,
+    count = this.prototype.COUNT_WALL_COMMENTS,
+    offset = 0,
+    needLikes = true,
+    sleepMin = 0,
+    sleepMax = sleepMin
+  ) {
+    const result = await this.send('wall.getComments', {
+      owner_id: ownerId,
+      post_id: postId,
+      count: count,
+      offset: offset,
+      need_likes: needLikes
+    }, { min: sleepMin, max: sleepMax })
+
+    return result
+  }
+  /**
+   * @see https://vk.com/dev/wall.deleteComment
+   */
+  static async fetchWallDeleteComment (commentId, ownerId = store.state.media.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
+    const result = await this.send('wall.deleteComment', {
+      owner_id: ownerId,
+      comment_id: commentId
     }, { min: sleepMin, max: sleepMax })
 
     return result
@@ -211,15 +257,15 @@ const network = class VK {
  * | -----------------------------------------------------------------------------
  * |
  */
-network.prototype.off = false
-network.prototype.disabled = false
-network.prototype.name = 'VK'
-network.prototype.to = '/vk'
-network.prototype.domain = 'vk.com'
-network.prototype.icon = 'fa-vk'
-network.prototype.url = 'https://vk.com/'
-network.prototype.urlApi = 'https://api.vk.com/method/'
-network.prototype.sections = router.options.routes[ROUTE_INDEX].children.map(route => {
+media.prototype.off = false
+media.prototype.disabled = false
+media.prototype.name = 'VK'
+media.prototype.to = '/vk'
+media.prototype.domain = 'vk.com'
+media.prototype.icon = 'fa-vk'
+media.prototype.url = 'https://vk.com/'
+media.prototype.urlApi = 'https://api.vk.com/method/'
+media.prototype.sections = router.options.routes[ROUTE_INDEX].children.map(route => {
   return { title: route.meta.name, name: route.name, icon: route.meta.icon, path: route.path }
 })
 
@@ -228,11 +274,11 @@ network.prototype.sections = router.options.routes[ROUTE_INDEX].children.map(rou
  * | -----------------------------------------------------------------------------
  * |
  */
-network.prototype.logs = (req, next) => {
+media.prototype.logs = (req, next) => {
   const urlSplit = req.url.split('/')
-  const method = urlSplit[urlSplit.length - 1]
+  const name = urlSplit[urlSplit.length - 1]
 
-  // Hide params from logs
+  // Hide important information in the logs
   const params = []
   Object.keys(req.params).forEach(key => {
     const param = req.params[key]
@@ -247,35 +293,44 @@ network.prototype.logs = (req, next) => {
     }
   })
 
-  addLog(this.default, method, { method: method, params: params }, colors.INFO)
-
   next(res => {
     if (res.status >= 200 && res.status < 300) {
-      addLog(this.default, method, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
+      addLog(media, name, { method: name, params: params }, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
       if (res.body.error) {
-        Vue.prototype.$Notify.error({ title: res.body.error.error_msg || 'Error', message: method })
+        Vue.prototype.$Notify.error({ title: res.body.error.error_msg || 'Error', message: name })
       }
     } else {
-      addLog(this.default, method, 'Server error', colors.ERROR)
-      Vue.prototype.$Notify.error({ title: 'Server error', message: method })
+      addLog(media, name, { method: name, params: params }, 'Server error', colors.ERROR)
+      Vue.prototype.$Notify.error({ title: 'Server error', message: name })
     }
   })
 }
+media.prototype.changeLang = (name, value, valueShort) => {
+  media.prototype.lang = LIST_OF_LANG.includes(valueShort) ? valueShort : DEFAULT_LANG
+}
 
 /* | -----------------------------------------------------------------------------
- * | Other
+ * | Other properties
  * | -----------------------------------------------------------------------------
  * |
  */
 // API params
-// TODO lang request + change (as the site)
-network.prototype.clientId = 6244330
-network.prototype.version = '5.76'
-network.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
-network.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
+media.prototype.clientId = 6244330
+media.prototype.version = '5.80'
+media.prototype.lang = DEFAULT_LANG
+media.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
+media.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
 
 // Information about methods
-network.prototype.COUNT_WALL = 100
-network.prototype.COUNT_DOCS = 2000
+media.prototype.COUNT_WALL = 100
+media.prototype.COUNT_DOCS = 2000
+media.prototype.COUNT_WALL_COMMENTS = 100
 
-export default network
+/* | -----------------------------------------------------------------------------
+ * | Other methods
+ * | -----------------------------------------------------------------------------
+ * |
+ */
+// ..
+
+export default media

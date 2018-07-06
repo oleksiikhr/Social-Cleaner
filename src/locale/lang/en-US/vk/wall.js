@@ -19,7 +19,7 @@ export default {
       name: 'Number of posts (from and to), inclusive'
     },
     is_delete_posts: {
-      name: 'Delete entries or clear comments under posts',
+      name: 'Delete posts or clear comments under posts',
       items: [
         'Posts',
         'Comments'
@@ -29,32 +29,17 @@ export default {
   wall_config: {
     h2: 'Wall parameters',
     ids: {
-      name: 'Posts ID',
-      info: 'Press enter to add to the list.'
+      name: 'Posts ID'
     },
     from_ids: {
       name: 'ID of authors of posts',
-      info: 'Press enter to add to the list. A negative value is the community ID.'
+      info: 'A negative value is the community ID.'
     },
     texts: {
-      name: 'Phrases in the text',
-      info: 'Press enter to add to the list.'
+      name: 'Phrases in the text'
     },
     attachments: {
-      name: 'Added media attachments',
-      items: [
-        'All',
-        'Video',
-        'Audio',
-        'Document',
-        'Link',
-        'Note',
-        'Poll',
-        'Wiki Page',
-        'Photos List',
-        'Market Item',
-        'Market Collection'
-      ]
+      name: 'Added media attachments'
     },
     indicators: {
       name: 'Indicators',
@@ -65,5 +50,39 @@ export default {
         'Views'
       ]
     }
+  },
+  comments_config: {
+    h2: 'Comment parameters',
+    from_ids: {
+      name: 'ID of authors of comments',
+      info: 'A negative value is the community ID.'
+    },
+    texts: {
+      name: 'Phrases in the comment'
+    },
+    attachments: {
+      name: 'Added media attachments'
+    },
+    indicators: {
+      name: 'Indicators',
+      items: [
+        'Likes'
+      ]
+    }
+  },
+  html: {
+    attachments: [
+      'All',
+      'Video',
+      'Audio',
+      'Document',
+      'Link',
+      'Note',
+      'Poll',
+      'Wiki Page',
+      'Photos List',
+      'Market Item',
+      'Market Collection'
+    ]
   }
 }

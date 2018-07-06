@@ -27,15 +27,14 @@ export default {
     h2: 'Additional settings',
     from_ids: {
       name: 'Authors ID',
-      info: 'Press enter to add to the list. A negative value is the community ID.'
+      info: 'A negative value is the community ID.'
     },
     exts: {
       name: 'Extensions of documents',
-      info: 'Press enter to add to the list. Without a dot. Example: png, jpg.'
+      info: 'Without a dot. Example: png, jpg.'
     },
     texts: {
-      name: 'Phrases in title',
-      info: 'After filling, press enter to add to the list.'
+      name: 'Phrases in title'
     },
     indicators: {
       name: 'Indicators',

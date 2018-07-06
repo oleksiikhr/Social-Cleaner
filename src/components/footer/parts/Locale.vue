@@ -20,6 +20,8 @@
 
 <script>
 import { languages } from '../../../config'
+import media from '../../../media'
+import moment from 'moment'
 
 export default {
   data () {
@@ -44,11 +46,28 @@ export default {
   },
   methods: {
     setLocale (lang) {
+      const valueShort = lang.value.split('-')[0]
       this.modal = false
+
+      // Display on site + set global translation in $i18n
       this.language = `${lang.name}, ${lang.value}`
       this.$i18n.locale = lang.value
+
+      // Save choose to localStorage
       localStorage.setItem('lang', JSON.stringify(lang))
-      document.getElementsByTagName('html')[0].setAttribute('lang', lang.value.split('-')[0])
+
+      // Set html lang
+      document.getElementsByTagName('html')[0].setAttribute('lang', valueShort)
+
+      // Update language in API
+      media.forEach(item => {
+        if (item.changeLang) {
+          item.changeLang(lang.name, lang.value, valueShort)
+        }
+      })
+
+      // Change language in plugins
+      moment.locale(valueShort)
     }
   }
 }

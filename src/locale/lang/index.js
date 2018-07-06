@@ -1,8 +1,20 @@
-const files = require.context('.', true, /\.\/[a-zA-Z-]+\/index\.js/)
+const files = require.context('.', true, /\.js$/)
 const languages = {}
 
 files.keys().forEach(key => {
-  languages[key.replace(/(\.\/)|\/index\.js/g, '')] = files(key).default
+  if (key === './index.js') return
+
+  const split = key.substring(2).replace(/.js/g, '').split('/')
+  const len = split.length - 1
+  let current = languages
+
+  for (let i = 0; i < len; i++) {
+    if (typeof current[split[i]] === 'undefined') {
+      current[split[i]] = {}
+    }
+    current = current[split[i]]
+  }
+  current[split[len]] = files(key).default
 })
 
 export default languages

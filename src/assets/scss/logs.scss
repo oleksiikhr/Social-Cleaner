@@ -1,0 +1,39 @@
+@import 'variables';
+//FIXME Responsive design
+
+.logs-modal {
+  .at-modal__wrapper {
+    cursor: pointer;
+    .at-modal {
+      cursor: auto;
+      display: flex;
+      flex-direction: column;
+      width: 90% !important;
+      top: 50px;
+      height: calc(100vh - 100px);
+      .at-modal__body {
+        overflow: auto;
+      }
+    }
+  }
+}
+
+.logs-modal__time {
+  color: rgba(0, 0, 0, .7);
+}
+
+.logs-modal__section {
+  &:first-child {
+    margin-bottom: 30px;
+  }
+  > p.title {
+    font-weight: bold;
+    padding: 10px;
+    background: #f7f7f7;
+    margin: 10px 0;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 1rem;
+    border-radius: 5px;
+  }
+}

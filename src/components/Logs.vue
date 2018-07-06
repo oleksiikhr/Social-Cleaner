@@ -1,42 +1,60 @@
 <template>
-  <!--TODO Global color styles-->
+  <!--TODO Responsive design (header, pagination, center items)-->
   <div id="logs">
-    <div class="header">
-      <h1>Query History</h1>
-      <at-input v-model="search" placeholder="Method" icon="search" />
-      <at-select v-model="networkName" placeholder="Social Network" clearable>
+    <div class="logs__header">
+      <h1>{{ $t('app.logs.h1') }}</h1>
+      <at-input v-model="search" :placeholder="$t('app.logs.search.placeholder')" icon="search" />
+      <at-select v-model="mediaName" :placeholder="$t('app.logs.network_name.placeholder')" clearable>
         <at-option v-for="network in networks" :key="network.to" :value="network.name">
           {{ network.name }}
         </at-option>
       </at-select>
-      <at-select v-model="color" placeholder="Type" clearable>
-        <at-option value="info" label="Request">
-          <span>Request</span>
-          <span style="float: right;color: #6c94e1;">**</span>
-        </at-option>
+      <at-select v-model="color" :placeholder="$t('app.logs.options.placeholder')" clearable>
         <at-option value="success" label="Success">
-          <span>Success</span>
-          <span style="float: right;color: #0dad54;">**</span>
+          <span class="color--success">{{ $t('app.logs.options.success') }}</span>
         </at-option>
         <at-option value="error" label="Error">
-          <span>Error</span>
-          <span style="float: right;color: #ff5b5b;">**</span>
+          <span class="color--error">{{ $t('app.logs.options.error') }}</span>
         </at-option>
       </at-select>
     </div>
 
-    <div class="items">
-      <a :class="'log ' + log.color" v-for="(log, index) in filteredLogs" :key="index"
-         @click="openDialogResponse(log.response)">
-        <span class="log__name">{{ log.method }}</span>
+    <div class="logs__items">
+      <a class="log" v-for="(log, index) in croppedFilteredLogs" :key="index"
+         @click="openDialogResponse(log)">
+        <span :class="`log__name color--${log.color}`">{{ log.name }}</span>
         <div class="log__footer">
-          <i :class="'current fa ' + log.socialNetwork.icon" aria-hidden="true"></i>
+          <i :class="'current fa ' + log.media.icon" aria-hidden="true"></i>
           <span class="time">{{ fromNow(log.time) }}</span>
         </div>
       </a>
     </div>
 
-    <!--TODO Pagination-->
+    <div id="pagination">
+      <at-pagination :total="len" :page-size="20" show-total show-sizer show-quickjump @page-change="eventPageChange"
+                     @pagesize-change="eventPageSizeChange" />
+    </div>
+
+    <at-modal v-model="modal.model" class="logs-modal" :show-footer="false">
+      <div slot="header" style="text-align:center;">
+        <div class="logs-modal__title">
+          <span :class="`color--${modal.item.color}`">{{ modal.item.name }}</span>
+          <small class="logs-modal__time">[{{ modalTime }}]</small>
+        </div>
+      </div>
+      <div class="logs-modal__inner">
+        <!--TODO Fast scroll (id) to section-->
+        <div class="logs-modal__section">
+          <p class="title">Request</p>
+          <pre>{{ modal.item.request }}</pre>
+        </div>
+        <div class="logs-modal__section">
+          <p class="title">Response</p>
+          <pre>{{ modal.item.response }}</pre>
+        </div>
+        <!--TODO arrow to top-->
+      </div>
+    </at-modal>
   </div>
 </template>
 
@@ -48,24 +66,34 @@ export default {
   data () {
     return {
       networks,
-      networkName: '',
+      mediaName: '',
       color: '',
-      search: ''
+      search: '',
+      page: {
+        size: 20,
+        current: 1
+      },
+      modal: {
+        model: false,
+        item: {}
+      }
     }
   },
-  // TODO Update time every 10sec (destroy on deactivated*)
   computed: {
     logs () {
       return this.$store.state.logs.storage
     },
-    filteredLogs () {
+    len () {
+      return this.filterLogs.length
+    },
+    filterLogs () {
       const search = this.search.toLocaleLowerCase().trim()
 
       return this.logs.filter(log => {
-        if (search && log.method.toLowerCase().indexOf(search) <= -1) {
+        if (search && log.name.toLowerCase().indexOf(search) <= -1) {
           return false
         }
-        if (this.networkName && this.networkName !== log.socialNetwork.name) {
+        if (this.mediaName && this.mediaName !== log.media.name) {
           return false
         }
         if (this.color && log.color !== this.color) {
@@ -74,22 +102,40 @@ export default {
 
         return log
       })
+    },
+    croppedFilteredLogs () {
+      const len = this.page.size * (this.page.current - 1)
+      return this.filterLogs.slice(len, len + this.page.size)
+    },
+    modalTime () {
+      return moment(this.modal.item.time).format('LTS')
     }
   },
   methods: {
-    openDialogResponse (response) {
-      // TODO
-      console.log(response)
+    openDialogResponse (log) {
+      this.modal.item = log
+      this.modal.model = true
     },
     fromNow (time) {
       return moment(time).fromNow()
+    },
+    eventPageChange (val) {
+      this.scrollToItems()
+      this.page.current = val
+    },
+    eventPageSizeChange (val) {
+      this.scrollToItems()
+      this.page.size = val
+    },
+    scrollToItems () {
+      document.getElementsByClassName('logs__items')[0].scrollIntoView({ block: 'start', inline: 'start', behavior: 'smooth' })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.header {
+.logs__header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -97,6 +143,7 @@ export default {
   background: #fbfbfb;
   padding: 20px 20px 0;
   border: 1px solid #e7e7e7;
+  width: 100%;
   > * {
     margin: 0 20px 20px 0;
   }
@@ -116,7 +163,7 @@ export default {
   }
 }
 
-.items {
+.logs__items {
   display: flex;
   flex-wrap: wrap;
 }
@@ -128,38 +175,37 @@ export default {
   padding: 10px;
   color: #333;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  transition: .3s;
   &:hover {
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    background: #fbfbfb;
+    color: #222;
   }
-  &.success .log__name {
-    color: #0dad54;
+  .log__name {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
   }
-  &.error .log__name {
-    color: #ff5b5b;
-  }
-  &.warning .log__name {
-    color: #efb30d;
-  }
-  &.info .log__name {
-    color: #6c94e1;
+  .log__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: .8rem;
+    opacity: .6;
+    > span {
+      padding-left: 15px;
+    }
   }
 }
 
-.log__name {
-  font-weight: bold;
+#pagination {
   text-align: center;
-  margin-bottom: 15px;
-}
-
-.log__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: .8rem;
-  opacity: .6;
-  > span {
-    padding-left: 15px;
+  font-size: 0;
+  padding: 20px 0;
+  background: #fbfbfb;
+  border: 1px solid #e7e7e7;
+  margin-top: 30px;
+  > .at-pagination {
+    display: inline-block;
   }
 }
 </style>

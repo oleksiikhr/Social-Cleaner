@@ -7,36 +7,36 @@
       <attr-select name="vk.wall.main_config.filter.name" :html="main.filter.html" :obj="main.filter" size="large"
                    :process="process" />
       <attr-count name="vk.wall.main_config.count.name" :model="main.count" :process="process" />
-      <attr-radio-button name="vk.wall.main_config.is_delete_posts.name" :obj="main.isDeletePosts"
-                         :process="process" />
+      <!--<attr-radio-button name="vk.wall.main_config.is_delete_posts.name" :obj="main.isDeletePosts"-->
+                         <!--:html="main.isDeletePosts.html" :process="process" />-->
     </div>
 
     <div class="wall-config block">
       <h2>{{ $t('vk.wall.wall_config.h2') }}</h2>
-      <attr-tag :obj="wall.ids" :push="pushNumber" :link-tag="getLinkPost" :process="process"
-                 info="vk.wall.wall_config.ids.info" />
+      <attr-tag :obj="wall.ids" :push="pushNumber" :link-tag="getLinkPost" :process="process" />
       <attr-tag :obj="wall.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
-                 info="vk.wall.wall_config.from_ids.info" />
-      <attr-tag :obj="wall.texts" :push="pushString" :process="process" info="vk.wall.wall_config.texts.info" compare />
-      <attr-checkbox :obj="wall.attachments" :process="process" compare />
+                info="vk.wall.wall_config.from_ids.info" />
+      <attr-tag :obj="wall.texts" :push="pushString" :process="process" compare />
+      <attr-checkbox :obj="wall.attachments" :html="html.attachments" :process="process" compare />
       <attr-indicators :obj="wall.indicators" :process="process" compare />
       <attr-reverse :model.sync="wall.reverse" :process="process" />
       <!--TODO Date-->
     </div>
 
-    <!--TODO Translate-->
-    <template v-if="main.isDeletePosts.value">
+    <template v-if="!main.isDeletePosts.value">
       <div class="comments-config block">
-        <h2>Параметры комментарий</h2>
-        <!--TODO From_id-->
-        <!--TODO Text-->
-        <!--TODO Attachments-->
+        <h2>{{ $t('vk.wall.comments_config.h2') }}</h2>
+        <attr-tag :obj="comments.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
+                  info="vk.wall.comments_config.from_ids.info" />
+        <attr-tag :obj="comments.texts" :push="pushString" :process="process" />
+        <attr-checkbox :obj="comments.attachments" :html="html.attachments" :process="process" compare />
+        <attr-indicators :obj="comments.indicators" :process="process" compare />
+        <attr-reverse :model.sync="comments.reverse" :process="process" />
         <!--TODO Date-->
-        <!--TODO Count [likes]-->
       </div>
     </template>
 
-    <attr-action :process="process" :loading="loading" canPreview @start="doStart" @preview="doPreview" />
+    <attr-action :process="process" :loading="loading" canPreview @start="doStartWallPosts" @preview="doPreview" />
     <attr-result :data="result" />
   </div>
 </template>
@@ -60,7 +60,8 @@ const SLEEP_DELETE_MAX = 2500
 const SLEEP_GET_MIN = 500
 const SLEEP_GET_MAX = 1500
 
-const MAX_COUNT_API = VK.prototype.COUNT_WALL
+const MAX_COUNT_WALL_API = VK.prototype.COUNT_WALL
+const MAX_COUNT_WALL_COMMENTS_API = VK.prototype.COUNT_WALL_COMMENTS
 
 export default {
   components: {
@@ -85,10 +86,10 @@ export default {
           max: '20'
         },
         isDeletePosts: {
-          value: 0,
+          value: 1,
           html: [
-            { name: 'vk.wall.main_config.is_delete_posts.items[0]', val: 0 },
-            { name: 'vk.wall.main_config.is_delete_posts.items[1]', val: 1 }
+            { name: 'vk.wall.main_config.is_delete_posts.items[0]', val: 1 },
+            { name: 'vk.wall.main_config.is_delete_posts.items[1]', val: 0 }
           ]
         }
       },
@@ -114,20 +115,7 @@ export default {
         attachments: {
           name: 'vk.wall.wall_config.attachments.name',
           items: [],
-          compareAll: true,
-          html: [
-            { name: 'vk.wall.wall_config.attachments.items[0]', val: 'photo' },
-            { name: 'vk.wall.wall_config.attachments.items[1]', val: 'video' },
-            { name: 'vk.wall.wall_config.attachments.items[2]', val: 'audio' },
-            { name: 'vk.wall.wall_config.attachments.items[3]', val: 'doc' },
-            { name: 'vk.wall.wall_config.attachments.items[4]', val: 'link' },
-            { name: 'vk.wall.wall_config.attachments.items[5]', val: 'note' },
-            { name: 'vk.wall.wall_config.attachments.items[6]', val: 'poll' },
-            { name: 'vk.wall.wall_config.attachments.items[7]', val: 'page' },
-            { name: 'vk.wall.wall_config.attachments.items[8]', val: 'photos_list' },
-            { name: 'vk.wall.wall_config.attachments.items[9]', val: 'market' },
-            { name: 'vk.wall.wall_config.attachments.items[10]', val: 'market_album' }
-          ]
+          compareAll: true
         },
         indicators: {
           name: 'vk.wall.wall_config.indicators.name',
@@ -140,6 +128,51 @@ export default {
           compareAll: true
         },
         reverse: false
+      },
+      comments: {
+        fromIds: {
+          name: 'vk.wall.comments_config.from_ids.name',
+          input: '',
+          items: [],
+          compareAll: false
+        },
+        texts: {
+          name: 'vk.wall.comments_config.texts.name',
+          input: '',
+          items: [],
+          compareAll: false
+        },
+        attachments: {
+          name: 'vk.wall.comments_config.attachments.name',
+          items: [],
+          compareAll: true
+        },
+        indicators: {
+          name: 'vk.wall.comments_config.indicators.name',
+          items: [{
+            name: 'vk.wall.comments_config.indicators.items[0]',
+            icon: 'heart-o',
+            state: 0,
+            count: 0
+          }],
+          compareAll: false
+        },
+        reverse: false
+      },
+      html: {
+        attachments: [
+          { name: 'vk.wall.html.attachments[0]', val: 'photo' },
+          { name: 'vk.wall.html.attachments[1]', val: 'video' },
+          { name: 'vk.wall.html.attachments[2]', val: 'audio' },
+          { name: 'vk.wall.html.attachments[3]', val: 'doc' },
+          { name: 'vk.wall.html.attachments[4]', val: 'link' },
+          { name: 'vk.wall.html.attachments[5]', val: 'note' },
+          { name: 'vk.wall.html.attachments[6]', val: 'poll' },
+          { name: 'vk.wall.html.attachments[7]', val: 'page' },
+          { name: 'vk.wall.html.attachments[8]', val: 'photos_list' },
+          { name: 'vk.wall.html.attachments[9]', val: 'market' },
+          { name: 'vk.wall.html.attachments[10]', val: 'market_album' }
+        ]
       },
       result: [],
       loading: false
@@ -179,38 +212,45 @@ export default {
 
       return res
     },
+    async fetchCommentsGet (id, count = VK.prototype.COUNT_WALL_COMMENTS, offset = this.main.count.min - 1) {
+      const res = await VK.fetchWallGetComments(id, this.ownerId, count, offset, true, SLEEP_GET_MIN, SLEEP_GET_MAX)
+
+      return res
+    },
+    async fetchCommentDelete (id) {
+      const res = await VK.fetchWallDeleteComment(id, this.ownerId, SLEEP_GET_MIN, SLEEP_GET_MAX)
+
+      return res
+    },
 
     /* | -----------------------------------------------------------------------------
      * | Start/Stop action
      * | -----------------------------------------------------------------------------
      * |
      */
-    // TODO Start delete comments
-    // TODO Preview comments*
-    async doStart () {
+    // TODO Delete comments
+    async doStartWallPosts () {
       if (!this.start()) {
         return this.stop()
       }
 
-      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_API)
+      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_WALL_API)
 
       for (let i = 0; i < countLoop; i++) {
-        const res = await this.fetchGetWall(this.getMaxCountItems(this.main.count, MAX_COUNT_API))
+        const res = await this.fetchGetWall(this.getMaxCountItems(this.main.count, MAX_COUNT_WALL_API))
 
         if (res.ok && res.body.response) {
           const len = res.body.response.items.length
           for (let j = 0; j < len; j++) {
-            // Check if the user clicked on the stop.
-            if (this.cancel) {
-              return this.stop()
-            }
-
             const post = res.body.response.items[j]
 
-            if (this.check(post)) {
+            if (this.checkPost(post)) {
               const resDelete = await this.fetchDeleteWall(post.id)
               if (resDelete.ok && resDelete.body.response) {
                 this.main.count.max--
+              } else {
+                this.result.splice(this.result.length - 1, 1)
+                return this.stop()
               }
             } else {
               this.main.count.min++
@@ -228,27 +268,69 @@ export default {
         return this.stop()
       }
 
-      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_API)
+      if (this.main.isDeletePosts.value) {
+        await this.doPreviewWallPosts()
+      } else {
+        await this.doPreviewWallComments()
+      }
+
+      this.stop()
+    },
+    async doPreviewWallPosts () {
+      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_WALL_API)
 
       for (let i = 0; i < countLoop; i++) {
-        // Check if the user clicked on the stop.
-        if (this.cancel) {
-          return this.stop()
-        }
-
-        const offset = i * MAX_COUNT_API
+        const offset = i * MAX_COUNT_WALL_API
         const leftItems = this.main.count.max - offset
-
-        const res = await this.fetchGetWall(leftItems > MAX_COUNT_API ? MAX_COUNT_API : leftItems, offset)
+        const res = await this.fetchGetWall(leftItems > MAX_COUNT_WALL_API ? MAX_COUNT_WALL_API : leftItems, offset)
 
         if (res.ok && res.body.response && res.body.response.items.length) {
-          res.body.response.items.forEach(post => this.check(post))
+          res.body.response.items.forEach(post => this.checkPost(post))
         } else {
           return this.stop()
         }
       }
+    },
+    // TODO Rewritten more simple!!
+    async doPreviewWallComments () {
+      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_WALL_API)
 
-      this.stop()
+      for (let i = 0; i < countLoop; i++) {
+        const offset = i * MAX_COUNT_WALL_API
+        const leftItems = this.main.count.max - offset
+        const res = await this.fetchGetWall(leftItems > MAX_COUNT_WALL_API ? MAX_COUNT_WALL_API : leftItems, offset)
+
+        if (res.ok && res.body.response && res.body.response.items.length) {
+          const len = res.body.response.items.length
+          for (let j = 0; j < len; j++) {
+            const post = res.body.response.items[j]
+
+            // COMMENTS SECTION
+            if (this.checkPost(post, false)) {
+              const commentsLength = post.comments.count
+              const countLoopComments = this.getCountLoop({ min: 1, max: commentsLength }, MAX_COUNT_WALL_COMMENTS_API)
+
+              for (let k = 0; k < countLoopComments; k++) {
+                const offsetComments = k * MAX_COUNT_WALL_COMMENTS_API
+                const leftItemsComments = commentsLength - offsetComments
+                const resComments = await this.fetchCommentsGet(
+                  post.id,
+                  leftItemsComments > MAX_COUNT_WALL_COMMENTS_API ? MAX_COUNT_WALL_COMMENTS_API : leftItemsComments,
+                  offsetComments
+                )
+
+                if (resComments.ok && resComments.body.response && resComments.body.response.items.length) {
+                  resComments.body.response.items.forEach(item => this.checkComment(item))
+                } else {
+                  return this.stop()
+                }
+              }
+            }
+          }
+        } else {
+          return this.stop()
+        }
+      }
     },
     start () {
       this.$store.commit('START_PROCESS', 'vk')
@@ -268,7 +350,7 @@ export default {
      * | -----------------------------------------------------------------------------
      * |
      */
-    check (post) {
+    checkPost (post, pushResult = true) {
       const attachments = typeof post.attachments === 'undefined' ? undefined : post.attachments.map(attachment => {
         return attachment.type
       })
@@ -291,7 +373,29 @@ export default {
 
       const checked = this.checkFinal(items, this.wall.reverse)
 
-      this.pushResult(this.result, `ID: ${post.id}`, VK.getLinkWall(this.ownerId, post.id), items, checked)
+      if (pushResult) {
+        this.pushResult(this.result, `ID: ${post.id}`, VK.getLinkWall(this.ownerId, post.id), items, checked)
+      }
+
+      return checked.result
+    },
+    checkComment (comment, pushResult = true) {
+      const attachments = typeof comment.attachments === 'undefined' ? undefined : comment.attachments.map(attachment => {
+        return attachment.type
+      })
+
+      const items = [
+        { obj: this.comments.fromIds, method: this.checkNumber, param: comment.from_id },
+        { obj: this.comments.texts, method: this.checkText, param: comment.text },
+        { obj: this.comments.attachments, method: this.checkCheckbox, param: attachments },
+        { obj: this.comments.indicators, method: this.checkIndicators, param: [comment.likes.count] }
+      ]
+
+      const checked = this.checkFinal(items, this.comments.reverse)
+
+      if (pushResult) {
+        this.pushResult(this.result, comment.text, '', items, checked)
+      }
 
       return checked.result
     },
