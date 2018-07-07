@@ -87,7 +87,7 @@ export default {
         &scope=${this.scope.join(',')}&response_type=token&v=${VK.prototype.version}`, '_blank')
     },
     parseToken (input) {
-      const split = input.match(/access_token=(\w+)&/)
+      const split = input.match(/access_token=(\w+)&?/)
 
       if (split) {
         return split[1]
