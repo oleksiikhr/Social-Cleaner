@@ -13,11 +13,12 @@ import 'at-ui-style'
 import 'font-awesome/scss/font-awesome.scss'
 import './assets/scss/index.scss'
 
-// TODO Global translate AtComponents
-
 // Use modules
 Vue.use(AtComponents)
 Vue.use(VueResource)
+
+// Configuration modules
+AtComponents.i18n((key, value) => i18n.t(key, value))
 
 // Hide message
 Vue.config.productionTip = false
