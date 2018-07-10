@@ -1,5 +1,4 @@
 @import 'variables';
-//FIXME Responsive design
 
 .logs-modal {
   .at-modal__wrapper {
@@ -35,5 +34,18 @@
     text-transform: uppercase;
     font-size: 1rem;
     border-radius: 5px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .logs-modal {
+    .at-modal__wrapper {
+      .at-modal {
+        top: 0;
+        width: 100% !important;
+        height: 100%;
+        border-radius: 0;
+      }
+    }
   }
 }
