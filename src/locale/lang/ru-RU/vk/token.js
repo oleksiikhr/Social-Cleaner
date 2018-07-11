@@ -20,7 +20,7 @@ export default {
     copy_here: 'СКОПИРОВАТЬ',
     application_id: 'ID приложения',
     generate: 'Сгенерировать временной токен',
-    info: 'Вам нужно скопировать значение access_token из URL поля:',
+    info: 'Вам нужно скопировать полностью URL-адрес, либо же значение с access_token:',
     placeholder_password: 'Введите токен доступа',
     get: 'Получить доступ'
   }

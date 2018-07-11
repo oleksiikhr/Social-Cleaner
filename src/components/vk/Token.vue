@@ -38,7 +38,6 @@
           </div>
           <div class="info">
             <p class="i1">{{ $t('vk.token.guest.info') }}</p>
-            <!--TODO Add/Replace text: You can set all url or only access_token-->
             <p>{{ VK.prototype.urlRedirect }}#access_token=<strong>{{ $t('vk.token.guest.copy_here') }}</strong>&expires_in=86400&user_id=..</p>
           </div>
         </template>

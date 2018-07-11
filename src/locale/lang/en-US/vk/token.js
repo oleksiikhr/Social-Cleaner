@@ -20,7 +20,7 @@ export default {
     copy_here: 'COPY_HERE',
     application_id: 'Application ID',
     generate: 'Generate a temporary token',
-    info: 'You need to copy the value of access_token from the URL of the field:',
+    info: 'You need to copy the entire URL, or the value with access_token:',
     placeholder_password: 'Enter a access token',
     get: 'Gain access'
   }
