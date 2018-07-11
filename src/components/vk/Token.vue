@@ -1,13 +1,15 @@
 <template>
   <div id="token">
-    <div class="logged-in" v-if="user">
+    <div class="logged-in" v-if="user.id">
       <at-alert :message="$t('vk.token.user.alert')" type="warning" show-icon />
+      <hr>
+      <user :user="user" />
+      <hr>
       <div class="btn-out">
         <at-button @click="deleteToken()" type="error">
           {{ $t('vk.token.user.button') }}
         </at-button>
       </div>
-      <!--TODO Info about user-->
     </div>
 
     <template v-else>
@@ -54,9 +56,13 @@
 </template>
 
 <script>
+import User from './parts/User'
 import VK from '../../media/VK'
 
 export default {
+  components: {
+    User
+  },
   data () {
     return {
       VK,
@@ -67,7 +73,7 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.media.vk.user.id
+      return this.$store.state.media.vk.user
     },
     process () {
       return this.$store.state.media.vk.process
@@ -154,7 +160,7 @@ button {
   > .btn-out {
     text-align: center;
     > button {
-      margin-top: 20px;
+      margin-top: 0;
     }
   }
 }
