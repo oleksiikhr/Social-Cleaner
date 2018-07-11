@@ -12,9 +12,8 @@
       </div>
       <div class="user__counters">
         <div :class="`user__counter ${attribute}`" v-for="(attribute, key) in atributes" :key="key">
-          <!--TODO Translate-->
           <!--TODO Design-->
-          <span class="user__counter-name">{{ attribute }}:</span>
+          <span class="user__counter-name">{{ $t(`vk.scope.${attribute}`)}}:</span>
           <span class="user__counter-value">{{ user.counters[attribute] }}</span>
         </div>
       </div>

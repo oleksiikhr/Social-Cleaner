@@ -20,14 +20,14 @@
       <div class="generate">
         <p>{{ $t('vk.token.guest.p') }}</p>
         <at-checkbox-group v-model="scope">
-          <at-checkbox label="friends">{{ $t('vk.token.guest.scope.friends') }}</at-checkbox>
-          <at-checkbox label="photos">{{ $t('vk.token.guest.scope.photos') }}</at-checkbox>
-          <at-checkbox label="video">{{ $t('vk.token.guest.scope.video') }}</at-checkbox>
-          <at-checkbox label="status">{{ $t('vk.token.guest.scope.status') }}</at-checkbox>
-          <at-checkbox label="messages">{{ $t('vk.token.guest.scope.messages') }}</at-checkbox>
-          <at-checkbox label="wall">{{ $t('vk.token.guest.scope.wall') }}</at-checkbox>
-          <at-checkbox label="docs">{{ $t('vk.token.guest.scope.docs') }}</at-checkbox>
-          <at-checkbox label="groups">{{ $t('vk.token.guest.scope.groups') }}</at-checkbox>
+          <at-checkbox label="friends">{{ $t('vk.scope.friends') }}</at-checkbox>
+          <at-checkbox label="photos">{{ $t('vk.scope.photos') }}</at-checkbox>
+          <at-checkbox label="video">{{ $t('vk.scope.video') }}</at-checkbox>
+          <at-checkbox label="status">{{ $t('vk.scope.status') }}</at-checkbox>
+          <at-checkbox label="messages">{{ $t('vk.scope.messages') }}</at-checkbox>
+          <at-checkbox label="wall">{{ $t('vk.scope.wall') }}</at-checkbox>
+          <at-checkbox label="docs">{{ $t('vk.scope.docs') }}</at-checkbox>
+          <at-checkbox label="groups">{{ $t('vk.scope.groups') }}</at-checkbox>
         </at-checkbox-group>
         <template v-if="scope.length">
           <div class="flex flex-middle flex-center">
