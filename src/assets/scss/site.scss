@@ -10,10 +10,14 @@ hr {
 }
 
 #app {
+  min-height: 100%;
+}
+
+.default-layout {
   display: flex;
   flex-direction: column;
   background: #fff;
-  min-height: 100%;
+  min-height: 100vh;
   border: 1px solid #e7e7e7;
   border-top: none;
   border-bottom: none;
@@ -66,29 +70,6 @@ hr {
         display: block;
         padding: 2px 10px;
         font-weight: bold;
-      }
-    }
-  }
-  > footer {
-    border-top: 1px solid #e7e7e7;
-    .footer__inner {
-      display: flex;
-      align-items: center;
-      margin: 0 20px 1px;
-      min-height: 42px;
-      justify-content: space-between;
-      color: #a0a0a0;
-      a {
-        color: #868686;
-        font-weight: bold;
-        transition: .2s;
-        &:hover {
-          color: #333;
-        }
-      }
-      .home-link {
-        line-height: 0;
-        font-size: 1.3rem;
       }
     }
   }

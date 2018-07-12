@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="color">
     <a class="language" @click.prevent="modal = true">
       <div class="language__icon">
         <i class="fa fa-language" aria-hidden="true"></i>
@@ -24,6 +24,12 @@ import media from '../../../media'
 import moment from 'moment'
 
 export default {
+  props: {
+    color: {
+      type: String,
+      required: false
+    }
+  },
   data () {
     return {
       languages,
@@ -78,6 +84,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  color: #868686;
+  font-weight: bold;
+  transition: .2s;
+  &:hover {
+    color: #333;
+  }
 }
 
 .language__icon {
@@ -101,5 +113,25 @@ export default {
   padding: 2px 10px;
   font-size: 1rem;
   margin: 5px;
+  color: #666;
+  font-weight: bold;
+  &:hover {
+    color: #333;
+  }
+}
+
+.white {
+  .language {
+    color: rgba(255, 255, 255, .8);
+    &:hover {
+      color: #fff;
+    }
+  }
+  .language__name {
+    color: rgba(255, 255, 255, .8);
+  }
+  .language__current {
+    color: rgba(255, 255, 255, .7);
+  }
 }
 </style>
