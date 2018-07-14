@@ -114,18 +114,18 @@ header {
     }
     > .header__button {
       display: block;
-      border: 1px solid #fff;
-      background: rgba(255,255,255,.05);
-      padding: 12px;
+      background: rgba(255, 255, 255, .9);
+      padding: 13px;
       max-width: 230px;
       width: 100%;
       margin: 0 auto;
-      color: #fff;
+      color: #4066af;
       font-weight: bold;
+      text-transform: uppercase;
+      font-size: .8rem;
       transition: .3s;
       &:hover {
         background: #fff;
-        color: #406da5;
       }
     }
   }
