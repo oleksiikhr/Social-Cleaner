@@ -1,7 +1,7 @@
 <template>
   <div id="status">
     <div class="main-config block">
-      <h2>{{ $t('vk.status.h2') }}</h2>
+      <attr-section name="vk.status.h2" />
       <attr-input name="vk.status.id.name" info="vk.status.id.info" :model.sync="id" :process="process" />
       <div class="text--center">
         <at-button type="primary" @click="fetchGetStatus()" :disabled="process">
@@ -12,7 +12,7 @@
 
     <div class="block">
       <div class="block__result">
-        <h2>{{ $t('vk.status.current_status') }}</h2>
+        <attr-section name="vk.status.current_status" />
         <template v-if="link">
           <a v-if="status" :href="link" class="status-text" target="_blank" rel="noopener">
             {{ status }}
@@ -30,13 +30,14 @@
 </template>
 
 <script>
+import AttrSection from '../attributes/Section'
 import AttrAction from '../attributes/Action'
 import AttrInput from '../attributes/Input'
 import VK from '../../media/VK'
 
 export default {
   components: {
-    AttrInput, AttrAction
+    AttrSection, AttrInput, AttrAction
   },
   data () {
     return {
