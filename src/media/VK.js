@@ -265,8 +265,7 @@ media.prototype.domain = 'vk.com'
 media.prototype.icon = 'fa-vk'
 media.prototype.url = 'https://vk.com/'
 media.prototype.urlApi = 'https://api.vk.com/method/'
-// TODO Fix ROUTE_INDEX
-media.prototype.sections = router.options.routes[ROUTE_INDEX[0]].children[[ROUTE_INDEX[1]]].children.map(route => {
+media.prototype.sections = router.options.routes[ROUTE_INDEX[0]].children[ROUTE_INDEX[1]].children.map(route => {
   return { title: route.meta.name, name: route.name, icon: route.meta.icon, path: route.path }
 })
 
