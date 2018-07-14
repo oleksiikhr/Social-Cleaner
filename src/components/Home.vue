@@ -1,5 +1,5 @@
 <template>
-  <div id="home">
+  <div id="home" class="landing-page">
     <header>
       <div class="header__inner">
         <h1 class="header__name">Social Cleaner <span class="header__version">{{ version }}</span></h1>
@@ -46,13 +46,18 @@
         <router-link class="section__link" :to="{ name: 'explore' }">{{ $t('app.home.action.button') }}</router-link>
       </div>
     </section>
+    <footer-component color="white" />
   </div>
 </template>
 
 <script>
+import FooterComponent from './footer/Index'
 import { version } from '../config'
 
 export default {
+  components: {
+    FooterComponent
+  },
   data () {
     return {
       version,
@@ -77,6 +82,7 @@ export default {
 
 <style lang="scss" scoped>
 $shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+$max-width: 1600px;
 
 header {
   display: flex;
@@ -125,13 +131,25 @@ header {
   }
 }
 
+footer {
+  max-width: $max-width;
+  border: none;
+  margin: 0 auto;
+  padding: 15px 0;
+}
+
+#home {
+  min-height: 100vh;
+  background: linear-gradient(to left, #525252, #3d72b4);
+}
+
 .section {
   padding-bottom: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   .section__inner {
-    max-width: 1600px;
+    max-width: $max-width;
     margin: 0 auto;
     width: 100%;
   }

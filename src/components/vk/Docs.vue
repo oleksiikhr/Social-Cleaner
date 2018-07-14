@@ -1,7 +1,7 @@
 <template>
   <div id="docs">
     <div class="main-config block">
-      <h2>{{ $t('vk.docs.main_config.h2') }}</h2>
+      <attr-section name="vk.docs.main_config.h2" />
       <attr-input name="vk.docs.main_config.owner_id.name" info="vk.docs.main_config.owner_id.info"
                   :model.sync="main.owner_id" :process="process" />
       <attr-count name="vk.docs.main_config.count.name" :model="main.count" :process="process" />
@@ -10,14 +10,13 @@
     </div>
 
     <div class="additional-config block">
-      <h2>{{ $t('vk.docs.additional_config.h2') }}</h2>
+      <attr-section name="vk.docs.additional_config.h2" :reverse.sync="config.reverse" :process="process" can-reverse />
       <attr-tag :obj="config.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
                  info="vk.docs.additional_config.from_ids.info" />
       <attr-tag :obj="config.exts" :push="pushString" :process="process"
                 info="vk.docs.additional_config.exts.info" />
       <attr-tag :obj="config.texts" :push="pushString" :process="process" compare />
       <attr-indicators :obj="config.indicators" :process="process" compare />
-      <attr-reverse :model.sync="config.reverse" :process="process" />
       <!--TODO Date-->
     </div>
 
@@ -28,7 +27,7 @@
 
 <script>
 import AttrIndicators from '../attributes/Indicators'
-import AttrReverse from '../attributes/Reverse'
+import AttrSection from '../attributes/Section'
 import { bytesToMB } from '../../heplers/file'
 import AttrResult from '../attributes/Result'
 import AttrAction from '../attributes/Action'
@@ -49,7 +48,7 @@ const MAX_COUNT_API = VK.prototype.COUNT_DOCS
 
 export default {
   components: {
-    AttrTag, AttrInput, AttrRadio, AttrCount, AttrAction, AttrReverse, AttrResult, AttrIndicators
+    AttrTag, AttrInput, AttrRadio, AttrCount, AttrAction, AttrSection, AttrResult, AttrIndicators
   },
   data () {
     return {

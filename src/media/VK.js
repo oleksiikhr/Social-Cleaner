@@ -5,7 +5,7 @@ import router from '../router'
 import store from '../store'
 import Vue from 'vue'
 
-const ROUTE_INDEX = 3
+const ROUTE_INDEX = [1, 2]
 
 const DEFAULT_LANG = 'en'
 
@@ -265,7 +265,7 @@ media.prototype.domain = 'vk.com'
 media.prototype.icon = 'fa-vk'
 media.prototype.url = 'https://vk.com/'
 media.prototype.urlApi = 'https://api.vk.com/method/'
-media.prototype.sections = router.options.routes[ROUTE_INDEX].children.map(route => {
+media.prototype.sections = router.options.routes[ROUTE_INDEX[0]].children[ROUTE_INDEX[1]].children.map(route => {
   return { title: route.meta.name, name: route.name, icon: route.meta.icon, path: route.path }
 })
 

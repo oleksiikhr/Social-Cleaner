@@ -1,5 +1,5 @@
 <template>
-  <div id="vk">
+  <div id="vk" class="media">
     <at-menu v-if="user.id" mode="horizontal" active-name="vk" class="main-menu" @on-select="eventSelectMenuItem">
       <at-menu-item v-for="item in VK.prototype.sections" :name="item.name" :key="item.path"
                     :disabled="isDisabledMenuItem(item.path)">

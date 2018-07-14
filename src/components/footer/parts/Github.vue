@@ -1,5 +1,5 @@
 <template>
-  <a :href="Github.prototype.url + repository" target="_blank" rel="noopener" class="github">
+  <a :href="Github.prototype.url + repository" target="_blank" rel="noopener" :class="`github ${color}`">
     <div class="github__icon">
       <i class="fa fa-github" aria-hidden="true"></i>
     </div>
@@ -23,6 +23,12 @@ import { repository } from '../../../config'
 import Github from '../../../media/Github'
 
 export default {
+  props: {
+    color: {
+      type: String,
+      required: false
+    }
+  },
   data () {
     return {
       Github,
@@ -81,6 +87,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  color: #868686;
+  font-weight: bold;
+  transition: .2s;
+  &:hover {
+    color: #333;
+  }
 }
 
 .github__icon {
@@ -109,6 +121,22 @@ export default {
       margin: 0 10px;
       border-radius: 50%;
     }
+  }
+}
+
+.white.github {
+  color: rgba(255, 255, 255, .8);
+  &:hover {
+    color: #fff;
+  }
+  .github__name {
+    color: rgba(255, 255, 255, .8);
+  }
+  .github__info > span {
+    color: rgba(255, 255, 255, .8);
+  }
+  .github__dot {
+    border-color: rgba(255, 255, 255, .9);
   }
 }
 </style>

@@ -49,6 +49,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  background: #f7f7f7;
+  padding: 5px;
+}
+
 .result-block {
   max-width: 100%;
 }

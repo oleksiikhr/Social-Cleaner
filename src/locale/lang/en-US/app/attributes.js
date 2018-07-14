@@ -23,5 +23,10 @@ export default {
   },
   tag: {
     info: 'Press enter to add to the list.'
+  },
+  section: {
+    reverse: 'Reverse',
+    on: 'on',
+    off: 'off'
   }
 }

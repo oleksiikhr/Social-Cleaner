@@ -1,6 +1,6 @@
 <template>
   <div class="block__attr">
-    <top :obj="obj" :name="nameAttribute" :compare="compare" :process="process" />
+    <top :obj="obj" :name="nameAttribute" :compare="compare" :process="process" :active-status="obj.items.length" />
     <at-checkbox-group v-model="obj.items">
       <at-checkbox v-for="item in html" :key="item.val" :label="item.val" :disabled="process">
         {{ $t(item.name) }}

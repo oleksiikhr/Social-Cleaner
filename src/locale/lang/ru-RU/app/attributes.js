@@ -23,5 +23,10 @@ export default {
   },
   tag: {
     info: 'Нажмите «enter», чтобы добавить в список.'
+  },
+  section: {
+    reverse: 'Реверс',
+    on: 'вкл',
+    off: 'выкл'
   }
 }
