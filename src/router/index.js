@@ -18,7 +18,6 @@ const router = new Router({
   routes: [
     {
       path: '',
-      name: 'layout-landing',
       component: load('layouts/Landing'),
       children: [
         {
@@ -30,7 +29,6 @@ const router = new Router({
     },
     {
       path: '',
-      name: 'layout-default',
       component: load('layouts/Default'),
       children: [
         {
