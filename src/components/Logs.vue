@@ -1,5 +1,4 @@
 <template>
-  <!--TODO Responsive design (header, pagination, center items)-->
   <div id="logs">
     <div class="logs__header">
       <h1>{{ $t('app.logs.h1') }}</h1>
@@ -35,7 +34,7 @@
                      @pagesize-change="eventPageSizeChange" />
     </div>
 
-    <at-modal v-model="modal.model" class="logs-modal" :show-footer="false">
+    <at-modal v-model="modal.model" class="logs-modal" :show-footer="false" @on-cancel="eventCloseModal">
       <div slot="header" style="text-align:center;">
         <div class="logs-modal__title">
           <span :class="`color--${modal.item.color}`">{{ modal.item.name }}</span>
@@ -43,7 +42,6 @@
         </div>
       </div>
       <div class="logs-modal__inner">
-        <!--TODO Fast scroll (id) to section-->
         <div class="logs-modal__section">
           <p class="title">Request</p>
           <pre>{{ modal.item.request }}</pre>
@@ -52,13 +50,13 @@
           <p class="title">Response</p>
           <pre>{{ modal.item.response }}</pre>
         </div>
-        <!--TODO arrow to top-->
       </div>
     </at-modal>
   </div>
 </template>
 
 <script>
+import { bodySetOverflow } from '../heplers/styles'
 import networks from '../media'
 import moment from 'moment'
 
@@ -115,6 +113,10 @@ export default {
     openDialogResponse (log) {
       this.modal.item = log
       this.modal.model = true
+      bodySetOverflow('hidden')
+    },
+    eventCloseModal () {
+      bodySetOverflow('auto')
     },
     fromNow (time) {
       return moment(time).fromNow()
