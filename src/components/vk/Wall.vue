@@ -1,7 +1,7 @@
 <template>
   <div id="wall">
     <div class="main-config block">
-      <h2>{{ $t('vk.wall.main_config.h2') }}</h2>
+      <attr-section name="vk.wall.main_config.h2" />
       <attr-input name="vk.wall.main_config.owner_id.name" :model.sync="main.owner_id" :process="process"
                   info="vk.wall.main_config.owner_id.info" />
       <attr-select name="vk.wall.main_config.filter.name" :html="main.filter.html" :obj="main.filter" size="large"
@@ -12,26 +12,24 @@
     </div>
 
     <div class="wall-config block">
-      <h2>{{ $t('vk.wall.wall_config.h2') }}</h2>
+      <attr-section name="vk.wall.wall_config.h2" :reverse.sync="wall.reverse" :process="process" can-reverse />
       <attr-tag :obj="wall.ids" :push="pushNumber" :link-tag="getLinkPost" :process="process" />
       <attr-tag :obj="wall.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
                 info="vk.wall.wall_config.from_ids.info" />
       <attr-tag :obj="wall.texts" :push="pushString" :process="process" compare />
       <attr-checkbox :obj="wall.attachments" :html="html.attachments" :process="process" compare />
       <attr-indicators :obj="wall.indicators" :process="process" compare />
-      <attr-reverse :model.sync="wall.reverse" :process="process" />
       <!--TODO Date-->
     </div>
 
     <template v-if="!main.isDeletePosts.value">
       <div class="comments-config block">
-        <h2>{{ $t('vk.wall.comments_config.h2') }}</h2>
+        <attr-section name="vk.wall.comments_config.h2" :reverse.sync="comments.reverse" :process="process" can-reverse />
         <attr-tag :obj="comments.fromIds" :push="pushNumber" :link-tag="getLinkPage" :process="process"
                   info="vk.wall.comments_config.from_ids.info" />
         <attr-tag :obj="comments.texts" :push="pushString" :process="process" />
         <attr-checkbox :obj="comments.attachments" :html="html.attachments" :process="process" compare />
         <attr-indicators :obj="comments.indicators" :process="process" compare />
-        <attr-reverse :model.sync="comments.reverse" :process="process" />
         <!--TODO Date-->
       </div>
     </template>
@@ -45,7 +43,7 @@
 import AttrRadioButton from '../attributes/RadioButton'
 import AttrIndicators from '../attributes/Indicators'
 import AttrCheckbox from '../attributes/Checkbox'
-import AttrReverse from '../attributes/Reverse'
+import AttrSection from '../attributes/Section'
 import AttrResult from '../attributes/Result'
 import AttrAction from '../attributes/Action'
 import AttrSelect from '../attributes/Select'
@@ -65,7 +63,7 @@ const MAX_COUNT_WALL_COMMENTS_API = VK.prototype.COUNT_WALL_COMMENTS
 
 export default {
   components: {
-    AttrTag, AttrCheckbox, AttrCount, AttrInput, AttrSelect, AttrRadioButton, AttrIndicators, AttrReverse, AttrResult, AttrAction
+    AttrTag, AttrCheckbox, AttrCount, AttrInput, AttrSelect, AttrRadioButton, AttrIndicators, AttrResult, AttrAction, AttrSection
   },
   data () {
     return {
