@@ -133,7 +133,6 @@ header {
 
 footer {
   max-width: $max-width;
-  border: none;
   margin: 0 auto;
   padding: 15px 0;
 }

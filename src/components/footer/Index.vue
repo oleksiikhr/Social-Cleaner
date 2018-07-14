@@ -51,6 +51,7 @@ footer {
 }
 
 footer.white {
+  border-top: none;
   .home-link {
     color: rgba(255, 255, 255, .8);
     &:hover {
