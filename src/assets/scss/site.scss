@@ -110,27 +110,29 @@ hr {
 }
 
 @media screen and (max-width: 550px) {
-  #content {
-    padding: 10px 10px 30px;
-  }
-  #app > header {
-    margin: 0 10px 10px;
-    > a {
-      width: 70px;
-      &.brand {
-        > .brand__full {
-          display: none;
+  .default-layout {
+    > #content {
+      padding: 10px 10px 30px;
+    }
+    > header {
+      margin: 0 10px 10px;
+      > a {
+        width: 70px;
+        &.brand {
+          > .brand__full {
+            display: none;
+          }
+          > .brand__short {
+            display: inline-block;
+          }
         }
-        > .brand__short {
-          display: inline-block;
-        }
-      }
-      &.logs {
-        > .logs__full {
-          display: none;
-        }
-        > .logs__short {
-          display: inline-block;
+        &.logs {
+          > .logs__full {
+            display: none;
+          }
+          > .logs__short {
+            display: inline-block;
+          }
         }
       }
     }
