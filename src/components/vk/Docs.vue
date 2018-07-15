@@ -16,7 +16,7 @@
       <attr-tag :obj="config.exts" :push="pushString" :process="process"
                 info="vk.docs.additional_config.exts.info" />
       <attr-tag :obj="config.texts" :push="pushString" :process="process" compare />
-      <attr-indicators :obj="config.indicators" :process="process" compare />
+      <attr-indicators :obj="config.indicators" :process="process" />
       <!--TODO Date-->
     </div>
 
