@@ -5,7 +5,7 @@
       <span class="brand__name brand__short">SC</span>
       <span class="brand__version">{{ version }}</span>
     </router-link>
-    <i v-if="socialNetwork.icon" :class="'current fa ' + socialNetwork.icon" aria-hidden="true"></i>
+    <i v-if="socialNetwork.icon" :class="`current fa ${socialNetwork.icon}`" aria-hidden="true"></i>
     <router-link to="/logs" class="logs">
       <div class="logs__full">
         <template v-if="firstLog">
