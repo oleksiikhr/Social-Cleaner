@@ -10,7 +10,7 @@
       </div>
     </a>
 
-    <at-modal v-model="modal" title="Choose language" :showFooter="false">
+    <at-modal v-model="modal" title="Choose language" class="locale-modal" :showFooter="false">
       <a class="lang-item" v-for="lang in languages" :key="lang.value" @click="setLocale(lang)">
         {{ lang.name }}
       </a>
