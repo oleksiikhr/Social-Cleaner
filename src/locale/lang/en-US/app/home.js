@@ -20,7 +20,7 @@ export default {
       { name: 'Verification before removal', description: 'You will receive a list of posts to be deleted, depending on your settings.' },
       { name: 'Localization', description: 'The service is available in different languages.' },
       { name: 'Flexible setup', description: 'Deep customization of deleted records that do not provide services.' },
-      { name: 'No analysts', description: 'Internal or external (Google analytics) - no one collects data about you.' },
+      { name: 'No analytics', description: 'Internal or external (Google analytics) - no one collects data about you.' },
       { name: 'SSL - Encryption', description: 'All requests to the service are encrypted using the https protocol.' },
       { name: 'Query log', description: 'Getting information about all requests / responses from social media.' }
     ]
