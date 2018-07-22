@@ -1,6 +1,6 @@
 <template>
   <div id="token">
-    <div class="logged-in" v-if="user.id">
+    <div class="logged-in" v-if="isAuth">
       <at-alert :message="$t('vk.token.user.alert')" type="warning" show-icon />
       <hr>
       <user :user="user" />
@@ -74,6 +74,9 @@ export default {
   computed: {
     user () {
       return this.$store.state.media.vk.user
+    },
+    isAuth () {
+      return this.$store.state.media.vk.isAuth
     },
     process () {
       return this.$store.state.media.vk.process

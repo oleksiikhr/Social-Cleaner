@@ -6,6 +6,7 @@ const state = {
   vk: {
     token: '',
     user: {},
+    isAuth: false,
     access: {
       friends: false,
       photos: false,
@@ -57,9 +58,11 @@ const mutations = {
     state.vk.token = ''
   },
   VK_SET_USER (state, obj) {
+    state.vk.isAuth = true
     state.vk.user = obj
   },
   VK_CLEAR_USER (state) {
+    state.vk.isAuth = false
     state.vk.user = {}
   },
   VK_SET_PERMISSIONS (state, num) {
