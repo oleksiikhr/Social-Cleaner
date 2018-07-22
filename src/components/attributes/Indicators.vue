@@ -8,7 +8,7 @@
           <p>{{ $t(item.name) }}</p>
         </div>
 
-        <at-popover v-if="item.info" placement="top" :content="item.info(item.count)">
+        <at-popover v-if="item.info" trigger="hover" placement="top" :content="item.info(item.count)">
           <at-input v-model="item.count" :disabled="process || item.state === 0" @blur="eventBlur(index)" />
         </at-popover>
         <template v-else>
