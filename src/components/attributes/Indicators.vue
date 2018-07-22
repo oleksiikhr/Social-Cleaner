@@ -79,7 +79,6 @@ export default {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
   .indicator {
     display: flex;
     flex-direction: column;
@@ -87,7 +86,7 @@ export default {
     justify-content: center;
     border: 1px solid #e7e7e7;
     margin: 5px;
-    padding: 10px 5px;
+    padding: 10px 6px;
     p {
       font-weight: bold;
       margin: 0;
@@ -104,6 +103,12 @@ export default {
     .at-input {
       margin-bottom: 20px;
     }
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .indicators {
+    justify-content: center;
   }
 }
 </style>
