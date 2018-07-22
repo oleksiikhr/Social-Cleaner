@@ -19,22 +19,18 @@ const media = class VK {
    * | -----------------------------------------------------------------------------
    * |
    */
-  static async defaultStart (component) {
+  static defaultStart (component) {
     store.commit('START_PROCESS', 'vk')
     component.loading = true
     component.result = []
-
-    return component.checkStart(component.main.count)
   }
-  static async defaultStop (component) {
+  static defaultStop (component) {
     store.commit('STOP_PROCESS', 'vk')
     store.commit('CLEAR_CANCEL', 'vk')
     component.loading = false
   }
   static async doStartDefault (component, maxCountApi) {
-    if (!this.defaultStart(component)) {
-      return this.defaultStop()
-    }
+    this.defaultStart(component)
 
     const countLoop = component.getCountLoop(component.main.count, maxCountApi)
 
@@ -64,9 +60,7 @@ const media = class VK {
     return this.defaultStop(component)
   }
   static async doPreviewDefault (component, maxCountApi) {
-    if (!this.defaultStart(component)) {
-      return this.defaultStop()
-    }
+    this.defaultStart(component)
 
     const countLoop = component.getCountLoop(component.main.count, maxCountApi)
 

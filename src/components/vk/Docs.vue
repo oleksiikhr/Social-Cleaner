@@ -4,7 +4,7 @@
       <attr-section name="vk.docs.main_config.h2" />
       <attr-input name="vk.docs.main_config.owner_id.name" info="vk.docs.main_config.owner_id.info"
                   :model.sync="main.owner_id" :process="process" />
-      <attr-count name="vk.docs.main_config.count.name" :model="main.count" :process="process" />
+      <attr-count name="vk.docs.main_config.count.name" :model.sync="main.count" :process="process" />
       <attr-radio name="vk.docs.main_config.type.name" :model.sync="main.type.value" :html="main.type.html"
                   :process="process" />
     </div>

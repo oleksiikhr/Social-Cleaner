@@ -10,26 +10,6 @@ export default {
      * |
      */
     /**
-     * Checking settings for startup.
-     *
-     * @param {object} countObj - {min, max}
-     *
-     * @return boolean
-     */
-    checkStart (countObj) {
-      const min = parseInt(this.main.count.min)
-      const max = parseInt(this.main.count.max)
-
-      if (min > 0 && max > 0 && max >= min) {
-        this.main.count.min = min.toString()
-        this.main.count.max = max.toString()
-        return true
-      }
-
-      this.$Modal.alert({ title: 'Ошибка', content: 'Проверьте диапазон в основных настройках' })
-      return false
-    },
-    /**
      * @param {array} items - {obj, method, param}
      * @param {boolean} reverse
      *

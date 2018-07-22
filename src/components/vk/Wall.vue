@@ -6,7 +6,7 @@
                   info="vk.wall.main_config.owner_id.info" />
       <attr-select name="vk.wall.main_config.filter.name" :html="main.filter.html" :obj="main.filter" size="large"
                    :process="process" />
-      <attr-count name="vk.wall.main_config.count.name" :model="main.count" :process="process" />
+      <attr-count name="vk.wall.main_config.count.name" :model.sync="main.count" :process="process" />
       <!--<attr-radio-button name="vk.wall.main_config.is_delete_posts.name" :obj="main.isDeletePosts"-->
                          <!--:html="main.isDeletePosts.html" :process="process" />-->
     </div>
