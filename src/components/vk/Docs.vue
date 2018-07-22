@@ -139,16 +139,6 @@ export default {
 
       return res
     },
-    async callbackGet (...params) {
-      const res = await this.fetchGet(...params)
-
-      return res
-    },
-    async callbackDelete (data) {
-      const res = await this.fetchDelete(data.id)
-
-      return res
-    },
 
     /* | -----------------------------------------------------------------------------
      * | Start / Stop
@@ -161,17 +151,21 @@ export default {
     async doPreview () {
       await VK.doPreviewDefault(this, this.check, MAX_COUNT_API)
     },
-    start () {
-      this.$store.commit('START_PROCESS', 'vk')
-      this.loading = true
-      this.result = []
 
-      return this.checkStart(this.main.count)
+    /* | -----------------------------------------------------------------------------
+     * | Callback
+     * | -----------------------------------------------------------------------------
+     * |
+     */
+    async callbackGet (...params) {
+      const res = await this.fetchGet(...params)
+
+      return res
     },
-    stop () {
-      this.$store.commit('STOP_PROCESS', 'vk')
-      this.$store.commit('CLEAR_CANCEL', 'vk')
-      this.loading = false
+    async callbackDelete (data) {
+      const res = await this.fetchDelete(data.id)
+
+      return res
     },
 
     /* | -----------------------------------------------------------------------------
