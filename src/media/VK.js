@@ -31,7 +31,7 @@ const media = class VK {
     store.commit('CLEAR_CANCEL', 'vk')
     component.loading = false
   }
-  static async doStartDefault (component, checkMethod, maxCountApi) {
+  static async doStartDefault (component, maxCountApi) {
     if (!this.defaultStart(component)) {
       return this.defaultStop()
     }
@@ -44,7 +44,7 @@ const media = class VK {
         const len = res.body.response.items.length
         for (let j = 0; j < len; j++) {
           const item = res.body.response.items[j]
-          if (checkMethod(item)) {
+          if (component.callbackCheck(item)) {
             const resDelete = await component.callbackDelete(item)
             if (resDelete.ok && resDelete.body.response) {
               component.main.count.max--
@@ -63,7 +63,7 @@ const media = class VK {
 
     return this.defaultStop(component)
   }
-  static async doPreviewDefault (component, checkMethod, maxCountApi) {
+  static async doPreviewDefault (component, maxCountApi) {
     if (!this.defaultStart(component)) {
       return this.defaultStop()
     }
@@ -77,7 +77,7 @@ const media = class VK {
       const res = await component.callbackGet(leftItems > maxCountApi ? maxCountApi : leftItems, offset)
 
       if (res.ok && res.body.response && res.body.response.items.length) {
-        res.body.response.items.forEach(item => checkMethod(item))
+        res.body.response.items.forEach(item => component.callbackCheck(item))
       } else {
         return this.defaultStop(component)
       }

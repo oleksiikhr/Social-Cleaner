@@ -146,10 +146,10 @@ export default {
      * |
      */
     async doStart () {
-      await VK.doStartDefault(this, this.check, MAX_COUNT_API)
+      await VK.doStartDefault(this, MAX_COUNT_API)
     },
     async doPreview () {
-      await VK.doPreviewDefault(this, this.check, MAX_COUNT_API)
+      await VK.doPreviewDefault(this, MAX_COUNT_API)
     },
 
     /* | -----------------------------------------------------------------------------
@@ -162,18 +162,12 @@ export default {
 
       return res
     },
-    async callbackDelete (data) {
-      const res = await this.fetchDelete(data.id)
+    async callbackDelete (doc) {
+      const res = await this.fetchDelete(doc.id)
 
       return res
     },
-
-    /* | -----------------------------------------------------------------------------
-     * | Check
-     * | -----------------------------------------------------------------------------
-     * |
-     */
-    check (doc) {
+    callbackCheck (doc) {
       const items = [
         { obj: this.config.fromIds, method: this.checkNumber, param: doc.owner_id },
         { obj: this.config.exts, method: this.checkTextFull, param: doc.ext },
