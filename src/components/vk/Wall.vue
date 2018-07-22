@@ -18,7 +18,7 @@
                 info="vk.wall.wall_config.from_ids.info" />
       <attr-tag :obj="wall.texts" :push="pushString" :process="process" compare />
       <attr-checkbox :obj="wall.attachments" :html="html.attachments" :process="process" compare />
-      <attr-indicators :obj="wall.indicators" :process="process" compare />
+      <attr-indicators :obj="wall.indicators" :process="process" only-numbers compare />
       <!--TODO Date-->
     </div>
 

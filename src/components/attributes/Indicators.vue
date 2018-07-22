@@ -9,10 +9,10 @@
         </div>
 
         <at-popover v-if="item.info" placement="top" :content="item.info(item.count)">
-          <at-input v-model="item.count" :disabled="process || item.state === 0" />
+          <at-input v-model="item.count" :disabled="process || item.state === 0" @blur="eventBlur(index)" />
         </at-popover>
         <template v-else>
-          <at-input v-model="item.count" :disabled="process || item.state === 0" />
+          <at-input v-model="item.count" :disabled="process || item.state === 0" @blur="eventBlur(index)" />
         </template>
 
         <at-radio-group v-model="item.state" :disabled="process">
@@ -48,6 +48,10 @@ export default {
     process: {
       type: Boolean,
       required: false
+    },
+    onlyNumbers: {
+      type: Boolean,
+      required: false
     }
   },
   data () {
@@ -69,6 +73,14 @@ export default {
           return true
         }
       })
+    }
+  },
+  methods: {
+    eventBlur (index) {
+      if (this.onlyNumbers) {
+        const count = this.obj.items[index].count
+        this.obj.items[index].count = count.toString().replace(/[^0-9]/g, '') || 0
+      }
     }
   }
 }
