@@ -58,11 +58,10 @@ export default {
   border: 1px solid #e7e7e7;
   background: #fbfbfb;
   padding: 20px;
-  color: #333;
+  color: rgba(0, 0, 0, .7);
   transition: .3s;
   &:hover {
-    background: #585f6c;
-    color: rgba(255, 255, 255, .87);
+    color: rgba(0, 0, 0, .9);
   }
 }
 
