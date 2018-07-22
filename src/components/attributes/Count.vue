@@ -1,10 +1,9 @@
 <template>
-  <!--TODO Translate-->
   <div class="block__attr">
     <p>{{ $t(name) }}</p>
     <div class="flex">
-      <at-input v-model="min" :disabled="process" placeholder="От" @blur="eventBlurMin" /> -
-      <at-input v-model="max" :disabled="process" placeholder="До" @blur="eventBlurMax" />
+      <at-input v-model="min" :disabled="process" :placeholder="$t('app.attributes.count.from')" @blur="eventBlurMin" /> -
+      <at-input v-model="max" :disabled="process" :placeholder="$t('app.attributes.count.to')" @blur="eventBlurMax" />
     </div>
     <small v-if="info">{{ $t(info) }}</small>
   </div>

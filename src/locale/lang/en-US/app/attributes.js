@@ -28,5 +28,9 @@ export default {
     reverse: 'Reverse',
     on: 'on',
     off: 'off'
+  },
+  count: {
+    from: 'From',
+    to: 'To'
   }
 }

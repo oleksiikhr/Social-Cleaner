@@ -28,5 +28,9 @@ export default {
     reverse: 'Реверс',
     on: 'вкл',
     off: 'выкл'
+  },
+  count: {
+    from: 'От',
+    to: 'До'
   }
 }
