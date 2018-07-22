@@ -1,4 +1,5 @@
 <template>
+  <!--TODO Rewrite-->
   <div id="loading" v-if="haveItems">
     <div class="loading__inner">
       <a :class="getClassItem(item)" v-if="item.process" v-for="(item, index) in media" :key="index" @click="cancel(index)">

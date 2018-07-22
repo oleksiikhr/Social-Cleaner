@@ -5,6 +5,7 @@
 ## TODO
 
 - [ ] Getting javascript to delete data on the site itself
+- [ ] Lists of words on different topics (modal, i18n)
 
 ## Build Setup
 

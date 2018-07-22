@@ -1,10 +1,13 @@
 <template>
   <div id="dashboard">
     <div class="header">
+      <!--TODO Here add 2 or more blocks (pages): How to use, FAQ, *-->
+    </div>
+    <div class="search-block">
       <h1>{{ $t('app.explore.h1') }}</h1>
       <at-input v-model="search" :placeholder="searchName" icon="search" :title="searchName" />
     </div>
-    <div class="result">
+    <div class="content">
       <card v-for="(item, index) in filteredMedia" :key="index" :item="item" />
     </div>
   </div>
@@ -57,7 +60,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.header {
+.search-block {
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -78,7 +81,7 @@ export default {
 }
 
 @media screen and (max-width: 600px) {
-  .header {
+  .search-block {
     flex-direction: column;
     > h1 {
       margin-bottom: 15px;
