@@ -181,7 +181,7 @@ export default {
     },
     async doPreview () {
       if (!this.start()) {
-        return
+        return this.stop()
       }
 
       const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_API)
