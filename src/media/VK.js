@@ -15,6 +15,78 @@ const LIST_OF_LANG = [
 
 const media = class VK {
   /* | -----------------------------------------------------------------------------
+   * | Process
+   * | -----------------------------------------------------------------------------
+   * |
+   */
+  static async defaultStart (component) {
+    store.commit('START_PROCESS', 'vk')
+    component.loading = true
+    component.result = []
+
+    return component.checkStart(component.main.count)
+  }
+  static async defaultStop (component) {
+    store.commit('STOP_PROCESS', 'vk')
+    store.commit('CLEAR_CANCEL', 'vk')
+    component.loading = false
+  }
+  static async doStartDefault (component, checkMethod, maxCountApi) {
+    if (!this.defaultStart(component)) {
+      return this.defaultStop()
+    }
+
+    const countLoop = component.getCountLoop(component.main.count, maxCountApi)
+
+    for (let i = 0; i < countLoop; i++) {
+      const res = await component.callbackGet(component.getMaxCountItems(component.main.count, maxCountApi))
+      if (res.ok && res.body.response) {
+        const len = res.body.response.items.length
+        for (let j = 0; j < len; j++) {
+          const item = res.body.response.items[j]
+          if (checkMethod(item)) {
+            const resDelete = await component.callbackDelete(item)
+            if (resDelete.ok && resDelete.body.response) {
+              component.main.count.max--
+            } else {
+              component.result.splice(component.result.length - 1, 1)
+              return this.defaultStop(component)
+            }
+          } else {
+            component.main.count.min++
+          }
+        }
+      } else {
+        return this.defaultStop(component)
+      }
+    }
+
+    return this.defaultStop(component)
+  }
+  static async doPreviewDefault (component, checkMethod, maxCountApi) {
+    if (!this.defaultStart(component)) {
+      return this.defaultStop()
+    }
+
+    const countLoop = component.getCountLoop(component.main.count, maxCountApi)
+
+    for (let i = 0; i < countLoop; i++) {
+      const offset = i * maxCountApi
+      const leftItems = component.main.count.max - offset
+
+      const res = await component.callbackGet(leftItems > maxCountApi ? maxCountApi : leftItems, offset)
+
+      if (res.ok && res.body.response && res.body.response.items.length) {
+        res.body.response.items.forEach(item => checkMethod(item))
+      } else {
+        return this.defaultStop(component)
+      }
+    }
+
+    return this.defaultStop(component)
+  }
+
+  /* | -----------------------------------------------------------------------------
    * | API
    * | -----------------------------------------------------------------------------
    * |

@@ -139,6 +139,16 @@ export default {
 
       return res
     },
+    async callbackGet (...params) {
+      const res = await this.fetchGet(...params)
+
+      return res
+    },
+    async callbackDelete (data) {
+      const res = await this.fetchDelete(data.id)
+
+      return res
+    },
 
     /* | -----------------------------------------------------------------------------
      * | Start / Stop
@@ -146,60 +156,10 @@ export default {
      * |
      */
     async doStart () {
-      if (!this.start()) {
-        return this.stop()
-      }
-
-      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_API)
-
-      for (let i = 0; i < countLoop; i++) {
-        const res = await this.fetchGet(this.getMaxCountItems(this.main.count, MAX_COUNT_API))
-
-        if (res.ok && res.body.response) {
-          const len = res.body.response.items.length
-          for (let j = 0; j < len; j++) {
-            const doc = res.body.response.items[j]
-
-            if (this.check(doc)) {
-              const resDelete = await this.fetchDelete(doc.id)
-              if (resDelete.ok && resDelete.body.response) {
-                this.main.count.max--
-              } else {
-                this.result.splice(this.result.length - 1, 1)
-                return this.stop()
-              }
-            } else {
-              this.main.count.min++
-            }
-          }
-        } else {
-          return this.stop()
-        }
-      }
-
-      this.stop()
+      await VK.doStartDefault(this, this.check, MAX_COUNT_API)
     },
     async doPreview () {
-      if (!this.start()) {
-        return this.stop()
-      }
-
-      const countLoop = this.getCountLoop(this.main.count, MAX_COUNT_API)
-
-      for (let i = 0; i < countLoop; i++) {
-        const offset = i * MAX_COUNT_API
-        const leftItems = this.main.count.max - offset
-
-        const res = await this.fetchGet(leftItems > MAX_COUNT_API ? MAX_COUNT_API : leftItems, offset)
-
-        if (res.ok && res.body.response && res.body.response.items.length) {
-          res.body.response.items.forEach(doc => this.check(doc))
-        } else {
-          return this.stop()
-        }
-      }
-
-      this.stop()
+      await VK.doPreviewDefault(this, this.check, MAX_COUNT_API)
     },
     start () {
       this.$store.commit('START_PROCESS', 'vk')
