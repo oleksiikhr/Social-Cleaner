@@ -44,7 +44,7 @@ const media = class VK {
         const len = res.body.response.items.length
         for (let j = 0; j < len; j++) {
           const item = res.body.response.items[j]
-          if (component.callbackCheck(item)) {
+          if (component.callbackCheck(item, true)) {
             const resDelete = await component.callbackDelete(item)
             if (resDelete.ok && resDelete.body.response) {
               component.main.count.max--
