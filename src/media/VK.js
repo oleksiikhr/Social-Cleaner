@@ -119,6 +119,12 @@ const media = class VK {
 
     return this.defaultStop(component)
   }
+  /**
+   * Stop process delete.
+   */
+  static doStopDefault () {
+    store.commit('SET_CANCEL', 'vk')
+  }
 
   /* | -----------------------------------------------------------------------------
    * | API

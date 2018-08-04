@@ -34,7 +34,7 @@
       </div>
     </template>
 
-    <attr-action :process="process" :loading="loading" canPreview @start="doStart" @preview="doPreview" />
+    <attr-action :process="process" :loading="loading" canPreview @start="doStart" @preview="doPreview" @stop="doStop" />
     <attr-result :data="result" />
   </div>
 </template>
@@ -239,6 +239,9 @@ export default {
       } else {
         // TODO await this.doPreviewComments()
       }
+    },
+    doStop () {
+      VK.doStopDefault()
     },
 
     /* | -----------------------------------------------------------------------------

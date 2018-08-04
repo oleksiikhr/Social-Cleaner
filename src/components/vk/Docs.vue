@@ -20,7 +20,7 @@
       <!--TODO Date-->
     </div>
 
-    <attr-action :process="process" :loading="loading" canPreview @start="doStart" @preview="doPreview" />
+    <attr-action :process="process" :loading="loading" canPreview @start="doStart" @preview="doPreview" @stop="doStop" />
     <attr-result :data="result" />
   </div>
 </template>
@@ -150,6 +150,9 @@ export default {
     },
     async doPreview () {
       await VK.doPreviewDefault(this, MAX_COUNT_API)
+    },
+    doStop () {
+      VK.doStopDefault()
     },
 
     /* | -----------------------------------------------------------------------------
