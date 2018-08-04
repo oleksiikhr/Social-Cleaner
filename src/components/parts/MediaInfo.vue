@@ -52,6 +52,11 @@ export default {
   background: #fff;
 }
 
+.loading__inner {
+  position: sticky;
+  top: 0;
+}
+
 .loading__item {
   display: flex;
   align-items: center;
