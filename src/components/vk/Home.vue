@@ -1,6 +1,6 @@
 <template>
   <div id="vk" class="media">
-    <at-menu v-if="isAuth" mode="horizontal" active-name="vk" class="main-menu" @on-select="eventSelectMenuItem">
+    <at-menu v-if="isAuth" mode="horizontal" :active-name="route" class="main-menu" @on-select="eventSelectMenuItem">
       <at-menu-item v-for="item in VK.prototype.sections" :name="item.name" :key="item.path"
                     :disabled="isDisabledMenuItem(item.path)">
         <i :class="`fa fa-${item.icon}`" aria-hidden="true"></i> {{ $t(item.title) }}
@@ -33,6 +33,9 @@ export default {
     },
     access () {
       return this.$store.state.media.vk.access
+    },
+    route () {
+      return this.$route.name
     }
   },
   methods: {
