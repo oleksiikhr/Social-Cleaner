@@ -3,6 +3,7 @@ import store from '../store'
 import Vue from 'vue'
 
 // Media
+import twitter from './twitter'
 import vk from './vk'
 
 Vue.use(Router)
@@ -39,6 +40,7 @@ const router = new Router({
           name: 'logs',
           component: load('Logs')
         },
+        twitter,
         vk
       ]
     }
