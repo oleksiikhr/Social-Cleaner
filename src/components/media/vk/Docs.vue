@@ -26,17 +26,17 @@
 </template>
 
 <script>
-import AttrIndicators from '../attributes/Indicators'
-import AttrSection from '../attributes/Section'
-import { bytesToMB } from '../../heplers/file'
-import AttrResult from '../attributes/Result'
-import AttrAction from '../attributes/Action'
-import AttrInput from '../attributes/Input'
-import AttrCount from '../attributes/Count'
-import AttrRadio from '../attributes/Radio'
-import { bytes } from '../../heplers/info'
-import AttrTag from '../attributes/Tag'
-import VK from '../../media/VK'
+import AttrIndicators from '../../attributes/Indicators'
+import AttrSection from '../../attributes/Section'
+import { bytesToMB } from '../../../heplers/file'
+import AttrResult from '../../attributes/Result'
+import AttrAction from '../../attributes/Action'
+import AttrInput from '../../attributes/Input'
+import AttrCount from '../../attributes/Count'
+import AttrRadio from '../../attributes/Radio'
+import { bytes } from '../../../heplers/info'
+import AttrTag from '../../attributes/Tag'
+import VK from '../../../media/VK'
 
 const SLEEP_GET_MIN = 500
 const SLEEP_GET_MAX = 1500

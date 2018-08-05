@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import VK from '../../../media/VK'
+import VK from '../../../../media/VK'
 
 export default {
   props: {

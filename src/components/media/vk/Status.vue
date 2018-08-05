@@ -30,10 +30,10 @@
 </template>
 
 <script>
-import AttrSection from '../attributes/Section'
-import AttrAction from '../attributes/Action'
-import AttrInput from '../attributes/Input'
-import VK from '../../media/VK'
+import AttrSection from '../../attributes/Section'
+import AttrAction from '../../attributes/Action'
+import AttrInput from '../../attributes/Input'
+import VK from '../../../media/VK'
 
 export default {
   components: {

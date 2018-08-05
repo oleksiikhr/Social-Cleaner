@@ -57,7 +57,7 @@
 
 <script>
 import User from './parts/User'
-import VK from '../../media/VK'
+import VK from '../../../media/VK'
 
 export default {
   components: {
