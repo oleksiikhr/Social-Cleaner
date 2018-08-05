@@ -5,7 +5,7 @@
       <span class="brand__name brand__short">SC</span>
       <span class="brand__version">{{ version }}</span>
     </router-link>
-    <i v-if="socialNetwork.icon" :class="`current fa ${socialNetwork.icon}`" aria-hidden="true"></i>
+    <i v-if="network.icon" :class="`current fa ${network.icon}`" aria-hidden="true"></i>
     <router-link to="/logs" class="logs">
       <div class="logs__full">
         <template v-if="firstLog">
@@ -30,8 +30,8 @@ export default {
     }
   },
   computed: {
-    socialNetwork () {
-      return this.$store.state.template.socialNetwork
+    network () {
+      return this.$store.state.template.network
     },
     firstLog () {
       return this.$store.state.logs.storage[0]

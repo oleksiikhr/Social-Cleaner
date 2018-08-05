@@ -1,5 +1,5 @@
 <template>
-  <div id="vk" class="media">
+  <div id="vk" class="network">
     <at-menu v-if="isAuth" mode="horizontal" :active-name="route" class="main-menu" @on-select="eventSelectMenuItem">
       <at-menu-item v-for="item in VK.prototype.sections" :name="item.name" :key="item.path"
                     :disabled="isDisabledMenuItem(item.path)">
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import VK from '../../media/VK'
+import VK from '../../../networks/VK'
 
 export default {
   data () {
@@ -29,10 +29,10 @@ export default {
   },
   computed: {
     isAuth () {
-      return this.$store.state.media.vk.isAuth
+      return this.$store.state.networks.vk.isAuth
     },
     access () {
-      return this.$store.state.media.vk.access
+      return this.$store.state.networks.vk.access
     },
     route () {
       return this.$route.name

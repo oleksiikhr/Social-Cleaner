@@ -1,6 +1,6 @@
 import VueResource from 'vue-resource'
+import networks from './networks'
 import AtComponents from 'at-ui'
-import networks from './media'
 import router from './router'
 import i18n from './locale'
 import store from './store'
@@ -26,7 +26,7 @@ Vue.config.productionTip = false
 // Add logs after each http call
 Vue.http.interceptors.push((req, next) => {
   const isFind = networks.some(network => {
-    if (req.url.indexOf(network.urlApi) !== -1) {
+    if (network.urlApi && req.url.indexOf(network.urlApi) !== -1) {
       network.logs(req, next)
       return true
     }

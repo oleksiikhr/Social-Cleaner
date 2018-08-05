@@ -6,7 +6,7 @@ import store from '../store'
 import Vue from 'vue'
 
 /** @see router - Position in array */
-const ROUTE_INDEX = [1, 2]
+const ROUTE_INDEX = [1, 3]
 
 const DEFAULT_LANG = 'en'
 
@@ -15,7 +15,7 @@ const LIST_OF_LANG = [
   'ru', 'uk', 'be', 'en', 'es', 'fi', 'de', 'it'
 ]
 
-const media = class VK {
+const network = class VK {
   /* | -----------------------------------------------------------------------------
    * | Process
    * | -----------------------------------------------------------------------------
@@ -136,7 +136,7 @@ const media = class VK {
    */
   static async send (method, params = [], rnd = { min: 0, max: 0 }) {
     // if the user canceled the data cleaning
-    if (store.state.media.vk.cancel) {
+    if (store.state.networks.vk.cancel) {
       return {}
     }
 
@@ -152,7 +152,7 @@ const media = class VK {
     params.lang = this.prototype.lang
 
     if (!params.access_token) {
-      params.access_token = store.state.media.vk.token
+      params.access_token = store.state.networks.vk.token
     }
 
     const result = await Vue.http.jsonp(this.prototype.urlApi + method, {
@@ -182,7 +182,7 @@ const media = class VK {
    * @see https://vk.com/dev/wall.get
    */
   static async fetchWallGet (
-    ownerId = store.state.media.vk.user.id,
+    ownerId = store.state.networks.vk.user.id,
     filter = 'all',
     count = this.prototype.COUNT_WALL,
     offset = 0,
@@ -201,7 +201,7 @@ const media = class VK {
   /**
    * @see https://vk.com/dev/wall.delete
    */
-  static async fetchWallDelete (postId, ownerId = store.state.media.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
+  static async fetchWallDelete (postId, ownerId = store.state.networks.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
     const result = await this.send('wall.delete', {
       owner_id: ownerId,
       post_id: postId
@@ -214,7 +214,7 @@ const media = class VK {
    */
   static async fetchWallGetComments (
     postId,
-    ownerId = store.state.media.vk.user.id,
+    ownerId = store.state.networks.vk.user.id,
     count = this.prototype.COUNT_WALL_COMMENTS,
     offset = 0,
     needLikes = true,
@@ -234,7 +234,7 @@ const media = class VK {
   /**
    * @see https://vk.com/dev/wall.deleteComment
    */
-  static async fetchWallDeleteComment (commentId, ownerId = store.state.media.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
+  static async fetchWallDeleteComment (commentId, ownerId = store.state.networks.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
     const result = await this.send('wall.deleteComment', {
       owner_id: ownerId,
       comment_id: commentId
@@ -245,7 +245,7 @@ const media = class VK {
   /**
    * @see https://vk.com/dev/users.get
    */
-  static async fetchUsersGet (userIds = store.state.media.vk.user.id, fields = '', sleepMin = 0, sleepMax = sleepMin) {
+  static async fetchUsersGet (userIds = store.state.networks.vk.user.id, fields = '', sleepMin = 0, sleepMax = sleepMin) {
     const result = await this.send('users.get', {
       user_ids: userIds,
       fields: fields
@@ -267,7 +267,7 @@ const media = class VK {
   /**
    * @see https://vk.com/dev/status.get
    */
-  static async fetchStatusGet (id = store.state.media.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
+  static async fetchStatusGet (id = store.state.networks.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
     const result = await this.send('status.get', {
       user_id: id
     }, { min: sleepMin, max: sleepMax })
@@ -292,7 +292,7 @@ const media = class VK {
     count = this.prototype.COUNT_DOCS,
     offset = 0,
     type = 0,
-    ownerId = store.state.media.vk.user.id,
+    ownerId = store.state.networks.vk.user.id,
     sleepMin = 0,
     sleepMax = sleepMin
   ) {
@@ -308,7 +308,7 @@ const media = class VK {
   /**
    * @see https://vk.com/dev/docs.delete
    */
-  static async fetchDocsDelete (docId, ownerId = store.state.media.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
+  static async fetchDocsDelete (docId, ownerId = store.state.networks.vk.user.id, sleepMin = 0, sleepMax = sleepMin) {
     const result = await this.send('docs.delete', {
       owner_id: ownerId,
       doc_id: docId
@@ -353,13 +353,13 @@ const media = class VK {
 
     return this.getLinkUser(id)
   }
-  static getLinkUser (id = store.state.media.vk.user.id) {
+  static getLinkUser (id = store.state.networks.vk.user.id) {
     return `${this.prototype.url}id${id}`
   }
   static getLinkGroup (id) {
     return `${this.prototype.url}public${id}`
   }
-  static getLinkDoc (docId, userId = store.state.media.vk.user.id) {
+  static getLinkDoc (docId, userId = store.state.networks.vk.user.id) {
     return `${this.prototype.url}doc${userId}_${docId}`
   }
 }
@@ -369,15 +369,15 @@ const media = class VK {
  * | -----------------------------------------------------------------------------
  * |
  */
-media.prototype.off = false
-media.prototype.disabled = false
-media.prototype.name = 'VK'
-media.prototype.to = '/vk'
-media.prototype.domain = 'vk.com'
-media.prototype.icon = 'fa-vk'
-media.prototype.url = 'https://vk.com/'
-media.prototype.urlApi = 'https://api.vk.com/method/'
-media.prototype.sections = router.options.routes[ROUTE_INDEX[0]].children[ROUTE_INDEX[1]].children.map(route => {
+network.prototype.off = false
+network.prototype.disabled = false
+network.prototype.name = 'VK'
+network.prototype.to = '/vk'
+network.prototype.domain = 'vk.com'
+network.prototype.icon = 'fa-vk'
+network.prototype.url = 'https://vk.com/'
+network.prototype.urlApi = 'https://api.vk.com/method/'
+network.prototype.sections = router.options.routes[ROUTE_INDEX[0]].children[ROUTE_INDEX[1]].children.map(route => {
   return { title: route.meta.name, name: route.name, icon: route.meta.icon, path: route.path }
 })
 
@@ -386,7 +386,7 @@ media.prototype.sections = router.options.routes[ROUTE_INDEX[0]].children[ROUTE_
  * | -----------------------------------------------------------------------------
  * |
  */
-media.prototype.logs = (req, next) => {
+network.prototype.logs = (req, next) => {
   const urlSplit = req.url.split('/')
   const name = urlSplit[urlSplit.length - 1]
 
@@ -407,18 +407,18 @@ media.prototype.logs = (req, next) => {
 
   next(res => {
     if (res.status >= 200 && res.status < 300) {
-      addLog(media, name, { method: name, params: params }, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
+      addLog(network, name, { method: name, params: params }, res.body, res.body.error ? colors.ERROR : colors.SUCCESS)
       if (res.body.error) {
         Vue.prototype.$Notify.error({ title: res.body.error.error_msg || 'Error', message: name })
       }
     } else {
-      addLog(media, name, { method: name, params: params }, 'Server error', colors.ERROR)
+      addLog(network, name, { method: name, params: params }, 'Server error', colors.ERROR)
       Vue.prototype.$Notify.error({ title: 'Server error', message: name })
     }
   })
 }
-media.prototype.changeLang = (name, value, valueShort) => {
-  media.prototype.lang = LIST_OF_LANG.includes(valueShort) ? valueShort : DEFAULT_LANG
+network.prototype.changeLang = (name, value, valueShort) => {
+  network.prototype.lang = LIST_OF_LANG.includes(valueShort) ? valueShort : DEFAULT_LANG
 }
 
 /* | -----------------------------------------------------------------------------
@@ -427,16 +427,16 @@ media.prototype.changeLang = (name, value, valueShort) => {
  * |
  */
 // API params
-media.prototype.clientId = 6244330
-media.prototype.version = '5.80'
-media.prototype.lang = DEFAULT_LANG
-media.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
-media.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
+network.prototype.clientId = 6244330
+network.prototype.version = '5.80'
+network.prototype.lang = DEFAULT_LANG
+network.prototype.urlOauth = 'https://oauth.vk.com/authorize/'
+network.prototype.urlRedirect = 'https://oauth.vk.com/blank.html'
 
 // Information about methods
-media.prototype.COUNT_WALL = 100
-media.prototype.COUNT_DOCS = 2000
-media.prototype.COUNT_WALL_COMMENTS = 100
+network.prototype.COUNT_WALL = 100
+network.prototype.COUNT_DOCS = 2000
+network.prototype.COUNT_WALL_COMMENTS = 100
 
 /* | -----------------------------------------------------------------------------
  * | Other methods
@@ -445,4 +445,4 @@ media.prototype.COUNT_WALL_COMMENTS = 100
  */
 // ..
 
-export default media
+export default network

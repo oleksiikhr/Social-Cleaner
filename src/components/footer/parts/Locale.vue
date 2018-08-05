@@ -20,7 +20,7 @@
 
 <script>
 import { languages } from '../../../config'
-import media from '../../../media'
+import networks from '../../../networks'
 import moment from 'moment'
 
 export default {
@@ -66,7 +66,7 @@ export default {
       document.getElementsByTagName('html')[0].setAttribute('lang', valueShort)
 
       // Update language in API
-      media.forEach(item => {
+      networks.forEach(item => {
         if (item.changeLang) {
           item.changeLang(lang.name, lang.value, valueShort)
         }

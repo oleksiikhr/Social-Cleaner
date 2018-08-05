@@ -1,9 +1,9 @@
 <template>
   <div id="loading" v-if="haveItems">
     <div class="loading__inner">
-      <a :class="getClassItem(item)" v-for="(item, index) in media" :key="index" @click="goMedia(item, index)" v-if="item.isAuth">
-        <i :class="`fa ${item.info.icon}`" aria-hidden="true"></i>
-        <div class="loading__icon" v-show="item.process">
+      <a :class="getClassItem(network)" v-for="(network, index) in networks" :key="index" @click="goMedia(network, index)" v-if="network.isAuth">
+        <i :class="`fa ${network.info.icon}`" aria-hidden="true"></i>
+        <div class="loading__icon" v-show="network.process">
           <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i>
         </div>
       </a>
@@ -14,29 +14,29 @@
 <script>
 export default {
   computed: {
-    media () {
-      return this.$store.state.media
+    networks () {
+      return this.$store.state.networks
     },
     haveItems () {
-      return Object.keys(this.media).some(key => {
-        if (this.media[key].isAuth) {
+      return Object.keys(this.networks).some(key => {
+        if (this.networks[key].isAuth) {
           return true
         }
       })
     }
   },
   methods: {
-    cancel (media, index) {
+    cancel (network, index) {
       // TODO
-      if (media.process) {
+      if (network.process) {
         this.$store.commit('SET_CANCEL', index)
       }
     },
-    goMedia (media) {
-      this.$router.push(media.info.to)
+    goMedia (network) {
+      this.$router.push(network.info.to)
     },
-    getClassItem (media) {
-      return 'loading__item' + (media.cancel ? ' loading__cancel' : '')
+    getClassItem (network) {
+      return 'loading__item' + (network.cancel ? ' loading__cancel' : '')
     }
   }
 }
