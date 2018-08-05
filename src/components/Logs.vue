@@ -23,7 +23,7 @@
          @click="openDialogResponse(log)">
         <span :class="`log__name color--${log.color}`">{{ log.name }}</span>
         <div class="log__footer">
-          <i :class="'current fa ' + log.media.icon" aria-hidden="true"></i>
+          <i :class="'current fa ' + log.network.icon" aria-hidden="true"></i>
           <span class="time">{{ fromNow(log.time) }}</span>
         </div>
       </a>
@@ -57,7 +57,7 @@
 
 <script>
 import { bodySetOverflow } from '../heplers/styles'
-import networks from '../media'
+import networks from '../networks'
 import moment from 'moment'
 
 export default {
@@ -91,7 +91,7 @@ export default {
         if (search && log.name.toLowerCase().indexOf(search) <= -1) {
           return false
         }
-        if (this.mediaName && this.mediaName !== log.media.name) {
+        if (this.mediaName && this.mediaName !== log.network.name) {
           return false
         }
         if (this.color && log.color !== this.color) {

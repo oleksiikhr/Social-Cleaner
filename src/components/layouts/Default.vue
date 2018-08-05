@@ -7,18 +7,18 @@
       </keep-alive>
     </div>
     <footer-component />
-    <media-info />
+    <networks-info />
   </div>
 </template>
 
 <script>
+import NetworksInfo from '../../components/parts/NetworksInfo'
 import FooterComponent from '../../components/footer/Index'
 import HeaderComponent from '../../components/header/Index'
-import MediaInfo from '../../components/parts/MediaInfo'
 
 export default {
   components: {
-    HeaderComponent, FooterComponent, MediaInfo
+    HeaderComponent, FooterComponent, NetworksInfo
   }
 }
 </script>

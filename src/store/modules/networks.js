@@ -1,5 +1,5 @@
 import router from '../../router/index'
-import VK from '../../media/VK'
+import VK from '../../networks/VK'
 import Vue from 'vue'
 
 // TODO Break in files
@@ -42,17 +42,17 @@ const mutations = {
    * | -----------------------------------------------------------------------------
    * |
    */
-  START_PROCESS (state, media) {
-    state[media].process = true
+  START_PROCESS (state, network) {
+    state[network].process = true
   },
-  STOP_PROCESS (state, media) {
-    state[media].process = false
+  STOP_PROCESS (state, network) {
+    state[network].process = false
   },
-  SET_CANCEL (state, media) {
-    state[media].cancel = true
+  SET_CANCEL (state, network) {
+    state[network].cancel = true
   },
-  CLEAR_CANCEL (state, media) {
-    state[media].cancel = false
+  CLEAR_CANCEL (state, network) {
+    state[network].cancel = false
   },
 
   /* | -----------------------------------------------------------------------------

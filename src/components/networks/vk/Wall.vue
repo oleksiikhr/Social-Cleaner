@@ -50,7 +50,7 @@ import AttrSelect from '../../attributes/Select'
 import AttrInput from '../../attributes/Input'
 import AttrCount from '../../attributes/Count'
 import AttrTag from '../../attributes/Tag'
-import VK from '../../../media/VK'
+import VK from '../../../networks/VK'
 
 const SLEEP_DELETE_MIN = 1500
 const SLEEP_DELETE_MAX = 2500
@@ -178,10 +178,10 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.media.vk.user
+      return this.$store.state.networks.vk.user
     },
     process () {
-      return this.$store.state.media.vk.process
+      return this.$store.state.networks.vk.process
     },
     ownerId () {
       return this.main.owner_id ? '-' + this.main.owner_id : this.user.id

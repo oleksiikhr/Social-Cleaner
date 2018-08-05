@@ -1,7 +1,7 @@
 import * as icons from '../heplers/icons'
 
 const load = (component) => {
-  return () => import(`@/components/media/vk/${component}.vue`)
+  return () => import(`@/components/networks/vk/${component}.vue`)
 }
 
 const getTranslateName = (name) => {

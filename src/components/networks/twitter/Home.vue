@@ -1,5 +1,5 @@
 <template>
-  <div id="twitter" class="media">
+  <div id="twitter" class="network">
     <keep-alive>
       <router-view />
     </keep-alive>
@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Twitter from '../../../media/Twitter'
+import Twitter from '../../../networks/Twitter'
 
 export default {
   data () {

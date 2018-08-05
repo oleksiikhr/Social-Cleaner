@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Twitter from '../../../media/Twitter'
+import Twitter from '../../../networks/Twitter'
 
 export default {
   data () {
@@ -15,13 +15,13 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.media.twitter.user
+      return this.$store.state.networks.twitter.user
     },
     isAuth () {
-      return this.$store.state.media.twitter.isAuth
+      return this.$store.state.networks.twitter.isAuth
     },
     process () {
-      return this.$store.state.media.twitter.process
+      return this.$store.state.networks.twitter.process
     }
   },
   methods: {

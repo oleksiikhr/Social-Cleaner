@@ -36,7 +36,7 @@ import AttrCount from '../../attributes/Count'
 import AttrRadio from '../../attributes/Radio'
 import { bytes } from '../../../heplers/info'
 import AttrTag from '../../attributes/Tag'
-import VK from '../../../media/VK'
+import VK from '../../../networks/VK'
 
 const SLEEP_GET_MIN = 500
 const SLEEP_GET_MAX = 1500
@@ -111,13 +111,13 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.media.vk.user
+      return this.$store.state.networks.vk.user
     },
     process () {
-      return this.$store.state.media.vk.process
+      return this.$store.state.networks.vk.process
     },
     cancel () {
-      return this.$store.state.media.vk.cancel
+      return this.$store.state.networks.vk.cancel
     },
     ownerId () {
       return this.main.owner_id ? '-' + this.main.owner_id : this.user.id

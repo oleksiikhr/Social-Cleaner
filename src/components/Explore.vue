@@ -14,8 +14,8 @@
 </template>
 
 <script>
+import networks from '../networks'
 import Card from './parts/Card'
-import media from '../media'
 
 export default {
   components: {
@@ -23,7 +23,7 @@ export default {
   },
   data () {
     return {
-      media: [],
+      networks: [],
       search: ''
     }
   },
@@ -31,8 +31,8 @@ export default {
     this.search = ''
   },
   created () {
-    // Get a list of social media and filter out disabled
-    this.media = media.filter(item => {
+    // Get a list of social networks and filter out disabled
+    this.networks = networks.filter(item => {
       return !item.off
     })
   },
@@ -41,12 +41,12 @@ export default {
       let search = this.search
 
       if (!search) {
-        return this.media
+        return this.networks
       }
 
       search = search.toLocaleLowerCase().trim()
 
-      return this.media.filter(n => {
+      return this.networks.filter(n => {
         if (n.name.toLowerCase().indexOf(search) !== -1 || n.domain.indexOf(search) !== -1) {
           return n
         }

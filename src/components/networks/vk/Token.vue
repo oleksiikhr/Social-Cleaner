@@ -57,7 +57,7 @@
 
 <script>
 import User from './parts/User'
-import VK from '../../../media/VK'
+import VK from '../../../networks/VK'
 
 export default {
   components: {
@@ -73,13 +73,13 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.media.vk.user
+      return this.$store.state.networks.vk.user
     },
     isAuth () {
-      return this.$store.state.media.vk.isAuth
+      return this.$store.state.networks.vk.isAuth
     },
     process () {
-      return this.$store.state.media.vk.process
+      return this.$store.state.networks.vk.process
     }
   },
   methods: {

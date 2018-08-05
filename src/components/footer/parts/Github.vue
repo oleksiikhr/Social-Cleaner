@@ -19,8 +19,8 @@
 </template>
 
 <script>
+import Github from '../../../networks/Github'
 import { repository } from '../../../config'
-import Github from '../../../media/Github'
 
 export default {
   props: {

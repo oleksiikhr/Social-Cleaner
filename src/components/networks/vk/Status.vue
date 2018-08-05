@@ -33,7 +33,7 @@
 import AttrSection from '../../attributes/Section'
 import AttrAction from '../../attributes/Action'
 import AttrInput from '../../attributes/Input'
-import VK from '../../../media/VK'
+import VK from '../../../networks/VK'
 
 export default {
   components: {
@@ -49,10 +49,10 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.state.media.vk.user
+      return this.$store.state.networks.vk.user
     },
     process () {
-      return this.$store.state.media.vk.process
+      return this.$store.state.networks.vk.process
     }
   },
   methods: {

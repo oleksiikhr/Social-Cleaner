@@ -1,4 +1,4 @@
-const media = class Twitter {
+const network = class Twitter {
 
 }
 
@@ -7,25 +7,25 @@ const media = class Twitter {
  * | -----------------------------------------------------------------------------
  * |
  */
-media.prototype.off = false
-media.prototype.disabled = false
-media.prototype.name = 'Twitter'
-media.prototype.to = '/twitter'
-media.prototype.domain = 'twitter.com'
-media.prototype.icon = 'fa-twitter'
-media.prototype.url = 'https://twitter.com/'
-media.prototype.urlApi = ''
-media.prototype.sections = []
+network.prototype.off = false
+network.prototype.disabled = false
+network.prototype.name = 'Twitter'
+network.prototype.to = '/twitter'
+network.prototype.domain = 'twitter.com'
+network.prototype.icon = 'fa-twitter'
+network.prototype.url = 'https://twitter.com/'
+network.prototype.urlApi = ''
+network.prototype.sections = []
 
 /* | -----------------------------------------------------------------------------
  * | Important methods
  * | -----------------------------------------------------------------------------
  * |
  */
-media.prototype.logs = (req, next) => {
+network.prototype.logs = (req, next) => {
   console.log(req)
 }
-media.prototype.changeLang = (name, value, valueShort) => {
+network.prototype.changeLang = (name, value, valueShort) => {
   //
 }
 
@@ -43,4 +43,4 @@ media.prototype.changeLang = (name, value, valueShort) => {
  */
 // ..
 
-export default media
+export default network

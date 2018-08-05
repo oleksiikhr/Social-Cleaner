@@ -2,7 +2,7 @@ import Router from 'vue-router'
 import store from '../store'
 import Vue from 'vue'
 
-// Media
+// Networks
 import twitter from './twitter'
 import vk from './vk'
 
@@ -54,7 +54,7 @@ function load (component) {
 router.beforeEach((to, from, next) => {
   Vue.prototype.$Loading.start()
 
-  if (to.meta.vk && !store.state.media.vk.user.id) {
+  if (to.meta.vk && !store.state.networks.vk.user.id) {
     next({ name: 'vk' })
   } else {
     next()

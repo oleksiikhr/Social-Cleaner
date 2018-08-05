@@ -1,13 +1,13 @@
 const state = {
   appClass: '',
-  socialNetwork: {}
+  network: {}
 }
 
 const mutations = {
-  SET_SOCIAL_NETWORK (state, cls) {
-    state.socialNetwork = {
-      name: cls.prototype.name,
-      icon: cls.prototype.icon
+  SET_SOCIAL_NETWORK (state, network) {
+    state.network = {
+      name: network.prototype.name,
+      icon: network.prototype.icon
     }
   },
   CLEAR_SOCIAL_NETWORK (state) {
