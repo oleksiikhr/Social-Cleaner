@@ -8,11 +8,11 @@
           <p>{{ $t(item.name) }}</p>
         </div>
 
-        <at-popover v-if="item.info" placement="top" :content="item.info(item.count)">
-          <at-input v-model="item.count" :disabled="process || item.state === 0" />
+        <at-popover v-if="item.info" trigger="hover" placement="top" :content="item.info(item.count)">
+          <at-input v-model="item.count" :disabled="process || item.state === 0" @blur="eventBlur(index)" />
         </at-popover>
         <template v-else>
-          <at-input v-model="item.count" :disabled="process || item.state === 0" />
+          <at-input v-model="item.count" :disabled="process || item.state === 0" @blur="eventBlur(index)" />
         </template>
 
         <at-radio-group v-model="item.state" :disabled="process">
@@ -48,6 +48,10 @@ export default {
     process: {
       type: Boolean,
       required: false
+    },
+    onlyNumbers: {
+      type: Boolean,
+      required: false
     }
   },
   data () {
@@ -70,6 +74,14 @@ export default {
         }
       })
     }
+  },
+  methods: {
+    eventBlur (index) {
+      if (this.onlyNumbers) {
+        const count = this.obj.items[index].count
+        this.obj.items[index].count = count.toString().replace(/[^0-9]/g, '') || 0
+      }
+    }
   }
 }
 </script>
@@ -79,7 +91,6 @@ export default {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
   .indicator {
     display: flex;
     flex-direction: column;
@@ -87,7 +98,7 @@ export default {
     justify-content: center;
     border: 1px solid #e7e7e7;
     margin: 5px;
-    padding: 10px 5px;
+    padding: 10px 6px;
     p {
       font-weight: bold;
       margin: 0;
@@ -104,6 +115,12 @@ export default {
     .at-input {
       margin-bottom: 20px;
     }
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .indicators {
+    justify-content: center;
   }
 }
 </style>

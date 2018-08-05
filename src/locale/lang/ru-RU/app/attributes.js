@@ -9,7 +9,8 @@ export default {
     preview: 'Проверить',
     text_modal: 'Вы действительно хотите начать очистку?',
     cancel: 'Отмена',
-    start: 'Запуск'
+    start: 'Запуск',
+    stop: 'Остановить'
   },
   result: {
     h2: 'Результаты',
@@ -28,5 +29,9 @@ export default {
     reverse: 'Реверс',
     on: 'вкл',
     off: 'выкл'
+  },
+  count: {
+    from: 'От',
+    to: 'До'
   }
 }

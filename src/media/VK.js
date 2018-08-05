@@ -5,15 +5,127 @@ import router from '../router'
 import store from '../store'
 import Vue from 'vue'
 
+/** @see router - Position in array */
 const ROUTE_INDEX = [1, 2]
 
 const DEFAULT_LANG = 'en'
 
+/** @see https://vk.com/dev/api_requests - lang param */
 const LIST_OF_LANG = [
   'ru', 'uk', 'be', 'en', 'es', 'fi', 'de', 'it'
 ]
 
 const media = class VK {
+  /* | -----------------------------------------------------------------------------
+   * | Process
+   * | -----------------------------------------------------------------------------
+   * |
+   */
+  /**
+   * Run the process, clear the results (if any)
+   *
+   * @param component
+   */
+  static defaultStart (component) {
+    store.commit('START_PROCESS', 'vk')
+    component.loading = true
+    component.result = []
+  }
+  /**
+   * Stop the process. Remove the global "Stop" button
+   *
+   * @param component
+   */
+  static defaultStop (component) {
+    store.commit('STOP_PROCESS', 'vk')
+    store.commit('CLEAR_CANCEL', 'vk')
+    component.loading = false
+  }
+  /**
+   * Process:
+   * Get the maximum number of records. Pass through each record and check.
+   * If the check is successful - delete. No - skip.
+   * We get a trace. a lot of posts and go through again.
+   * If there are any errors or items are empty - we stop.
+   *
+   * NOTE: Callbacks are required in the component!
+   * callbackGet - get the data from the server.
+   * callbackCheck - Checking the recording of filters.
+   * callbackDelete - send a request to the server for deletion.
+   *
+   * @param component
+   * @param {number} maxCountApi
+   * @return {Promise<void>}
+   */
+  static async doStartDefault (component, maxCountApi) {
+    this.defaultStart(component)
+
+    const countLoop = component.getCountLoop(component.main.count, maxCountApi)
+
+    for (let i = 0; i < countLoop; i++) {
+      const res = await component.callbackGet(component.getMaxCountItems(component.main.count, maxCountApi))
+      if (res.ok && res.body.response) {
+        const len = res.body.response.items.length
+        for (let j = 0; j < len; j++) {
+          const item = res.body.response.items[j]
+          if (component.callbackCheck(item, true)) {
+            const resDelete = await component.callbackDelete(item)
+            if (resDelete.ok && resDelete.body.response) {
+              component.main.count.max--
+            } else {
+              component.result.splice(component.result.length - 1, 1)
+              return this.defaultStop(component)
+            }
+          } else {
+            component.main.count.min++
+          }
+        }
+      } else {
+        return this.defaultStop(component)
+      }
+    }
+
+    return this.defaultStop(component)
+  }
+  /**
+   * Process:
+   * Get the maximum number of records. Pass through each record and check.
+   * Check each entry and resend requests to the server.
+   *
+   * NOTE: Callbacks are required in the component!
+   * callbackGet - get the data from the server.
+   * callbackCheck - Checking the recording of filters.
+   *
+   * @param component
+   * @param {number} maxCountApi
+   * @return {Promise<void>}
+   */
+  static async doPreviewDefault (component, maxCountApi) {
+    this.defaultStart(component)
+
+    const countLoop = component.getCountLoop(component.main.count, maxCountApi)
+
+    for (let i = 0; i < countLoop; i++) {
+      const offset = i * maxCountApi
+      const leftItems = component.main.count.max - offset
+      const res = await component.callbackGet(leftItems > maxCountApi ? maxCountApi : leftItems, offset)
+
+      if (res.ok && res.body.response && res.body.response.items.length) {
+        res.body.response.items.forEach(item => component.callbackCheck(item))
+      } else {
+        return this.defaultStop(component)
+      }
+    }
+
+    return this.defaultStop(component)
+  }
+  /**
+   * Stop process delete.
+   */
+  static doStopDefault () {
+    store.commit('SET_CANCEL', 'vk')
+  }
+
   /* | -----------------------------------------------------------------------------
    * | API
    * | -----------------------------------------------------------------------------

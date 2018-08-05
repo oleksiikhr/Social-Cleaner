@@ -13,6 +13,10 @@ hr {
   min-height: 100%;
 }
 
+.layout {
+  position: relative;
+}
+
 .default-layout {
   display: flex;
   flex-direction: column;

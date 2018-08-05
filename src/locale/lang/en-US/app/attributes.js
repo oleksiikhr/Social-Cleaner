@@ -9,7 +9,8 @@ export default {
     preview: 'Preview',
     text_modal: 'Do you really want to start cleaning?',
     cancel: 'Cancel',
-    start: 'Start'
+    start: 'Start',
+    stop: 'Stop'
   },
   result: {
     h2: 'Results',
@@ -28,5 +29,9 @@ export default {
     reverse: 'Reverse',
     on: 'on',
     off: 'off'
+  },
+  count: {
+    from: 'From',
+    to: 'To'
   }
 }
