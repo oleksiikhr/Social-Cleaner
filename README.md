@@ -6,6 +6,12 @@
 
 - [ ] Lists of words on different topics (modal, i18n)
 
+## Images
+![Image1](/images/v0.12/1.png)
+![Image2](/images/v0.12/2.png)
+![Image3](/images/v0.12/3.png)
+![Image4](/images/v0.12/4.png)
+
 ## Build Setup
 
 ``` bash
