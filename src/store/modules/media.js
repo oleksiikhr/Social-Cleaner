@@ -2,6 +2,8 @@ import router from '../../router/index'
 import VK from '../../media/VK'
 import Vue from 'vue'
 
+// TODO Break in files
+
 const state = {
   vk: {
     token: '',
@@ -22,6 +24,13 @@ const state = {
       icon: VK.prototype.icon,
       to: VK.prototype.to
     },
+    process: false,
+    cancel: false
+  },
+  twitter: {
+    token: '',
+    user: {},
+    isAuth: false,
     process: false,
     cancel: false
   }
