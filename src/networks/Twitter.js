@@ -8,7 +8,7 @@ const network = class Twitter {
  * |
  */
 network.prototype.off = false
-network.prototype.disabled = false
+network.prototype.disabled = true
 network.prototype.name = 'Twitter'
 network.prototype.to = '/twitter'
 network.prototype.domain = 'twitter.com'
