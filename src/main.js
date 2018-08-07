@@ -17,6 +17,11 @@ import './assets/scss/index.scss'
 Vue.use(AtComponents)
 Vue.use(VueResource)
 
+// Register service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/Social-Cleaner/service-worker.js')
+}
+
 // Configuration modules
 AtComponents.i18n((key, value) => i18n.t(key, value))
 
