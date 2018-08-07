@@ -11,6 +11,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
+const WebpackPwaManifest = require('webpack-pwa-manifest')
 
 const PUBLIC_PATH = 'https://alexeykhr.github.io/Social-Cleaner/'
 
@@ -81,6 +82,21 @@ const webpackConfig = merge(baseWebpackConfig, {
       minify: true,
       navigateFallback: PUBLIC_PATH + 'index.html',
       staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
+    }),
+    new WebpackPwaManifest({
+      name: 'Social Cleaner',
+      short_name: 'Social Cleaner',
+      description: 'Clear data from various Social Media',
+      background_color: '#01579b',
+      theme_color: '#01579b',
+      'theme-color': '#01579b',
+      start_url: '/',
+      icons: [
+        {
+          src: path.resolve('static/img/logo-square-full.png'),
+          sizes: [96, 128, 192, 256, 384, 512]
+        }
+      ]
     })
   ],
   optimization: {
