@@ -87,9 +87,9 @@ const webpackConfig = merge(baseWebpackConfig, {
       name: 'Social Cleaner',
       short_name: 'SC',
       description: 'Clear data from various Social Media',
-      background_color: '#01579b',
-      theme_color: '#01579b',
-      'theme-color': '#01579b',
+      background_color: '#3d72b4',
+      theme_color: '#3d72b4',
+      'theme-color': '#3d72b4',
       start_url: PUBLIC_PATH,
       icons: [
         {
