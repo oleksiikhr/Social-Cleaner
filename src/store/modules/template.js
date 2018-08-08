@@ -11,7 +11,7 @@ const mutations = {
     }
   },
   CLEAR_SOCIAL_NETWORK (state) {
-    state.socialNetwork = {}
+    state.network = {}
   },
   SET_APP_CLASS (state, str) {
     state.appClass = str
