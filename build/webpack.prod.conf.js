@@ -85,12 +85,12 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     new WebpackPwaManifest({
       name: 'Social Cleaner',
-      short_name: 'Social Cleaner',
+      short_name: 'SC',
       description: 'Clear data from various Social Media',
       background_color: '#01579b',
       theme_color: '#01579b',
       'theme-color': '#01579b',
-      start_url: '/',
+      start_url: PUBLIC_PATH,
       icons: [
         {
           src: path.resolve('static/img/logo-square-full.png'),
