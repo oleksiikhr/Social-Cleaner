@@ -1,5 +1,5 @@
-import * as colors from '../heplers/colors'
-import { addLog } from '../heplers/logs'
+import * as colors from '../../heplers/colors'
+import { addLog } from '../../heplers/logs'
 import Vue from 'vue'
 
 const network = class Github {

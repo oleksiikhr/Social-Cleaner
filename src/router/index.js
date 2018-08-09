@@ -3,8 +3,8 @@ import store from '../store'
 import Vue from 'vue'
 
 // Networks
-import twitter from './twitter'
-import vk from './vk'
+// import twitter from '../networks/Twitter/router/index'
+// import vk from '../networks/VK/router/index'
 
 Vue.use(Router)
 
@@ -39,9 +39,7 @@ const router = new Router({
           path: '/logs',
           name: 'logs',
           component: load('Logs')
-        },
-        twitter,
-        vk
+        }
       ]
     }
   ]

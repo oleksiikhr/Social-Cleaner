@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Twitter from '../../../networks/Twitter'
+import Twitter from '../Twitter'
 
 export default {
   data () {

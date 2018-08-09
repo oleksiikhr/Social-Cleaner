@@ -1,7 +1,7 @@
-import * as icons from '../heplers/icons'
+import * as icons from '../../../heplers/icons'
 
 const load = (component) => {
-  return () => import(`@/components/networks/twitter/${component}.vue`)
+  return () => import(`../components/${component}.vue`)
 }
 
 const name = (name) => {

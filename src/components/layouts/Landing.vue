@@ -1,6 +1,6 @@
 <template>
   <div class="landing-layout layout">
-    <router-view />
+    <!--<router-view />-->
   </div>
 </template>
 

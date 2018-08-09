@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import VK from '../../../networks/VK'
+import VK from '../VK'
 
 export default {
   data () {

@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Github from '../../../networks/Github'
+import Github from '../../../networks/Github/Github'
 import { repository } from '../../../config'
 
 export default {
