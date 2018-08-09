@@ -32,7 +32,7 @@ export default {
   },
   created () {
     // Get a list of social networks and filter out disabled
-    this.networks = networks.filter(item => {
+    this.networks = networks.class.filter(item => {
       return !item.off
     })
   },

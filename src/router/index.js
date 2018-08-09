@@ -2,6 +2,10 @@ import Router from 'vue-router'
 import store from '../store'
 import Vue from 'vue'
 
+import networks from '../networks'
+
+console.log('router', networks)
+
 // Networks
 // import twitter from '../networks/Twitter/router/index'
 // import vk from '../networks/VK/router/index'

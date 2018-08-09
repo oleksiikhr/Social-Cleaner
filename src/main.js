@@ -13,6 +13,8 @@ import 'at-ui-style'
 import 'font-awesome/scss/font-awesome.scss'
 import './assets/scss/index.scss'
 
+console.log('MAIN.js', networks)
+
 // Use modules
 Vue.use(AtComponents)
 Vue.use(VueResource)
@@ -30,7 +32,7 @@ Vue.config.productionTip = false
 
 // Add logs after each http call
 Vue.http.interceptors.push((req, next) => {
-  const isFind = networks.some(network => {
+  const isFind = networks.class.some(network => {
     if (network.urlApi && req.url.indexOf(network.urlApi) !== -1) {
       network.logs(req, next)
       return true

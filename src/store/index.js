@@ -1,6 +1,9 @@
+import networks from '../networks'
 import modules from './modules'
 import Vuex from 'vuex'
 import Vue from 'vue'
+
+console.log('STORE', networks)
 
 Vue.use(Vuex)
 

@@ -66,7 +66,7 @@ export default {
       document.getElementsByTagName('html')[0].setAttribute('lang', valueShort)
 
       // Update language in API
-      networks.forEach(item => {
+      networks.class.forEach(item => {
         if (item.changeLang) {
           item.changeLang(lang.name, lang.value, valueShort)
         }
