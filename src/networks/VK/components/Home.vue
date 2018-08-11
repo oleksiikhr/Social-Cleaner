@@ -1,9 +1,9 @@
 <template>
   <div id="vk" class="network">
-    <at-menu v-if="isAuth" mode="horizontal" :active-name="route" class="main-menu" @on-select="eventSelectMenuItem">
-      <at-menu-item v-for="item in VK.prototype.sections" :name="item.name" :key="item.path"
-                    :disabled="isDisabledMenuItem(item.path)">
-        <i :class="`fa fa-${item.icon}`" aria-hidden="true"></i> {{ $t(item.title) }}
+    <at-menu v-if="isAuth" mode="horizontal" :active-name="routeName" class="main-menu" @on-select="eventSelectMenuItem">
+      <at-menu-item v-for="section in sections" :name="section.name" :key="section.path"
+                    :disabled="isDisabledMenuItem(section.path)">
+        <i :class="`fa fa-${section.icon}`" aria-hidden="true"></i> {{ $t(section.title) }}
       </at-menu-item>
     </at-menu>
     <keep-alive>
@@ -18,14 +18,11 @@ import VK from '../VK'
 export default {
   data () {
     return {
-      VK
+      sections: VK.prototype.sections
     }
   },
   activated () {
     this.$store.commit('SET_SOCIAL_NETWORK', VK)
-  },
-  deactivated () {
-    this.$store.commit('CLEAR_SOCIAL_NETWORK')
   },
   computed: {
     isAuth () {
@@ -34,7 +31,7 @@ export default {
     access () {
       return this.$store.state.networks.vk.access
     },
-    route () {
+    routeName () {
       return this.$route.name
     }
   },

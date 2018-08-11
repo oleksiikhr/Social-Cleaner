@@ -41,8 +41,13 @@ const router = new Router({
           path: '/logs',
           name: 'logs',
           component: load('Logs')
+        },
+        {
+          path: '',
+          component: load('Social'),
+          children: networksRouter
         }
-      ].concat(networksRouter)
+      ]
     }
   ]
 })
