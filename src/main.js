@@ -13,6 +13,10 @@ import 'at-ui-style'
 import 'font-awesome/scss/font-awesome.scss'
 import './assets/scss/index.scss'
 
+// Import styles form social networks
+const files = require.context('./networks', true, /^\.\/[a-z]+\/scss\/index.scss$/i)
+files.keys().forEach(file => files(file))
+
 // Use modules
 Vue.use(AtComponents)
 Vue.use(VueResource)

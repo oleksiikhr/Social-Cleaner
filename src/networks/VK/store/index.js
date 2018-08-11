@@ -12,15 +12,8 @@ const state = {
     wall: false,
     docs: false,
     groups: false
-  },
-  info: {
-    name: VK.prototype.name,
-    icon: VK.prototype.icon,
-    to: VK.prototype.to
   }
 }
-
-// FIXME state.info ?
 
 const mutations = {
   VK_SET_TOKEN (state, str) {
