@@ -33,7 +33,7 @@ export default {
     return {
       languages,
       modal: false,
-      language: 'en-US'
+      language: 'English, en-US'
     }
   },
   created () {
