@@ -47,7 +47,15 @@ export default {
       } catch (e) { }
     }
 
-    this.modal = true
+    // Put the translation of the language for the user
+    const navLang = navigator.language
+
+    for (const language of languages) {
+      if (language.value === navLang) {
+        this.setLocale(language)
+        return
+      }
+    }
   },
   methods: {
     setLocale (lang) {
