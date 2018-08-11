@@ -19,8 +19,7 @@
 </template>
 
 <script>
-import { languages } from '../../../config'
-import networks from '../../../networks'
+import { languages, networks } from '../../../config'
 import moment from 'moment'
 
 export default {
@@ -66,7 +65,7 @@ export default {
       document.getElementsByTagName('html')[0].setAttribute('lang', valueShort)
 
       // Update language in API
-      networks.class.forEach(item => {
+      networks.forEach(item => {
         if (item.changeLang) {
           item.changeLang(lang.name, lang.value, valueShort)
         }

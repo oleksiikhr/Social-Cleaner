@@ -4,7 +4,7 @@
       <h1>{{ $t('app.logs.h1') }}</h1>
       <at-input v-model="search" :placeholder="$t('app.logs.search.placeholder')" icon="search" />
       <at-select v-model="mediaName" :placeholder="$t('app.logs.network_name.placeholder')" clearable>
-        <at-option v-for="network in networks.class" :key="network.to" :value="network.name">
+        <at-option v-for="network in networks" :key="network.to" :value="network.name">
           {{ network.name }}
         </at-option>
       </at-select>
@@ -57,7 +57,7 @@
 
 <script>
 import { bodySetOverflow } from '../heplers/styles'
-import networks from '../networks'
+import { networks } from '../config'
 import moment from 'moment'
 
 export default {

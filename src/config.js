@@ -2,12 +2,23 @@ import locale from './locale/lang'
 import pack from '../package'
 
 /* | -----------------------------------------------------------------------------
+ * | List of social networks
+ * | -----------------------------------------------------------------------------
+ * |
+ */
+const parse = require.context('./networks', true, /^\.\/([a-z]+)\/[a-z]+.js$/i)
+export const networks = parse.keys().map(network => {
+  return parse(network).default.prototype
+})
+
+/* | -----------------------------------------------------------------------------
  * | Information from package.json
  * | -----------------------------------------------------------------------------
  * |
  */
 export const version = pack.version
 export const repository = pack.repository.split(':')[1]
+export const url = pack.url
 
 /* | -----------------------------------------------------------------------------
  * | Translations. See Locale folder

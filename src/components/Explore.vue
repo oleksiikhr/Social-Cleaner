@@ -1,7 +1,7 @@
 <template>
   <div id="dashboard">
     <div class="header">
-      <!--TODO Here add 2 or more blocks (pages): How to use, FAQ, *-->
+      <!--TODO Here add 2 or more blocks (pages): How to use, FAQ, Contributors *-->
     </div>
     <div class="search-block">
       <h1>{{ $t('app.explore.h1') }}</h1>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import networks from '../networks'
+import { networks } from '../config'
 import Card from './parts/Card'
 
 export default {
@@ -32,7 +32,7 @@ export default {
   },
   created () {
     // Get a list of social networks and filter out disabled
-    this.networks = networks.class.filter(item => {
+    this.networks = networks.filter(item => {
       return !item.off
     })
   },

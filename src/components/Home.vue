@@ -1,52 +1,52 @@
 <template>
   <div id="home" class="landing-page">
-    <!--<header>-->
-      <!--<div class="header__inner">-->
-        <!--<h1 class="header__name">Social Cleaner <span class="header__version">{{ version }}</span></h1>-->
-        <!--<p class="header__description">{{ $t('app.home.header.description') }}</p>-->
-        <!--<router-link :to="{ name: 'explore' }" class="header__button">{{ $t('app.home.header.button') }}</router-link>-->
-      <!--</div>-->
-    <!--</header>-->
-    <!--<section class="section section-works">-->
-      <!--<div class="section__inner">-->
-        <!--<h3 class="section__title">{{ $t('app.home.works.title') }}</h3>-->
-        <!--<div class="list-works">-->
-          <!--<div class="work" v-for="(work, index) in works" :key="index">-->
-            <!--<div class="work__inner">-->
-              <!--<div class="work__icon">-->
-                <!--<i :class="`fa fa-${work.icon}`" aria-hidden="true"></i>-->
-              <!--</div>-->
-              <!--<div class="work__name">{{ $t(`app.home.works.items[${index}].name`) }}</div>-->
-              <!--<div class="work__description">{{ $t(`app.home.works.items[${index}].description`) }}</div>-->
-            <!--</div>-->
-            <!--<div v-if="work.dot" class="work__dot">-->
-              <!--<i class="fa fa-arrow-circle-right" aria-hidden="true"></i>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</section>-->
-    <!--<section class="section section-benefits">-->
-      <!--<div class="section__inner">-->
-        <!--<h3 class="section__title">{{ $t('app.home.benefits.title') }}</h3>-->
-        <!--<div class="list-benefits">-->
-          <!--<div class="benefit" v-for="(benefit, index) in benefits" :key="index">-->
-            <!--<span class="benefit__title">-->
-              <!--<i :class="`fa fa-${benefit}`" aria-hidden="true"></i>-->
-              <!--<span>{{ $t(`app.home.benefits.items[${index}].name`) }}</span>-->
-            <!--</span>-->
-            <!--<p>{{ $t(`app.home.benefits.items[${index}].description`) }}</p>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</section>-->
-    <!--<section class="section section-action">-->
-      <!--<div class="section__inner">-->
-        <!--<span class="section__name">{{ $t('app.home.action.name') }}</span>-->
-        <!--<router-link class="section__link" :to="{ name: 'explore' }">{{ $t('app.home.action.button') }}</router-link>-->
-      <!--</div>-->
-    <!--</section>-->
-    <!--<footer-component color="white" />-->
+    <header>
+      <div class="header__inner">
+        <h1 class="header__name">Social Cleaner <span class="header__version">{{ version }}</span></h1>
+        <p class="header__description">{{ $t('app.home.header.description') }}</p>
+        <router-link :to="{ name: 'explore' }" class="header__button">{{ $t('app.home.header.button') }}</router-link>
+      </div>
+    </header>
+    <section class="section section-works">
+      <div class="section__inner">
+        <h3 class="section__title">{{ $t('app.home.works.title') }}</h3>
+        <div class="list-works">
+          <div class="work" v-for="(work, index) in works" :key="index">
+            <div class="work__inner">
+              <div class="work__icon">
+                <i :class="`fa fa-${work.icon}`" aria-hidden="true"></i>
+              </div>
+              <div class="work__name">{{ $t(`app.home.works.items[${index}].name`) }}</div>
+              <div class="work__description">{{ $t(`app.home.works.items[${index}].description`) }}</div>
+            </div>
+            <div v-if="work.dot" class="work__dot">
+              <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section section-benefits">
+      <div class="section__inner">
+        <h3 class="section__title">{{ $t('app.home.benefits.title') }}</h3>
+        <div class="list-benefits">
+          <div class="benefit" v-for="(benefit, index) in benefits" :key="index">
+            <span class="benefit__title">
+              <i :class="`fa fa-${benefit}`" aria-hidden="true"></i>
+              <span>{{ $t(`app.home.benefits.items[${index}].name`) }}</span>
+            </span>
+            <p>{{ $t(`app.home.benefits.items[${index}].description`) }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section section-action">
+      <div class="section__inner">
+        <span class="section__name">{{ $t('app.home.action.name') }}</span>
+        <router-link class="section__link" :to="{ name: 'explore' }">{{ $t('app.home.action.button') }}</router-link>
+      </div>
+    </section>
+    <footer-component color="white" />
   </div>
 </template>
 

@@ -3,9 +3,6 @@ import VK from '../VK'
 import Vue from 'vue'
 
 const state = {
-  token: '',
-  user: {},
-  isAuth: false,
   access: {
     friends: false,
     photos: false,
@@ -20,10 +17,10 @@ const state = {
     name: VK.prototype.name,
     icon: VK.prototype.icon,
     to: VK.prototype.to
-  },
-  process: false,
-  cancel: false
+  }
 }
+
+// FIXME state.info ?
 
 const mutations = {
   VK_SET_TOKEN (state, str) {
