@@ -57,7 +57,7 @@
 
 <script>
 import { bodySetOverflow } from '../heplers/styles'
-import networks from '../networks'
+import { networks } from '../config'
 import moment from 'moment'
 
 export default {

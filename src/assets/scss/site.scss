@@ -141,17 +141,8 @@ hr {
       }
     }
   }
-}
-
-@media screen and (max-width: 440px) {
-  .home-link {
+  .language__inner, .github__inner {
     display: none;
-  }
-}
-
-@media screen and (max-width: 380px) {
-  .footer__inner {
-    flex-direction: column;
   }
   .mw--200 {
     padding: 8px;

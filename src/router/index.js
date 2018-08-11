@@ -2,15 +2,17 @@ import Router from 'vue-router'
 import store from '../store'
 import Vue from 'vue'
 
-// Networks
-import twitter from './twitter'
-import vk from './vk'
-
 Vue.use(Router)
 
-/*
- * NOTE: It is important to keep the indexes of the array. See social networking classes.
- */
+// Import router from social networks
+const networks = require.context('../networks', true, /^\.\/([a-z]+)\/router\/index.js$/i)
+const networksRouter = networks.keys().map(network => {
+  return networks(network).default
+})
+
+const load = (component) => {
+  return () => import(`@/components/${component}.vue`)
+}
 
 const router = new Router({
   scrollBehavior: () => ({ y: 0 }),
@@ -40,22 +42,23 @@ const router = new Router({
           name: 'logs',
           component: load('Logs')
         },
-        twitter,
-        vk
+        {
+          path: '',
+          component: load('Social'),
+          children: networksRouter
+        }
       ]
     }
   ]
 })
 
-function load (component) {
-  return () => import(`@/components/${component}.vue`)
-}
+// TODO Create another template for social networks
 
 router.beforeEach((to, from, next) => {
   Vue.prototype.$Loading.start()
 
-  if (to.meta.vk && !store.state.networks.vk.user.id) {
-    next({ name: 'vk' })
+  if (to.meta.auth && !store.state.networks[to.meta.auth].isAuth) {
+    next({ name: to.meta.auth })
   } else {
     next()
   }

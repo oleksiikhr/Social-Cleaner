@@ -12,8 +12,7 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 const WebpackPwaManifest = require('webpack-pwa-manifest')
-
-const PUBLIC_PATH = 'https://alexeykhr.github.io/Social-Cleaner/'
+const packageJson = require('../package')
 
 const env = require('../config/prod.env')
 
@@ -80,7 +79,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       dontCacheBustUrlsMatching: /\.\w{8}\./,
       filename: 'service-worker.js',
       minify: true,
-      navigateFallback: PUBLIC_PATH + 'index.html',
+      navigateFallback: packageJson.url,
       staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
     }),
     new WebpackPwaManifest({
@@ -90,7 +89,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       background_color: '#3d72b4',
       theme_color: '#3d72b4',
       'theme-color': '#3d72b4',
-      start_url: PUBLIC_PATH,
+      start_url: packageJson.url,
       icons: [
         {
           src: path.resolve('static/img/logo-square-full.png'),

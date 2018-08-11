@@ -1,12 +1,9 @@
-import { sleep, randomInteger } from '../heplers/methods'
-import * as colors from '../heplers/colors'
-import { addLog } from '../heplers/logs'
-import router from '../router'
-import store from '../store'
+import { sleep, randomInteger } from '../../heplers/methods'
+import * as colors from '../../heplers/colors'
+import { addLog } from '../../heplers/logs'
+import store from '../../store/index'
+import router from './router'
 import Vue from 'vue'
-
-/** @see router - Position in array */
-const ROUTE_INDEX = [1, 3]
 
 const DEFAULT_LANG = 'en'
 
@@ -377,7 +374,7 @@ network.prototype.domain = 'vk.com'
 network.prototype.icon = 'fa-vk'
 network.prototype.url = 'https://vk.com/'
 network.prototype.urlApi = 'https://api.vk.com/method/'
-network.prototype.sections = router.options.routes[ROUTE_INDEX[0]].children[ROUTE_INDEX[1]].children.map(route => {
+network.prototype.sections = router.children.map(route => {
   return { title: route.meta.name, name: route.name, icon: route.meta.icon, path: route.path }
 })
 
