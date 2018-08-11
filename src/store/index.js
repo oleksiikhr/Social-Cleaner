@@ -1,3 +1,4 @@
+import { getNameFromFolder } from '../heplers/networks'
 import modules from './modules'
 import Vuex from 'vuex'
 import Vue from 'vue'
@@ -8,7 +9,7 @@ Vue.use(Vuex)
 const networks = require.context('../networks', true, /^\.\/[a-z]+\/store\/index.js$/i)
 networks.keys().forEach(network => {
   const store = networks(network).default
-  const name = network.match(/\.\/([a-z]+)\//i)[1].toLowerCase()
+  const name = getNameFromFolder(network)
 
   // Set default values
   const state = {}

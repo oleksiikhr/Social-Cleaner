@@ -28,14 +28,14 @@
 <script>
 import AttrIndicators from '../../../components/attributes/Indicators'
 import AttrSection from '../../../components/attributes/Section'
-import { bytesToMB } from '../../../heplers/file'
 import AttrResult from '../../../components/attributes/Result'
 import AttrAction from '../../../components/attributes/Action'
 import AttrInput from '../../../components/attributes/Input'
 import AttrCount from '../../../components/attributes/Count'
 import AttrRadio from '../../../components/attributes/Radio'
-import { bytes } from '../../../heplers/info'
 import AttrTag from '../../../components/attributes/Tag'
+import { bytesToMB } from '../../../heplers/file'
+import { bytes } from '../../../heplers/info'
 import VK from '../VK'
 
 const SLEEP_GET_MIN = 500
