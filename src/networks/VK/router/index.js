@@ -26,7 +26,7 @@ export default {
       name: 'vk-wall',
       component: load('Wall'),
       meta: {
-        vk: true,
+        auth: 'vk',
         name: name('wall'),
         icon: icons.WALL
       }
@@ -36,7 +36,7 @@ export default {
       name: 'vk-status',
       component: load('Status'),
       meta: {
-        vk: true,
+        auth: 'vk',
         name: name('status'),
         icon: icons.STATUS
       }
@@ -46,7 +46,7 @@ export default {
       name: 'vk-docs',
       component: load('Docs'),
       meta: {
-        vk: true,
+        auth: 'vk',
         name: name('docs'),
         icon: icons.DOCS
       }

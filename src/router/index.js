@@ -52,9 +52,8 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   Vue.prototype.$Loading.start()
 
-  // TODO Auto
-  if (to.meta.vk && !store.state.networks.vk.user.id) {
-    next({ name: 'vk' })
+  if (to.meta.auth && !store.state.networks[to.meta.auth].isAuth) {
+    next({ name: to.meta.auth })
   } else {
     next()
   }
