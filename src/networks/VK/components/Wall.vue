@@ -40,17 +40,17 @@
 </template>
 
 <script>
-import AttrRadioButton from '../../attributes/RadioButton'
-import AttrIndicators from '../../attributes/Indicators'
-import AttrCheckbox from '../../attributes/Checkbox'
-import AttrSection from '../../attributes/Section'
-import AttrResult from '../../attributes/Result'
-import AttrAction from '../../attributes/Action'
-import AttrSelect from '../../attributes/Select'
-import AttrInput from '../../attributes/Input'
-import AttrCount from '../../attributes/Count'
-import AttrTag from '../../attributes/Tag'
-import VK from '../../../networks/VK'
+import AttrRadioButton from '../../../components/attributes/RadioButton'
+import AttrIndicators from '../../../components/attributes/Indicators'
+import AttrCheckbox from '../../../components/attributes/Checkbox'
+import AttrSection from '../../../components/attributes/Section'
+import AttrResult from '../../../components/attributes/Result'
+import AttrAction from '../../../components/attributes/Action'
+import AttrSelect from '../../../components/attributes/Select'
+import AttrInput from '../../../components/attributes/Input'
+import AttrCount from '../../../components/attributes/Count'
+import AttrTag from '../../../components/attributes/Tag'
+import VK from '../VK'
 
 const SLEEP_DELETE_MIN = 1500
 const SLEEP_DELETE_MAX = 2500

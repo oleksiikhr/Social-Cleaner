@@ -19,8 +19,7 @@
 </template>
 
 <script>
-import { languages } from '../../../config'
-import networks from '../../../networks'
+import { languages, networks } from '../../../config'
 import moment from 'moment'
 
 export default {

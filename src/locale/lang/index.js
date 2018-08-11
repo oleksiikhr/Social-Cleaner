@@ -1,13 +1,6 @@
 // The array of all translations.
 const languages = []
 
-// import of translations from the At-ui library.
-const atUi = require.context('at-ui/dist/locale', false, /\.js$/)
-atUi.keys().forEach(key => {
-  const language = key.match(/^\.\/(.+)\.js$/)[1]
-  languages[language] = atUi(key).default
-})
-
 // Import of local language translations.
 const files = require.context('.', true, /\.js$/)
 files.keys().forEach(key => {

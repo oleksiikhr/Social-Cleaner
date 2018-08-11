@@ -1,10 +1,10 @@
-import * as icons from '../heplers/icons'
+import * as icons from '../../../heplers/icons'
 
 const load = (component) => {
-  return () => import(`@/components/networks/vk/${component}.vue`)
+  return () => import(`../components/${component}.vue`)
 }
 
-const getTranslateName = (name) => {
+const name = (name) => {
   return `vk.sections.${name}`
 }
 
@@ -17,7 +17,7 @@ export default {
       name: 'vk',
       component: load('Token'),
       meta: {
-        name: getTranslateName('token'),
+        name: name('token'),
         icon: icons.TOKEN
       }
     },
@@ -26,8 +26,8 @@ export default {
       name: 'vk-wall',
       component: load('Wall'),
       meta: {
-        vk: true,
-        name: getTranslateName('wall'),
+        auth: 'vk',
+        name: name('wall'),
         icon: icons.WALL
       }
     },
@@ -36,8 +36,8 @@ export default {
       name: 'vk-status',
       component: load('Status'),
       meta: {
-        vk: true,
-        name: getTranslateName('status'),
+        auth: 'vk',
+        name: name('status'),
         icon: icons.STATUS
       }
     },
@@ -46,8 +46,8 @@ export default {
       name: 'vk-docs',
       component: load('Docs'),
       meta: {
-        vk: true,
-        name: getTranslateName('docs'),
+        auth: 'vk',
+        name: name('docs'),
         icon: icons.DOCS
       }
     }
