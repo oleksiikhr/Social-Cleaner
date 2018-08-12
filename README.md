@@ -5,6 +5,16 @@
 ## TODO
 
 - [ ] Lists of words on different topics (modal, i18n)
+- [ ] Server(s) for REST API
+- [ ] Contributors page
+- [ ] IndexedDB
+- [ ] Server page, widget (response time, url, etc)
+- [ ] Support page
+- [ ] FAQ page
+- [ ] How to page
+- [ ] Settings page
+- [ ] Update explore page
+- [ ] Header menu
 
 ## Build Setup
 
