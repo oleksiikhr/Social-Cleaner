@@ -1,4 +1,5 @@
 <template>
+  <!--TODO Offline scope + alert-->
   <div id="token">
     <div class="logged-in" v-if="isAuth">
       <at-alert :message="$t('vk.token.user.alert')" type="warning" show-icon />
@@ -91,8 +92,8 @@ export default {
       this.$store.dispatch('vkLogOut')
     },
     goGetToken () {
-      window.open(`${VK.prototype.urlOauth}?client_id=${this.appId}&display=page&redirect_uri=${VK.prototype.urlRedirect}
-        &scope=${this.scope.join(',')}&response_type=token&v=${VK.prototype.version}`, '_blank')
+      window.open(`${VK.prototype.urlOauth}?client_id=${this.appId}&display=page&redirect_uri=${VK.prototype.urlRedirect}` +
+        `&scope=${this.scope.join(',')}&response_type=token&v=${VK.prototype.version}`, '_blank')
     },
     parseToken (input) {
       const split = input.match(/access_token=(\w+)&?/)
