@@ -1,0 +1,31 @@
+@import "variables";
+
+.at-input__original {
+  background-color: rgba(0, 0, 0, .1);
+  border-color: rgba(0, 0, 0, .1);
+  box-shadow: $box-shadow1;
+  border-radius: 20px;
+  color: #fff;
+  &:hover, &:focus {
+    border-color: rgba(0, 0, 0, .2);
+  }
+  &:focus {
+    box-shadow: $box-shadow2;
+  }
+  &::placeholder {
+    color: rgba(255, 255, 255, .9);
+  }
+}
+
+.at-input--icon {
+  .at-input__original {
+    padding: 10px 35px 10px 15px;
+  }
+}
+
+.at-input__icon  {
+  margin: 0 10px 0 0;
+  .at-input__original {
+    line-height: 0;
+  }
+}

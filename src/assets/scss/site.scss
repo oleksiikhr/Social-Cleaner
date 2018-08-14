@@ -1,6 +1,23 @@
+@import "variables";
+
 body {
-  background: #fbfbfb;
+  background: $main-color;
   min-height: calc(100% + 1px);
+  color: rgba(255, 255, 255, .95);
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  color: rgba(255, 255, 255, .95);
+}
+
+a {
+  color: rgba(255, 255, 255, .95);
+  transition: .5s;
+  &:hover {
+    color: #738cd3;
+    border-radius: 25px;
+    background: $main-color;
+  }
 }
 
 hr {
@@ -20,12 +37,9 @@ hr {
 .default-layout {
   display: flex;
   flex-direction: column;
-  background: #fff;
   min-height: 100vh;
-  border: 1px solid #e7e7e7;
   border-top: none;
   border-bottom: none;
-  max-width: 1200px;
   margin: 0 auto;
   > header {
     display: flex;
@@ -33,15 +47,12 @@ hr {
     justify-content: space-between;
     min-height: 42px;
     overflow: hidden;
+    background: rgba(0,0,0,.1);
+    margin-bottom: 20px;
     > a {
       width: 280px;
-      color: #333;
       transition: .2s;
-      opacity: .7;
       text-align: center;
-      &:hover {
-        opacity: 1;
-      }
       &.brand {
         font-weight: bold;
         font-size: 1.2rem;
@@ -59,7 +70,6 @@ hr {
     .current {
       font-size: 1.5rem;
       line-height: 0;
-      color: #444;
     }
     .logs {
       white-space: nowrap;
@@ -80,8 +90,10 @@ hr {
 }
 
 #content {
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
   flex-grow: 1;
-  padding: 30px 20px;
   > .network {
     max-width: 800px;
     width: 100%;

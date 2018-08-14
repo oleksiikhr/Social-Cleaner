@@ -139,7 +139,6 @@ footer {
 
 #home {
   min-height: 100vh;
-  background: linear-gradient(to left, #525252, #3d72b4);
 }
 
 .section {

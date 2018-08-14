@@ -1,4 +1,3 @@
 export default {
-  h1: 'Social Media',
-  search: 'Search'
+  search: 'Quick Navigation'
 }

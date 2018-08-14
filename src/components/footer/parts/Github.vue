@@ -1,5 +1,5 @@
 <template>
-  <a :href="Github.prototype.url + repository" target="_blank" rel="noopener" :class="`github ${color}`">
+  <a :href="Github.prototype.url + repository" target="_blank" rel="noopener" class="github">
     <div class="github__icon">
       <i class="fa fa-github" aria-hidden="true"></i>
     </div>
@@ -23,12 +23,6 @@ import Github from '../../../networks/Github/Github'
 import { repository } from '../../../config'
 
 export default {
-  props: {
-    color: {
-      type: String,
-      required: false
-    }
-  },
   data () {
     return {
       Github,
@@ -87,12 +81,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  color: #868686;
   font-weight: bold;
   transition: .2s;
-  &:hover {
-    color: #333;
-  }
 }
 
 .github__icon {
@@ -103,7 +93,6 @@ export default {
   margin-left: 7px;
   .github__name {
     font-size: .8rem;
-    color: #555;
   }
   .github__info {
     display: flex;
@@ -111,32 +100,15 @@ export default {
     justify-content: center;
     > span {
       font-size: .7rem;
-      color: #868686;
     }
     .github__message {
       font-size: .7rem;
     }
     .github__dot {
-      border: 1px solid #777;
+      border: 1px solid #fff;
       margin: 0 10px;
       border-radius: 50%;
     }
-  }
-}
-
-.white.github {
-  color: rgba(255, 255, 255, .8);
-  &:hover {
-    color: #fff;
-  }
-  .github__name {
-    color: rgba(255, 255, 255, .8);
-  }
-  .github__info > span {
-    color: rgba(255, 255, 255, .8);
-  }
-  .github__dot {
-    border-color: rgba(255, 255, 255, .9);
   }
 }
 </style>

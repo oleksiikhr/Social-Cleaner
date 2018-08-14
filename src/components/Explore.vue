@@ -4,7 +4,6 @@
       <!--TODO Here add 2 or more blocks (pages): How to use, FAQ, Contributors *-->
     </div>
     <div class="search-block">
-      <h1>{{ $t('app.explore.h1') }}</h1>
       <at-input v-model="search" :placeholder="searchName" icon="search" :title="searchName" />
     </div>
     <div class="content">
@@ -66,12 +65,9 @@ export default {
   justify-content: space-around;
   max-width: 800px;
   margin: 0 auto 30px;
-  background: #fbfbfb;
   padding: 20px;
-  border: 1px solid #e7e7e7;
   > h1 {
     text-align: center;
-    color: rgba(0, 0, 0, .6);
     font-size: 1.2rem;
   }
   > .at-input {

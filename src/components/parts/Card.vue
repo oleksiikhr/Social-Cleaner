@@ -26,14 +26,9 @@ export default {
   display: inline-block;
   margin: 10px;
   padding: 5px 10px;
-  color: #333;
-  opacity: .6;
   transition: .3s;
-  &:hover {
-    opacity: 1;
-  }
   &.disabled {
-    opacity: .2;
+    opacity: .5;
     pointer-events: none;
   }
   > .name {
