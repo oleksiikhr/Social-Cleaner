@@ -25,11 +25,13 @@ export default {
 .item {
   display: inline-block;
   margin: 10px;
-  padding: 5px 10px;
-  transition: .3s;
+  transition: .5s;
+  padding: 5px 30px;
+  background: rgba(0, 0, 0, .1);
   &.disabled {
     opacity: .5;
     pointer-events: none;
+    color: #e08989;
   }
   > .name {
     font-weight: bold;

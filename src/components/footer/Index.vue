@@ -24,11 +24,6 @@ export default {
 <style lang="scss" scoped>
 footer {
   .footer__inner {
-    display: flex;
-    align-items: center;
-    margin: 0 20px 1px;
-    min-height: 42px;
-    justify-content: space-between;
     .home-link {
       line-height: 0;
       font-size: 1.3rem;

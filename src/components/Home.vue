@@ -20,7 +20,7 @@
               <div class="work__description">{{ $t(`app.home.works.items[${index}].description`) }}</div>
             </div>
             <div v-if="work.dot" class="work__dot">
-              <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+              <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@ export default {
       works: [
         { icon: 'key', dot: true },
         { icon: 'cogs', dot: true },
-        { icon: 'spinner' }
+        { icon: 'spinner', dot: false }
       ],
       benefits: [
         'bomb', 'github', 'database', 'filter', 'language', 'cogs', 'eye-slash', 'shield', 'folder-open-o'
@@ -81,8 +81,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-$max-width: 1600px;
+@import "../assets/scss/variables";
 
 header {
   display: flex;
@@ -115,15 +114,16 @@ header {
     > .header__button {
       display: block;
       background: rgba(255, 255, 255, .9);
-      padding: 13px;
+      padding: 10px;
       max-width: 230px;
       width: 100%;
       margin: 0 auto;
-      color: #4066af;
+      color: $main-color;
       font-weight: bold;
       text-transform: uppercase;
       font-size: .8rem;
       transition: .3s;
+      border-radius: 20px;
       &:hover {
         background: #fff;
       }
@@ -170,7 +170,7 @@ footer {
   justify-content: space-around;
   flex-wrap: nowrap;
   background: rgba(0, 0, 0, .1);
-  box-shadow: $shadow;
+  box-shadow: $box-shadow1;
   padding: 40px 0;
   > .work {
     color: rgba(255, 255, 255, 0.8);
@@ -212,7 +212,7 @@ footer {
     flex: 1;
     min-width: 31%;
     padding: 30px;
-    box-shadow: $shadow;
+    box-shadow: $box-shadow1;
     background: rgba(0, 0, 0, .1);
     margin: 10px;
     > span {
@@ -244,8 +244,8 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 40px;
-    background: rgba(0,0,0,.1);
-    box-shadow: $shadow;
+    background: rgba(0, 0, 0, .1);
+    box-shadow: $box-shadow1;
     > .section__name {
       font-size: 1.4rem;
       color: rgba(255, 255, 255, .87);
