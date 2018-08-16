@@ -94,20 +94,19 @@ header {
     padding: 0 15px;
     max-width: 800px;
     > .header__name {
-      color: rgba(255, 255, 255, .9);
       font-size: 2.5rem;
       text-transform: uppercase;
       padding-bottom: 15px;
+      color: rgba(255, 255, 255, .9);
       > .header__version {
         position: absolute;
         text-indent: 10px;
         font-size: 1rem;
         vertical-align: top;
-        color: #ffa9a9;
+        color: $color-warning;
       }
     }
     > .header__description {
-      color: rgba(255, 255, 255, .7);
       font-size: 1.3rem;
       padding-bottom: 25px;
     }
@@ -152,10 +151,10 @@ footer {
     width: 100%;
   }
   .section__title {
-    font-size: 1.4rem;
-    color: rgba(255, 255, 255, 0.9);
     margin: 0;
     padding: 10px 10px 30px;
+    color: rgba(255, 255, 255, .9);
+    font-size: 1.4rem;
     letter-spacing: 1px;
     text-transform: uppercase;
   }
@@ -170,10 +169,9 @@ footer {
   justify-content: space-around;
   flex-wrap: nowrap;
   background: rgba(0, 0, 0, .1);
-  box-shadow: $box-shadow1;
+  box-shadow: $box-shadow2;
   padding: 40px 0;
   > .work {
-    color: rgba(255, 255, 255, 0.8);
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -212,17 +210,17 @@ footer {
     flex: 1;
     min-width: 31%;
     padding: 30px;
-    box-shadow: $box-shadow1;
     background: rgba(0, 0, 0, .1);
     margin: 10px;
+    border-bottom: 2px solid #181c20;
     > span {
       display: block;
       margin-bottom: 10px;
       font-size: 1.2rem;
-      color: rgba(255, 255, 255, 0.87);
+      color: rgba(255, 255, 255, .9);
     }
     > p {
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, .7);
     }
     .benefit__title {
       > i {
@@ -245,15 +243,13 @@ footer {
     align-items: center;
     padding: 40px;
     background: rgba(0, 0, 0, .1);
-    box-shadow: $box-shadow1;
+    box-shadow: $box-shadow2;
     > .section__name {
       font-size: 1.4rem;
-      color: rgba(255, 255, 255, .87);
       margin-right: 15px;
     }
     > .section__link {
       padding: 10px 30px;
-      color: rgba(255, 255, 255, .87);
       border: 1px solid transparent;
       background: rgba(0, 0, 0, .2);
       min-width: 200px;

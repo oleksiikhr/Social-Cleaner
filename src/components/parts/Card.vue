@@ -22,20 +22,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../assets/scss/variables";
+
 .item {
   display: inline-block;
-  margin: 10px;
-  transition: .5s;
+  min-width: 150px;
+  margin: 0 10px 10px;
   padding: 5px 30px;
   background: rgba(0, 0, 0, .1);
+  border: 1px solid rgba(0, 0, 0, .1);
+  text-align: center;
+  transition: .5s;
   &.disabled {
-    opacity: .5;
+    opacity: .7;
     pointer-events: none;
-    color: #e08989;
+    color: $color-error;
   }
   > .name {
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
   > .domain {
     vertical-align: top;

@@ -3,15 +3,13 @@
 body {
   background: $main-color;
   min-height: calc(100% + 1px);
-  color: rgba(255, 255, 255, .9);
 }
 
-h1, h2, h3, h4, h5, h6, p {
-  color: rgba(255, 255, 255, .9);
+body, h1, h2, h3, h4, h5, h6, p, a {
+  color: rgba(255, 255, 255, .8);
 }
 
 a {
-  color: rgba(255, 255, 255, .9);
   border-radius: 25px;
   transition: .5s;
   &:hover, &:active {
@@ -20,7 +18,7 @@ a {
 }
 
 hr {
-  margin: 30px;
+  margin: 40px 0;
   border: none;
   border-bottom: 1px solid #e0e0e0;
 }
@@ -55,8 +53,7 @@ hr {
     display: flex;
     align-items: center;
     background: rgba(0, 0, 0, .1);
-    margin-bottom: 30px;
-    padding: 7px 0;
+    margin-bottom: 40px;
     overflow: hidden;
     box-shadow: $box-shadow1;
     .header__inner {
@@ -69,6 +66,7 @@ hr {
     }
     a {
       width: 280px;
+      padding: 7px 0;
       transition: .2s;
       text-align: center;
       &.brand {
@@ -78,7 +76,7 @@ hr {
         .brand__version {
           font-size: 0.7rem;
           vertical-align: top;
-          opacity: 0.5;
+          color: $color-warning;
         }
         .brand__short {
           display: none;
@@ -106,13 +104,17 @@ hr {
       }
     }
   }
+  > footer {
+    margin-top: 40px;
+  }
 }
 
 #content {
+  width: 100%;
   max-width: 1600px;
   margin: 0 auto;
-  width: 100%;
   flex-grow: 1;
+  padding: 0 20px;
   > .network {
     max-width: 800px;
     width: 100%;

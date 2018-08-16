@@ -1,5 +1,10 @@
 @import "variables";
 
+button {
+  min-width: 200px;
+  border-radius: 20px;
+}
+
 .at-input__original {
   background-color: rgba(0, 0, 0, .1);
   border-color: rgba(0, 0, 0, .1);
@@ -27,5 +32,33 @@
   margin: 0 10px 0 0;
   .at-input__original {
     line-height: 0;
+  }
+}
+
+.at-checkbox {
+  &:hover .at-checkbox__inner {
+    border-color: #fff;
+  }
+  &:focus {
+    outline: none;
+  }
+}
+
+.at-checkbox__inner {
+  background-color: rgba(0, 0, 0, .2);
+  border-color: #b0b0b0;
+}
+
+.at-checkbox--checked .at-checkbox__inner {
+  background-color: #2b3757;
+  border-color: #fff;
+}
+
+.at-btn--primary {
+  background-color: #59668d;
+  border-color: transparent;
+  &:hover, &:focus {
+    background-color: #46537a;
+    border-color: transparent;
   }
 }
