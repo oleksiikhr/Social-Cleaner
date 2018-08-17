@@ -41,7 +41,7 @@
           </div>
           <div class="info">
             <p class="i1">{{ $t('vk.token.guest.info') }}</p>
-            <p>{{ VK.prototype.urlRedirect }}#access_token=<strong>{{ $t('vk.token.guest.copy_here') }}</strong>&expires_in=86400&user_id=</p>
+            <syntax>{{ VK.prototype.urlRedirect }}#access_token=<strong>{{ $t('vk.token.guest.copy_here') }}</strong>&expires_in=86400&user_id=</syntax>
           </div>
         </template>
       </div>
@@ -57,12 +57,13 @@
 </template>
 
 <script>
+import Syntax from '../../../components/Syntax'
 import User from './parts/User'
 import VK from '../VK'
 
 export default {
   components: {
-    User
+    User, Syntax
   },
   data () {
     return {
