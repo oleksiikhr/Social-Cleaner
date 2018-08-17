@@ -1,0 +1,22 @@
+.at-modal {
+  cursor: auto;
+  width: auto !important;
+  max-width: 700px;
+  background: unset;
+  margin: 50px auto;
+  top: 0;
+}
+
+.at-modal__mask {
+  background: rgba(0, 0, 0, .9);
+}
+
+.at-modal__header {
+  position: relative;
+  border-color: #333 !important;
+  background: rgba(47, 55, 73, .7);
+}
+
+.at-modal__body {
+  background: rgba(47, 55, 73, .5);
+}
