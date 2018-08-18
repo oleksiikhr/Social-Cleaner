@@ -137,21 +137,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/scss/variables';
+
 .logs__header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   margin: 0 auto 30px;
-  background: #fbfbfb;
-  padding: 20px 20px 0;
-  border: 1px solid #e7e7e7;
   width: 100%;
   > * {
     margin: 0 20px 20px 0;
   }
   > h1 {
     text-align: center;
-    color: rgba(0, 0, 0, .6);
     font-size: 1.2rem;
   }
   > .at-input {
@@ -175,13 +173,8 @@ export default {
   flex-direction: column;
   margin: 10px;
   padding: 10px;
-  color: #333;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: $box-shadow1;
   transition: .3s;
-  &:hover {
-    background: #fbfbfb;
-    color: #222;
-  }
   .log__name {
     font-weight: bold;
     text-align: center;
@@ -192,7 +185,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     font-size: .8rem;
-    opacity: .6;
+    opacity: .8;
     > span {
       padding-left: 15px;
     }
@@ -203,8 +196,6 @@ export default {
   text-align: center;
   font-size: 0;
   padding: 20px 0;
-  background: #fbfbfb;
-  border: 1px solid #e7e7e7;
   margin-top: 30px;
   > .at-pagination {
     display: inline-block;

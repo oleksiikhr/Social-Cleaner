@@ -1,0 +1,41 @@
+@import 'variables';
+
+body {
+  background: $main-color;
+  min-height: calc(100% + 1px);
+}
+
+body, h1, h2, h3, h4, h5, h6, p, a {
+  color: rgba(255, 255, 255, .8);
+}
+
+a {
+  border-radius: 25px;
+  transition: .5s;
+  &:hover, &:active {
+    color: $primary-color;
+  }
+}
+
+hr {
+  margin: 40px 0;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+button {
+  min-width: 200px;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 4px;
+  height: 4px;
+  background-color: #1b253a;
+}

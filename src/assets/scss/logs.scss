@@ -10,6 +10,8 @@
       width: 90% !important;
       top: 50px;
       height: calc(100vh - 100px);
+      max-width: unset;
+      margin: 0 auto;
       .at-modal__body {
         overflow: auto;
       }
@@ -18,7 +20,7 @@
 }
 
 .logs-modal__time {
-  color: rgba(0, 0, 0, .7);
+  color: $color-warning;
 }
 
 .logs-modal__section {
@@ -28,16 +30,16 @@
   > p.title {
     font-weight: bold;
     padding: 10px;
-    background: #f7f7f7;
     margin: 10px 0;
-    text-align: center;
     text-transform: uppercase;
     font-size: 1rem;
-    border-radius: 5px;
+    color: #fff;
+    border-bottom: 1px solid #333;
+    background: rgba(0, 0, 0, .2);
   }
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
   .logs-modal {
     .at-modal__wrapper {
       .at-modal {

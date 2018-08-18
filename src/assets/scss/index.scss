@@ -1,7 +1,14 @@
+@import 'global';
 @import 'input';
 @import 'helper';
 @import 'site';
 @import 'attributes';
 @import 'logs';
 @import 'locale';
-@import "modal";
+@import 'modal';
+
+.at-popover__popper {
+  background-color: #2b3757;
+}
+
+

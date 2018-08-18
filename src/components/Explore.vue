@@ -65,7 +65,6 @@ export default {
   justify-content: space-around;
   max-width: 800px;
   margin: 0 auto 30px;
-  padding: 20px;
   > h1 {
     text-align: center;
     font-size: 1.2rem;
