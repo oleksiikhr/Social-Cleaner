@@ -1,32 +1,32 @@
 {
   "icons": [
     {
-      "src": "/Social-Cleaner/icon_512x512.0a4bd7a7d242efbfa382db23accb495b.png",
+      "src": "/Social-Cleaner/static/icons/icon_512x512.0a4bd7a7d242efbfa382db23accb495b.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "/Social-Cleaner/icon_384x384.5e5e96ecb0fa462e170b4ae0e8c9e85d.png",
+      "src": "/Social-Cleaner/static/icons/icon_384x384.5e5e96ecb0fa462e170b4ae0e8c9e85d.png",
       "sizes": "384x384",
       "type": "image/png"
     },
     {
-      "src": "/Social-Cleaner/icon_256x256.f08d25fd9e85fe32c380cecd8bda4772.png",
+      "src": "/Social-Cleaner/static/icons/icon_256x256.f08d25fd9e85fe32c380cecd8bda4772.png",
       "sizes": "256x256",
       "type": "image/png"
     },
     {
-      "src": "/Social-Cleaner/icon_192x192.919e76532ca6430776be8995ce6d4f75.png",
+      "src": "/Social-Cleaner/static/icons/icon_192x192.919e76532ca6430776be8995ce6d4f75.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/Social-Cleaner/icon_128x128.af8309b80629ae692ea150280d9262b8.png",
+      "src": "/Social-Cleaner/static/icons/icon_128x128.af8309b80629ae692ea150280d9262b8.png",
       "sizes": "128x128",
       "type": "image/png"
     },
     {
-      "src": "/Social-Cleaner/icon_96x96.23ab4f2083b2a9fb21eb3dc5086d4f89.png",
+      "src": "/Social-Cleaner/static/icons/icon_96x96.23ab4f2083b2a9fb21eb3dc5086d4f89.png",
       "sizes": "96x96",
       "type": "image/png"
     }
@@ -37,7 +37,6 @@
   "display": "standalone",
   "start_url": "https://alexeykhr.github.io/Social-Cleaner/",
   "description": "Clear data from various Social Media",
-  "background_color": "#3d72b4",
-  "theme_color": "#3d72b4",
-  "theme-color": "#3d72b4"
+  "background_color": "#2b3757",
+  "theme_color": "#2b3757"
 }

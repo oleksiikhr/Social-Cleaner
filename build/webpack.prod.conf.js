@@ -12,8 +12,8 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 const WebpackPwaManifest = require('webpack-pwa-manifest')
-const packageJson = require('../package')
 
+const packageJson = require('../package')
 const env = require('../config/prod.env')
 
 const webpackConfig = merge(baseWebpackConfig, {
@@ -77,25 +77,24 @@ const webpackConfig = merge(baseWebpackConfig, {
     new SWPrecacheWebpackPlugin({
       cacheId: 'social-cleaner',
       dontCacheBustUrlsMatching: /\.\w{8}\./,
-      filename: 'service-worker.js',
+      filename: 'sw.js',
       minify: true,
       navigateFallback: packageJson.url,
+      importScripts: ['./src/sw.js'],
       staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
     }),
     new WebpackPwaManifest({
       name: 'Social Cleaner',
       short_name: 'SC',
-      description: 'Clear data from various Social Media',
-      background_color: '#3d72b4',
-      theme_color: '#3d72b4',
-      'theme-color': '#3d72b4',
+      description: packageJson.description,
+      background_color: '#2b3757',
+      theme_color: '#2b3757',
       start_url: packageJson.url,
-      icons: [
-        {
-          src: path.resolve('static/img/logo-square-full.png'),
-          sizes: [96, 128, 192, 256, 384, 512]
-        }
-      ]
+      icons: [{
+        src: 'static/img/logo-square-full.png',
+        sizes: [96, 128, 192, 256, 384, 512],
+        destination: 'static/icons'
+      }]
     })
   ],
   optimization: {

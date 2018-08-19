@@ -23,7 +23,7 @@ Vue.use(VueResource)
 
 // Register service worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register(url + '/service-worker.js')
+  navigator.serviceWorker.register(url + 'sw.js')
 }
 
 // Configuration modules
