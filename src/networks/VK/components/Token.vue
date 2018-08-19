@@ -1,6 +1,6 @@
 <template>
   <!--TODO Offline scope + alert-->
-  <div id="token">
+  <div id="token" class="text--center">
     <div class="logged-in" v-if="isAuth">
       <at-alert :message="$t('vk.token.user.alert')" type="warning" show-icon />
       <hr>
@@ -14,37 +14,37 @@
     </div>
 
     <template v-else>
-      <div class="header">
-        <p>{{ $t('vk.token.guest.header') }}</p>
-      </div>
+      <p class="font--bold">{{ $t('vk.token.guest.header') }}</p>
+
       <hr>
-      <div class="generate">
-        <p>{{ $t('vk.token.guest.p') }}</p>
-        <at-checkbox-group v-model="scope">
-          <at-checkbox label="friends">{{ $t('vk.scope.friends') }}</at-checkbox>
-          <at-checkbox label="photos">{{ $t('vk.scope.photos') }}</at-checkbox>
-          <at-checkbox label="video">{{ $t('vk.scope.video') }}</at-checkbox>
-          <at-checkbox label="status">{{ $t('vk.scope.status') }}</at-checkbox>
-          <at-checkbox label="messages">{{ $t('vk.scope.messages') }}</at-checkbox>
-          <at-checkbox label="wall">{{ $t('vk.scope.wall') }}</at-checkbox>
-          <at-checkbox label="docs">{{ $t('vk.scope.docs') }}</at-checkbox>
-          <at-checkbox label="groups">{{ $t('vk.scope.groups') }}</at-checkbox>
-        </at-checkbox-group>
-        <template v-if="scope.length">
-          <div class="flex flex-middle flex-center">
-            <at-popover trigger="hover" :content="$t('vk.token.guest.application_id')" placement="bottom">
-              <at-input :placeholder="$t('vk.token.guest.application_id')" v-model="appId" />
-            </at-popover>
-            <at-button @click="goGetToken()" type="primary">
-              {{ $t('vk.token.guest.generate') }}
-            </at-button>
-          </div>
-          <div class="info">
-            <p class="i1">{{ $t('vk.token.guest.info') }}</p>
-            <syntax>{{ VK.prototype.urlRedirect }}#access_token=<strong>{{ $t('vk.token.guest.copy_here') }}</strong>&expires_in=86400&user_id=</syntax>
-          </div>
-        </template>
-      </div>
+      <p class="title">{{ $t('vk.token.guest.p') }}</p>
+      <at-checkbox-group v-model="scope">
+        <at-checkbox label="friends">{{ $t('vk.scope.friends') }}</at-checkbox>
+        <at-checkbox label="photos">{{ $t('vk.scope.photos') }}</at-checkbox>
+        <at-checkbox label="video">{{ $t('vk.scope.video') }}</at-checkbox>
+        <at-checkbox label="status">{{ $t('vk.scope.status') }}</at-checkbox>
+        <at-checkbox label="messages">{{ $t('vk.scope.messages') }}</at-checkbox>
+        <at-checkbox label="wall">{{ $t('vk.scope.wall') }}</at-checkbox>
+        <at-checkbox label="docs">{{ $t('vk.scope.docs') }}</at-checkbox>
+        <at-checkbox label="groups">{{ $t('vk.scope.groups') }}</at-checkbox>
+      </at-checkbox-group>
+
+      <template v-if="scope.length">
+        <hr>
+        <div class="flex flex-middle flex-center">
+          <at-popover trigger="hover" :content="$t('vk.token.guest.application_id')" placement="bottom">
+            <at-input :placeholder="$t('vk.token.guest.application_id')" v-model="appId" />
+          </at-popover>
+          <at-button @click="goGetToken()" type="primary">
+            {{ $t('vk.token.guest.generate') }}
+          </at-button>
+        </div>
+        <div class="info">
+          <p class="i1">{{ $t('vk.token.guest.info') }}</p>
+          <syntax>{{ VK.prototype.urlRedirect }}#access_token=<strong>{{ $t('vk.token.guest.copy_here') }}</strong>&expires_in=86400&user_id=</syntax>
+        </div>
+      </template>
+
       <hr>
       <div class="exists">
         <at-input type="password" v-model="token" clearable :placeholder="$t('vk.token.guest.placeholder_password')" />
@@ -114,24 +114,14 @@ button {
   margin-top: 25px;
 }
 
+p.title {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
 #token {
   margin: 0 auto;
-}
-
-.header {
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.generate {
-  margin-bottom: 30px;
-  text-align: center;
-  > p {
-    font-weight: bold;
-    font-size: 1rem;
-    margin-bottom: 20px;
-  }
 }
 
 .flex {
@@ -158,12 +148,10 @@ button {
 .exists {
   max-width: 500px;
   margin: 0 auto;
-  text-align: center;
 }
 
 .logged-in {
   > .btn-out {
-    text-align: center;
     > button {
       margin-top: 0;
     }
