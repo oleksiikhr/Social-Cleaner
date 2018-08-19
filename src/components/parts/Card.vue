@@ -22,12 +22,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/scss/variables";
+@import '../../assets/scss/variables';
 
 .item {
   display: inline-block;
   min-width: 150px;
-  margin: 0 10px 10px;
+  margin: 0 10px 20px;
   padding: 5px 30px;
   background: rgba(0, 0, 0, .1);
   border: 1px solid rgba(0, 0, 0, .1);

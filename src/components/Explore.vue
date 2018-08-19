@@ -1,13 +1,11 @@
 <template>
   <div id="dashboard">
-    <div class="header">
-      <!--TODO Here add 2 or more blocks (pages): How to use, FAQ, Contributors *-->
-    </div>
     <div class="search-block">
       <at-input v-model="search" :placeholder="searchName" icon="search" :title="searchName" />
     </div>
     <div class="content">
       <card v-for="(item, index) in filteredMedia" :key="index" :item="item" />
+      <!--TODO Here add 2 or more blocks (pages): How to use, FAQ, Contributors *-->
     </div>
   </div>
 </template>
@@ -60,31 +58,7 @@ export default {
 
 <style lang="scss" scoped>
 .search-block {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  max-width: 800px;
+  max-width: 700px;
   margin: 0 auto 30px;
-  > h1 {
-    text-align: center;
-    font-size: 1.2rem;
-  }
-  > .at-input {
-    flex-grow: 1;
-    margin: 0 40px;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .search-block {
-    flex-direction: column;
-    > h1 {
-      margin-bottom: 15px;
-    }
-    > .at-input {
-      width: 100%;
-      max-width: 400px;
-    }
-  }
 }
 </style>
