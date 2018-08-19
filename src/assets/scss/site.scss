@@ -117,11 +117,7 @@
  * |
  */
 
-@media screen and (max-width: 600px) {
-  .mw--200 {
-    min-width: unset !important;
-  }
-}
+
 
 @media screen and (max-width: 550px) {
   .default-layout {
@@ -153,8 +149,5 @@
   }
   .language__inner, .github__inner {
     display: none;
-  }
-  .mw--200 {
-    padding: 8px;
   }
 }

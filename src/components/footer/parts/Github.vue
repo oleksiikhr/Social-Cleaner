@@ -6,8 +6,8 @@
     <div class="github__inner">
       <div class="github__name">{{ repository }}</div>
       <div class="github__info">
-        <p v-if="loading" class="github__message">Loading..</p>
-        <p v-else-if="error" class="github__message">Error Response</p>
+        <p v-if="loading" class="github__message">{{ $t('app.footer.github.loading') }}</p>
+        <p v-else-if="error" class="github__message">{{ $t('app.footer.github.error') }}</p>
         <template v-else>
           <span class="github__start">{{ stars }} Stars</span>
           <div class="github__dot"></div>
