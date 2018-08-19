@@ -117,7 +117,7 @@ header {
       max-width: 230px;
       width: 100%;
       margin: 0 auto;
-      color: $main-color;
+      color: $primary-color;
       font-weight: bold;
       text-transform: uppercase;
       font-size: .8rem;
