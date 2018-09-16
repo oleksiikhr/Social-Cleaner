@@ -1,0 +1,41 @@
+{
+  "name": "social-cleaner",
+  "version": "0.2.0",
+  "description": "Clear data from various Social Media",
+  "keywords": [
+    "cleaner",
+    "social media",
+    "social networks",
+    "clear data"
+  ],
+  "author": "Alexey Khrushch <alexeykhr@outlook.com>",
+  "url": "https://alexeykhr.github.io/Social-Cleaner/",
+  "repository": "github:Alexeykhr/Social-Cleaner",
+  "license": "MIT",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "vue": "^2.5.17"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.3",
+    "@vue/cli-plugin-eslint": "^3.0.3",
+    "@vue/cli-service": "^3.0.3",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "vue-template-compiler": "^2.5.17"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
