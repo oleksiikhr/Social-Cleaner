@@ -16,6 +16,7 @@
     "plugin:vue/strongly-recommended"
   ],
   "rules": {
-    "vue/max-attributes-per-line": "off"
+    "vue/max-attributes-per-line": 0,
+    "allowEmptyCatch": true
   }
 }
