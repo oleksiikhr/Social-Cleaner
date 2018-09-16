@@ -1,0 +1,43 @@
+@import 'variables';
+
+html {
+  line-height: 1.4;
+}
+
+html, body {
+  min-height: calc(100% + 1px);
+}
+
+body {
+  background: $primary-color;
+  font-family: -apple-system,BlinkMacSystemFont,Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, a {
+  color: rgba(255, 255, 255, .9);
+}
+
+a {
+  border-radius: 25px;
+  transition: .5s;
+  text-decoration: none;
+  &:hover, &:active {
+    color: rgba(255, 255, 255, .9);
+  }
+}
+
+svg {
+  fill: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: rgba(0, 0, 0, .1);
+}
+
+::-webkit-scrollbar-thumb {
+  width: 4px;
+  height: 4px;
+  background-color: #1b253a;
+}
