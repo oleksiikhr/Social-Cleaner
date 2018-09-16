@@ -13,7 +13,7 @@ Vue.use(Router)
 
 // Component loading by name.
 const load = (component) => {
-  return () => import(`@/components/${component}.vue`)
+  return () => import(`@/pages/${component}.vue`)
 }
 
 const router = new Router({
