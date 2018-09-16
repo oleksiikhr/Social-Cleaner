@@ -5,6 +5,7 @@ import Vue from 'vue'
 
 // Styles
 import './styles/index.scss'
+import 'normalize.css'
 
 // Hide message
 Vue.config.productionTip = false
