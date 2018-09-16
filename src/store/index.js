@@ -1,3 +1,10 @@
+/**
+ * Large-scale state management.
+ * @see https://vuex.vuejs.org/
+ */
+/* eslint-disable */
+'use strict'
+
 import modules from './modules'
 import Vuex from 'vuex'
 import Vue from 'vue'

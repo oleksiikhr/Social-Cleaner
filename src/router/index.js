@@ -1,10 +1,17 @@
-import Home from '@/components/Home.vue'
+/**
+ * Single-page application routing.
+ * @see https://router.vuejs.org/
+ */
+/* eslint-disable */
+'use strict'
+
 import NProgress from 'nprogress'
 import Router from 'vue-router'
 import Vue from 'vue'
 
 Vue.use(Router)
 
+// Component loading by name.
 const load = (component) => {
   return () => import(`@/components/${component}.vue`)
 }
@@ -22,7 +29,6 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
-
   next()
 })
 
