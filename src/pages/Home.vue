@@ -307,7 +307,7 @@ export default {
   margin: 100px 0 0;
   &__link {
     display: block;
-    padding: 50px;
+    padding: 20px 50px;
     margin: 0 auto;
     text-align: center;
     background: rgba(0, 0, 0, .1);

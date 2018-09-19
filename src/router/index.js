@@ -11,18 +11,38 @@ import Vue from 'vue'
 
 Vue.use(Router)
 
-// Component loading by name.
-const load = (component) => {
-  return () => import(`@/pages/${component}.vue`)
+// Helpers.
+const page = (name) => {
+  return () => import(`@/pages/${name}.vue`)
+}
+const layout = (name) => {
+  return () => import(`@/layouts/${name}.vue`)
 }
 
 const router = new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: load('Home')
+      path: '',
+      component: layout('Empty'),
+      children: [
+        {
+          path: '/',
+          name: 'home',
+          component: page('Home')
+        }
+      ]
+    },
+    {
+      path: '',
+      component: layout('Default'),
+      children: [
+        {
+          path: '/explore',
+          name: 'explore',
+          component: page('Explore')
+        }
+      ]
     }
   ]
 })
