@@ -3,17 +3,26 @@
     <header class="header">
       <h1 class="header__title">Social Cleaner <span class="header__title__version">{{ packageJson.version }}</span></h1>
       <p class="header__description">{{ packageJson.description }}</p>
-      <router-link :to="{ name: 'explore' }" class="header__button">{{ $t('app.home.header.button') }}</router-link>
+      <router-link 
+        :to="{ name: 'explore' }" 
+        class="header__button">{{ $t('app.home.header.button') }}</router-link>
     </header>
     <section class="section section-works">
       <h2><span>{{ $t('app.home.works.title') }}</span></h2>
       <div class="section-works__list">
-        <div v-for="(item, index) in works" :key="index" class="work-item">
+        <div 
+          v-for="(item, index) in works" 
+          :key="index" 
+          class="work-item">
           <div class="work-item__content">
-            <component :is="item.icon" class="work-item__content__icon" />
+            <component 
+              :is="item.icon" 
+              class="work-item__content__icon" />
             <div class="work-item__content__name">{{ $t(`app.home.works.items[${index}]`) }}</div>
           </div>
-          <div v-if="item.next" class="work-item__next">
+          <div 
+            v-if="item.next" 
+            class="work-item__next">
             <component :is="item.next" />
           </div>
         </div>
@@ -22,7 +31,10 @@
     <section class="section section-benefits">
       <h2><span>{{ $t('app.home.benefits.title') }}</span></h2>
       <div class="section-benefits__list">
-        <div v-for="(item, index) in benefits" :key="index" class="benefit-item">
+        <div 
+          v-for="(item, index) in benefits" 
+          :key="index" 
+          class="benefit-item">
           <div class="benefit-item__header">
             <component :is="item" />
             <span>{{ $t(`app.home.benefits.items[${index}].name`) }}</span>
@@ -34,15 +46,25 @@
     <section class="section section-contributors">
       <h2><span>{{ $t(`app.home.contributors.title`) }}</span></h2>
       <div class="section-contributors__list">
-        <a v-for="(item, index) in contributors" :key="index" :href="getGithubProfile(item.login)"
-           :title="item.login" target="_blank" rel="noopener" class="contributor-item">
-          <img :src="item.avatar_url" :alt="item.login">
+        <a 
+          v-for="(item, index) in contributors" 
+          :key="index" 
+          :href="getGithubProfile(item.login)"
+          :title="item.login" 
+          target="_blank" 
+          rel="noopener" 
+          class="contributor-item">
+          <img 
+            :src="item.avatar_url" 
+            :alt="item.login">
           <div class="contributor-item__svg"><external-link /></div>
         </a>
       </div>
     </section>
     <div class="block block-action">
-      <router-link :to="{ name: 'explore' }" class="block-action__link">{{ $t(`app.home.action`) }}</router-link>
+      <router-link 
+        :to="{ name: 'explore' }" 
+        class="block-action__link">{{ $t(`app.home.action`) }}</router-link>
     </div>
   </div>
 </template>
