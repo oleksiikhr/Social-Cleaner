@@ -23,5 +23,5 @@ export default {
   contributors: {
     title: 'Contributors'
   },
-  action: 'List of social media'
+  action: 'List of social networks'
 }
